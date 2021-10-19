@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>個人部落格工具 - Hexo</title>
+    <url>/2021/10/10/tools-blog-hexo-install/</url>
+    <content><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>因為之前都是使用 Word 或 Power Point 方式整理筆記，但是隨著筆記越來越多，當又出現之前踩到的雷時，想要去找到之前的筆記變得越來越困難，雖然中間嘗試著用目錄進行筆記分類，但是有些筆記內容是屬於多個分類的，導致在分類上難以進行一個很明確的分類．<br>再者因為硬碟的損毀導致部份筆記遺失，所以一直想要將筆記放在網路上，一方面做為備份，另一方面也可以隨時隨地查閱筆記．<br>今天在 Youtube 看教學時，Youtube 突然推薦了一個關於 Ｈexo 搭配 Github 建立一個 blog 的影片引起我的注意，看完之後雖然不完全是我心目中記錄筆記的方式，但是也相去不遠了，所以才有這篇文章的產生．</p>
+<span id="more"></span>
+<h1 id="事前準備"><a href="#事前準備" class="headerlink" title="事前準備"></a>事前準備</h1><h2 id="安裝-Nodej"><a href="#安裝-Nodej" class="headerlink" title="安裝 Nodej"></a>安裝 Nodej</h2><img src="/2021/10/10/tools-blog-hexo-install/download_nodejs.png" class="" title="download_nodejs">
+<p>下載網址 : <a href="https://nodejs.org/zh-tw/download/">Nodejs</a><br>安裝方式 : 無腦安裝法</p>
+<ol>
+<li>點擊下載的 nodejs<img src="/2021/10/10/tools-blog-hexo-install/double_click_nodejs.png" class="" title="double_click_nodejs"></li>
+<li>進行安裝<img src="/2021/10/10/tools-blog-hexo-install/install_nodejs.png" class="" title="install_nodejs"></li>
+<li>完成安裝<img src="/2021/10/10/tools-blog-hexo-install/install_nodejs_done.png" class="" title="install_nodejs_done"></li>
+</ol>
+<h2 id="安裝-Git"><a href="#安裝-Git" class="headerlink" title="安裝 Git"></a>安裝 Git</h2><img src="/2021/10/10/tools-blog-hexo-install/download_git.png" class="" title="download_git">
+<p>下載網址 : <a href="https://git-scm.com/downloads">Git</a><br>安裝方式 : 無腦安裝法</p>
+<ol>
+<li>點擊下載的 git<img src="/2021/10/10/tools-blog-hexo-install/double_click_git.png" class="" title="double_click_git"></li>
+<li>進行安裝<img src="/2021/10/10/tools-blog-hexo-install/install_git.png" class="" title="install_git"></li>
+<li>完成安裝<img src="/2021/10/10/tools-blog-hexo-install/install_git_done.png" class="" title="install_git_done"></li>
+</ol>
+<h1 id="安裝-Hexo-CLI"><a href="#安裝-Hexo-CLI" class="headerlink" title="安裝 Hexo CLI"></a>安裝 Hexo CLI</h1><p>輸入底下命令</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ npm install -g hexo-cli</span><br></pre></td></tr></table></figure>
+<img src="/2021/10/10/tools-blog-hexo-install/install_hexo.png" class="" title="install_hexo">
+
+<h1 id="建立-Blog-目錄並初始化"><a href="#建立-Blog-目錄並初始化" class="headerlink" title="建立 Blog 目錄並初始化"></a>建立 Blog 目錄並初始化</h1><p>建立一個目錄放置 blog<br>我是建立一個 Blog 目錄，進入 Blog 目錄中，並進行初始化．<br>命令如下 :</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ mkdir Blog</span><br><span class="line">$ <span class="built_in">cd</span> Blog</span><br><span class="line">$ hexo init</span><br></pre></td></tr></table></figure>
+<ul>
+<li>建立 Blog 目錄<img src="/2021/10/10/tools-blog-hexo-install/create_blog.png" class="" title="create_blog"></li>
+<li>初始化<img src="/2021/10/10/tools-blog-hexo-install/init_hexo.png" class="" title="init_hexo"></li>
+</ul>
+<h1 id="將-Blog-目錄下的東西上傳到-GitHub-Optional"><a href="#將-Blog-目錄下的東西上傳到-GitHub-Optional" class="headerlink" title="將 Blog 目錄下的東西上傳到 GitHub (Optional)"></a>將 Blog 目錄下的東西上傳到 GitHub (Optional)</h1><p>因為 Hexo 在部署上會先自動產生文章相關的網頁並進行部署，但是對於外掛套件、主題安裝和修改設定檔是不會一起部署到 GitHub 的，對於曾經因為沒有版本控制而吃上大虧的我，對於在沒版控的情況下進行修改，著實讓我感到不安．<br>這部分進行的步驟跟一般專案將程式碼上 GitHub 一樣，所以我就不詳述了．</p>
+<ol>
+<li>在 GitHub 上建立一個 Repository</li>
+<li>將 Blog 目錄下的東西全部上傳到 GitHub</li>
+</ol>
+<h1 id="安裝部署套件"><a href="#安裝部署套件" class="headerlink" title="安裝部署套件"></a>安裝部署套件</h1><p>此套件是用來將產生的 blog 靜態網頁部署到 GitHub 上</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
+<img src="/2021/10/10/tools-blog-hexo-install/install_hexo_git_package.png" class="" title="install_hexo_git_package">
+
+<h1 id="部署網頁空間"><a href="#部署網頁空間" class="headerlink" title="部署網頁空間"></a>部署網頁空間</h1><p>GitHub 提供了一個網頁空間，因為免費的，所以我就拿它來當 blog 使用<br>網路上有許多教學，這邊就不再詳述，可以參考底下網站的教學 :<br><a href="https://pages.github.com/">GitHub Pages</a></p>
+<h1 id="部署設定"><a href="#部署設定" class="headerlink" title="部署設定"></a>部署設定</h1><p>修改 _config.yml 檔案中的</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Deployment</span></span><br><span class="line"><span class="comment">## Docs: https://hexo.io/docs/one-command-deployment</span></span><br><span class="line">deploy:</span><br><span class="line">  <span class="built_in">type</span>: <span class="string">&#x27;&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>改成</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Deployment</span></span><br><span class="line"><span class="comment">## Docs: https://hexo.io/docs/one-command-deployment</span></span><br><span class="line">deploy:</span><br><span class="line">  <span class="built_in">type</span>: git</span><br><span class="line">  repo: your_repository (ex: https://github.com/username/username.github.io.git，其中 username 需要替換成自己的)</span><br><span class="line">  branch: master</span><br></pre></td></tr></table></figure>
+
+<h1 id="進行部署"><a href="#進行部署" class="headerlink" title="進行部署"></a>進行部署</h1><p>使用以下命令進行部署 :</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>Tools</category>
+        <category>Blog</category>
+        <category>Hexo</category>
+      </categories>
+      <tags>
+        <tag>Theme</tag>
+        <tag>Next</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>為 Next 主題添加關鍵字搜尋</title>
+    <url>/2021/10/16/tools-blog-hexo-next-search/</url>
+    <content><![CDATA[<h1 id="安裝-hexo-generator-searchdb"><a href="#安裝-hexo-generator-searchdb" class="headerlink" title="安裝 hexo-generator-searchdb"></a>安裝 hexo-generator-searchdb</h1><p>在終端機上輸入</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ npm install hexo-generator-searchdb --save</span><br></pre></td></tr></table></figure>
+<img src="/2021/10/16/tools-blog-hexo-next-search/01.png" class="" title="install hexo-generator-searchdb">
+
+<h1 id="修改設定檔"><a href="#修改設定檔" class="headerlink" title="修改設定檔"></a>修改設定檔</h1><p>打開 themes/next/_config.yml<br>將 local_search 的 enable 設為 true</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">local_search:</span><br><span class="line">  <span class="built_in">enable</span>: <span class="literal">true</span></span><br><span class="line">  trigger: auto</span><br><span class="line">  top_n_per_article: 1</span><br><span class="line">  unescape: <span class="literal">false</span></span><br><span class="line">  preload: <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+<img src="/2021/10/16/tools-blog-hexo-next-search/02.png" class="" title="enable local_search">
+
+<h1 id="效果呈現"><a href="#效果呈現" class="headerlink" title="效果呈現"></a>效果呈現</h1><img src="/2021/10/16/tools-blog-hexo-next-search/03.png" class="" title="result">]]></content>
+      <categories>
+        <category>Tools</category>
+        <category>Blog</category>
+        <category>Hexo</category>
+      </categories>
+      <tags>
+        <tag>Next</tag>
+        <tag>Plugin</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>為 Next 主題添加字數與閱讀時間統計</title>
+    <url>/2021/10/16/tools-blog-hexo-next-symbol-count/</url>
+    <content><![CDATA[<h1 id="安裝-hexo-symbols-count-time"><a href="#安裝-hexo-symbols-count-time" class="headerlink" title="安裝 hexo-symbols-count-time"></a>安裝 hexo-symbols-count-time</h1><p>在終端機上輸入</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ npm install hexo-symbols-count-time --save</span><br></pre></td></tr></table></figure>
+<img src="/2021/10/16/tools-blog-hexo-next-symbol-count/01.png" class="" title="install hexo-symbols-count-time">
+
+<h1 id="修改設定檔"><a href="#修改設定檔" class="headerlink" title="修改設定檔"></a>修改設定檔</h1><p>打開 themes/next/_config.yml<br>將 item_text_total 設為 true</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">symbols_count_time:</span><br><span class="line">  separated_meta: <span class="literal">true</span></span><br><span class="line">  item_text_post: <span class="literal">true</span></span><br><span class="line">  item_text_total: <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<img src="/2021/10/16/tools-blog-hexo-next-symbol-count/02.png" class="" title="enable item_text_total">
+
+<h1 id="效果呈現"><a href="#效果呈現" class="headerlink" title="效果呈現"></a>效果呈現</h1><img src="/2021/10/16/tools-blog-hexo-next-symbol-count/03.png" class="" title="result">]]></content>
+      <categories>
+        <category>Tools</category>
+        <category>Blog</category>
+        <category>Hexo</category>
+      </categories>
+      <tags>
+        <tag>Next</tag>
+        <tag>Plugin</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>前端 - React 學習 - 001 Hello React</title>
+    <url>/2021/10/17/fronted-react-001-hello-react/</url>
+    <content><![CDATA[<h1 id="使用-VS-Code-建立一個專案"><a href="#使用-VS-Code-建立一個專案" class="headerlink" title="使用 VS Code 建立一個專案"></a>使用 VS Code 建立一個專案</h1><p>打開 VS Code 並點選 Open Folder…</p>
+<img src="/2021/10/17/fronted-react-001-hello-react/01.png" class="" title="click Open-Folder">
+<span id="more"></span>
+<p>建立一個工作目錄 React</p>
+<img src="/2021/10/17/fronted-react-001-hello-react/02.png" class="" title="create a folder React">
+<p>建立完成</p>
+<img src="/2021/10/17/fronted-react-001-hello-react/03.png" class="" title="create a React project">
+
+<h1 id="建立一個實驗目錄並建立一個-html-檔案"><a href="#建立一個實驗目錄並建立一個-html-檔案" class="headerlink" title="建立一個實驗目錄並建立一個 html 檔案"></a>建立一個實驗目錄並建立一個 html 檔案</h1><p>在 React 目錄中按下滑鼠右鍵，點選 New Folder 並建立 React 01 目錄</p>
+<img src="/2021/10/17/fronted-react-001-hello-react/04.png" class="" title="create a folder for experiment 1">
+<p>在 React 01 上按下滑鼠右鍵，點選 New File 建立 hello_react.html</p>
+<img src="/2021/10/17/fronted-react-001-hello-react/05.png" class="" title="create a file">
+<p>最終目錄結構如下:</p>
+<img src="/2021/10/17/fronted-react-001-hello-react/06.png" class="" title="folder and file result">
+
+<h1 id="引入相關設定並展示結果"><a href="#引入相關設定並展示結果" class="headerlink" title="引入相關設定並展示結果"></a>引入相關設定並展示結果</h1><p>編輯 hello_react.html</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">&quot;X-UA-Compatible&quot;</span> <span class="attr">content</span>=<span class="string">&quot;IE=edge&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">&quot;viewport&quot;</span> <span class="attr">content</span>=<span class="string">&quot;width=device-width, initial-scale=1.0&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>hello_reactjs<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 準備好一個容器 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;test&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 引入 react 核心庫 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;https://unpkg.com/react@17/umd/react.development.js&quot;</span> <span class="attr">crossorigin</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 引入 react-dom，用於 react 操作 DOM --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;https://unpkg.com/react-dom@17/umd/react-dom.development.js&quot;</span> <span class="attr">crossorigin</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 引入 babel，用於將 jsx 轉為 js --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;https://unpkg.com/babel-standalone@6/babel.min.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- </span></span><br><span class="line"><span class="comment">        此處 type 一定要設為 text/babel</span></span><br><span class="line"><span class="comment">        這樣 babel 才知道要將此處的 jsx 編譯成 js</span></span><br><span class="line"><span class="comment">     --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/babel&quot;</span>&gt;</span><span class="javascript"></span></span><br><span class="line"><span class="javascript">        <span class="comment">// 1. 創建虛擬 DOM</span></span></span><br><span class="line"><span class="javascript">        <span class="keyword">const</span> VDOM = <span class="xml"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>Hello, React<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span>  <span class="comment">// 此處一定不要寫引號，因為不是字串</span></span></span><br><span class="line"><span class="javascript">        <span class="comment">// 2. 渲染虛擬 DOM 到頁面上</span></span></span><br><span class="line"><span class="javascript">        ReactDOM.render(VDOM, <span class="built_in">document</span>.getElementById(<span class="string">&#x27;test&#x27;</span>))</span></span><br><span class="line"><span class="javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>注意 : </p>
+<ol>
+<li>三個 js 包的引入順序</li>
+<li>在使用 jsx 時，一定用宣告成 <code>&lt;script type=&quot;text/babel&quot;&gt;&lt;/script&gt;</code></li>
+<li>此為開始學習 Ract 的最簡單方式，之後還會介紹比較正式複雜的方式</li>
+</ol>
+<h1 id="結果呈現"><a href="#結果呈現" class="headerlink" title="結果呈現"></a>結果呈現</h1><p>首先在 VS Code 中需安裝延伸套件 Live Server</p>
+<img src="/2021/10/17/fronted-react-001-hello-react/07.png" class="" title="install Live Server">
+<p>在該檔案上按下滑鼠右鍵點選 Open with Live Server</p>
+<img src="/2021/10/17/fronted-react-001-hello-react/08.png" class="" title="Open with Live Server">
+<p>最終在瀏覽器上呈現出以下畫面:</p>
+<img src="/2021/10/17/fronted-react-001-hello-react/09.png" class="" title="result in browser">
+
+<h1 id="參考"><a href="#參考" class="headerlink" title="參考"></a>參考</h1><p><a href="https://reactjs.org/docs/add-react-to-a-website.html">https://reactjs.org/docs/add-react-to-a-website.html</a></p>
+]]></content>
+      <categories>
+        <category>Fronted</category>
+        <category>React</category>
+      </categories>
+      <tags>
+        <tag>Hello</tag>
+      </tags>
+  </entry>
+</search>
