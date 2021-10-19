@@ -143,4 +143,36 @@
         <tag>Hello</tag>
       </tags>
   </entry>
+  <entry>
+    <title>為 Next 主題添加訪客與訪問量統計</title>
+    <url>/2021/10/19/tools-blog-hexo-next-statistics-visitor/</url>
+    <content><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在網路上找了一下有關於為 Hexo 添加訪客與訪問量統計，發現蠻混亂的，<br>一下子說 busuanzi 有問題不可以用，也有人說要修改一些東西，結果我修改完也沒有效果，<br>所以我這一篇就是來記錄一下我最後找到並是成功的方法。<br>我是參考這篇<a href="https://www.lcd1024.xyz/2020/05/31/busuanzi/">文章</a></p>
+<span id="more"></span>
+<h1 id="修改設定檔"><a href="#修改設定檔" class="headerlink" title="修改設定檔"></a>修改設定檔</h1><p>打開 themes\next_config.yml，確認底下的設定是有關閉的</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">busuanzi_count:</span></span><br><span class="line">  <span class="attr">enable:</span> <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+<p>設定 valine</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">vendors:</span></span><br><span class="line">  <span class="string">...</span></span><br><span class="line">  <span class="attr">valine:</span></span><br><span class="line">    <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">    <span class="attr">visitor:</span> <span class="literal">true</span></span><br><span class="line">  <span class="string">...</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="在頁腳添加統計"><a href="#在頁腳添加統計" class="headerlink" title="在頁腳添加統計"></a>在頁腳添加統計</h1><p>打開 themes\next\layout_partials\footer.swig，<br>在 <code>&#123;%- endif %&#125;</code> 和 <code>&#123;&#123;- next_inject('footer') &#125;&#125;</code> 之間添加底下代碼 :</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">async</span> <span class="attr">src</span>=<span class="string">&quot;//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">span</span>&gt;</span><span class="tag">&lt;<span class="name">br</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">&quot;post-meta-item-icon&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">i</span> <span class="attr">class</span>=<span class="string">&quot;fa fa-users&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">i</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">span</span>&gt;</span>總訪客：&amp;nbsp<span class="tag">&lt;<span class="name">span</span> <span class="attr">id</span>=<span class="string">&quot;busuanzi_value_site_uv&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">i</span> <span class="attr">class</span>=<span class="string">&quot;fa fa-spinner fa-spin&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">i</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span>&amp;nbsp人<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">&quot;post-meta-divider&quot;</span>&gt;</span>|<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">&quot;post-meta-item-icon&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">i</span> <span class="attr">class</span>=<span class="string">&quot;fa fa-eye&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">i</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">span</span>&gt;</span>總訪問量：&amp;nbsp<span class="tag">&lt;<span class="name">span</span> <span class="attr">id</span>=<span class="string">&quot;busuanzi_value_site_pv&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">i</span> <span class="attr">class</span>=<span class="string">&quot;fa fa-spinner fa-spin&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">i</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span>&amp;nbsp次<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<img src="/2021/10/19/tools-blog-hexo-next-statistics-visitor/01.png" class="" title="modify footer.swig">
+
+<h1 id="結果呈現"><a href="#結果呈現" class="headerlink" title="結果呈現"></a>結果呈現</h1><p>若是在本地端上看到的會是底下情況 :</p>
+<img src="/2021/10/19/tools-blog-hexo-next-statistics-visitor/02.png" class="" title="local">
+
+<p>放到 GitHub 後才會有作用 :</p>
+<img src="/2021/10/19/tools-blog-hexo-next-statistics-visitor/03.png" class="" title="server">
+
+<h1 id="參考"><a href="#參考" class="headerlink" title="參考"></a>參考</h1><p><a href="https://www.lcd1024.xyz/2020/05/31/busuanzi/">Lcd1024|上善若水</a></p>
+]]></content>
+      <categories>
+        <category>Tools</category>
+        <category>Blog</category>
+        <category>Hexo</category>
+      </categories>
+      <tags>
+        <tag>Next</tag>
+        <tag>Plugin</tag>
+      </tags>
+  </entry>
 </search>

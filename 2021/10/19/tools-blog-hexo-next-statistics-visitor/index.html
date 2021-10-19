@@ -20,25 +20,25 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="安裝 hexo-generator-searchdb在終端機上輸入 1$ npm install hexo-generator-searchdb --save   修改設定檔打開 themes&#x2F;next&#x2F;_config.yml將 local_search 的 enable 設為 true 123456local_search:  enable: true  trigger: auto  top_n">
+  <meta name="description" content="前言在網路上找了一下有關於為 Hexo 添加訪客與訪問量統計，發現蠻混亂的，一下子說 busuanzi 有問題不可以用，也有人說要修改一些東西，結果我修改完也沒有效果，所以我這一篇就是來記錄一下我最後找到並是成功的方法。我是參考這篇文章">
 <meta property="og:type" content="article">
-<meta property="og:title" content="為 Next 主題添加關鍵字搜尋">
-<meta property="og:url" content="http://example.com/2021/10/16/tools-blog-hexo-next-search/index.html">
+<meta property="og:title" content="為 Next 主題添加訪客與訪問量統計">
+<meta property="og:url" content="http://example.com/2021/10/19/tools-blog-hexo-next-statistics-visitor/index.html">
 <meta property="og:site_name" content="Steven 的學習筆記">
-<meta property="og:description" content="安裝 hexo-generator-searchdb在終端機上輸入 1$ npm install hexo-generator-searchdb --save   修改設定檔打開 themes&#x2F;next&#x2F;_config.yml將 local_search 的 enable 設為 true 123456local_search:  enable: true  trigger: auto  top_n">
+<meta property="og:description" content="前言在網路上找了一下有關於為 Hexo 添加訪客與訪問量統計，發現蠻混亂的，一下子說 busuanzi 有問題不可以用，也有人說要修改一些東西，結果我修改完也沒有效果，所以我這一篇就是來記錄一下我最後找到並是成功的方法。我是參考這篇文章">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/2021/10/16/tools-blog-hexo-next-search/01.png">
-<meta property="og:image" content="http://example.com/2021/10/16/tools-blog-hexo-next-search/02.png">
-<meta property="og:image" content="http://example.com/2021/10/16/tools-blog-hexo-next-search/03.png">
-<meta property="article:published_time" content="2021-10-16T01:27:45.000Z">
-<meta property="article:modified_time" content="2021-10-18T01:48:32.214Z">
+<meta property="og:image" content="http://example.com/2021/10/19/tools-blog-hexo-next-statistics-visitor/01.png">
+<meta property="og:image" content="http://example.com/2021/10/19/tools-blog-hexo-next-statistics-visitor/02.png">
+<meta property="og:image" content="http://example.com/2021/10/19/tools-blog-hexo-next-statistics-visitor/03.png">
+<meta property="article:published_time" content="2021-10-19T02:52:08.000Z">
+<meta property="article:modified_time" content="2021-10-19T03:36:55.650Z">
 <meta property="article:author" content="Steven Wu">
 <meta property="article:tag" content="Next">
 <meta property="article:tag" content="Plugin">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2021/10/16/tools-blog-hexo-next-search/01.png">
+<meta name="twitter:image" content="http://example.com/2021/10/19/tools-blog-hexo-next-statistics-visitor/01.png">
 
-<link rel="canonical" href="http://example.com/2021/10/16/tools-blog-hexo-next-search/">
+<link rel="canonical" href="http://example.com/2021/10/19/tools-blog-hexo-next-statistics-visitor/">
 
 
 <script id="page-configurations">
@@ -51,7 +51,7 @@
   };
 </script>
 
-  <title>為 Next 主題添加關鍵字搜尋 | Steven 的學習筆記</title>
+  <title>為 Next 主題添加訪客與訪問量統計 | Steven 的學習筆記</title>
   
 
 
@@ -194,7 +194,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/10/16/tools-blog-hexo-next-search/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/10/19/tools-blog-hexo-next-statistics-visitor/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -207,7 +207,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          為 Next 主題添加關鍵字搜尋
+          為 Next 主題添加訪客與訪問量統計
         </h1>
 
         <div class="post-meta">
@@ -216,16 +216,10 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
+              
 
-              <time title="Created: 2021-10-16 09:27:45" itemprop="dateCreated datePublished" datetime="2021-10-16T09:27:45+08:00">2021-10-16</time>
+              <time title="Created: 2021-10-19 10:52:08 / Modified: 11:36:55" itemprop="dateCreated datePublished" datetime="2021-10-19T10:52:08+08:00">2021-10-19</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-10-18 09:48:32" itemprop="dateModified" datetime="2021-10-18T09:48:32+08:00">2021-10-18</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -250,7 +244,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>221</span>
+              <span>1.2k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
@@ -269,15 +263,25 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="安裝-hexo-generator-searchdb"><a href="#安裝-hexo-generator-searchdb" class="headerlink" title="安裝 hexo-generator-searchdb"></a>安裝 hexo-generator-searchdb</h1><p>在終端機上輸入</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install hexo-generator-searchdb --save</span><br></pre></td></tr></table></figure>
-<img src="/2021/10/16/tools-blog-hexo-next-search/01.png" class="" title="install hexo-generator-searchdb">
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在網路上找了一下有關於為 Hexo 添加訪客與訪問量統計，發現蠻混亂的，<br>一下子說 busuanzi 有問題不可以用，也有人說要修改一些東西，結果我修改完也沒有效果，<br>所以我這一篇就是來記錄一下我最後找到並是成功的方法。<br>我是參考這篇<a target="_blank" rel="noopener" href="https://www.lcd1024.xyz/2020/05/31/busuanzi/">文章</a></p>
+<span id="more"></span>
+<h1 id="修改設定檔"><a href="#修改設定檔" class="headerlink" title="修改設定檔"></a>修改設定檔</h1><p>打開 themes\next_config.yml，確認底下的設定是有關閉的</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">busuanzi_count:</span></span><br><span class="line">  <span class="attr">enable:</span> <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+<p>設定 valine</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">vendors:</span></span><br><span class="line">  <span class="string">...</span></span><br><span class="line">  <span class="attr">valine:</span></span><br><span class="line">    <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">    <span class="attr">visitor:</span> <span class="literal">true</span></span><br><span class="line">  <span class="string">...</span></span><br></pre></td></tr></table></figure>
 
-<h1 id="修改設定檔"><a href="#修改設定檔" class="headerlink" title="修改設定檔"></a>修改設定檔</h1><p>打開 themes/next/_config.yml<br>將 local_search 的 enable 設為 true</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">local_search:</span><br><span class="line">  <span class="built_in">enable</span>: <span class="literal">true</span></span><br><span class="line">  trigger: auto</span><br><span class="line">  top_n_per_article: 1</span><br><span class="line">  unescape: <span class="literal">false</span></span><br><span class="line">  preload: <span class="literal">false</span></span><br></pre></td></tr></table></figure>
-<img src="/2021/10/16/tools-blog-hexo-next-search/02.png" class="" title="enable local_search">
+<h1 id="在頁腳添加統計"><a href="#在頁腳添加統計" class="headerlink" title="在頁腳添加統計"></a>在頁腳添加統計</h1><p>打開 themes\next\layout_partials\footer.swig，<br>在 <code>&#123;%- endif %&#125;</code> 和 <code>&#123;&#123;- next_inject('footer') &#125;&#125;</code> 之間添加底下代碼 :</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">async</span> <span class="attr">src</span>=<span class="string">&quot;//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">span</span>&gt;</span><span class="tag">&lt;<span class="name">br</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">&quot;post-meta-item-icon&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">i</span> <span class="attr">class</span>=<span class="string">&quot;fa fa-users&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">i</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">span</span>&gt;</span>總訪客：&amp;nbsp<span class="tag">&lt;<span class="name">span</span> <span class="attr">id</span>=<span class="string">&quot;busuanzi_value_site_uv&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">i</span> <span class="attr">class</span>=<span class="string">&quot;fa fa-spinner fa-spin&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">i</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span>&amp;nbsp人<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">&quot;post-meta-divider&quot;</span>&gt;</span>|<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">&quot;post-meta-item-icon&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">i</span> <span class="attr">class</span>=<span class="string">&quot;fa fa-eye&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">i</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">span</span>&gt;</span>總訪問量：&amp;nbsp<span class="tag">&lt;<span class="name">span</span> <span class="attr">id</span>=<span class="string">&quot;busuanzi_value_site_pv&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">i</span> <span class="attr">class</span>=<span class="string">&quot;fa fa-spinner fa-spin&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">i</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span>&amp;nbsp次<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<img src="/2021/10/19/tools-blog-hexo-next-statistics-visitor/01.png" class="" title="modify footer.swig">
 
-<h1 id="效果呈現"><a href="#效果呈現" class="headerlink" title="效果呈現"></a>效果呈現</h1><img src="/2021/10/16/tools-blog-hexo-next-search/03.png" class="" title="result">
+<h1 id="結果呈現"><a href="#結果呈現" class="headerlink" title="結果呈現"></a>結果呈現</h1><p>若是在本地端上看到的會是底下情況 :</p>
+<img src="/2021/10/19/tools-blog-hexo-next-statistics-visitor/02.png" class="" title="local">
+
+<p>放到 GitHub 後才會有作用 :</p>
+<img src="/2021/10/19/tools-blog-hexo-next-statistics-visitor/03.png" class="" title="server">
+
+<h1 id="參考"><a href="#參考" class="headerlink" title="參考"></a>參考</h1><p><a target="_blank" rel="noopener" href="https://www.lcd1024.xyz/2020/05/31/busuanzi/">Lcd1024|上善若水</a></p>
+
     </div>
 
     
@@ -296,13 +300,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/10/10/tools-blog-hexo-install/" rel="prev" title="個人部落格工具 - Hexo">
-      <i class="fa fa-chevron-left"></i> 個人部落格工具 - Hexo
+    <a href="/2021/10/17/fronted-react-001-hello-react/" rel="prev" title="前端 - React 學習 - 001 Hello React">
+      <i class="fa fa-chevron-left"></i> 前端 - React 學習 - 001 Hello React
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2021/10/16/tools-blog-hexo-next-symbol-count/" rel="next" title="為 Next 主題添加字數與閱讀時間統計">
-      為 Next 主題添加字數與閱讀時間統計 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -362,7 +363,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%9D-hexo-generator-searchdb"><span class="nav-number">1.</span> <span class="nav-text">安裝 hexo-generator-searchdb</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E8%A8%AD%E5%AE%9A%E6%AA%94"><span class="nav-number">2.</span> <span class="nav-text">修改設定檔</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%88%E6%9E%9C%E5%91%88%E7%8F%BE"><span class="nav-number">3.</span> <span class="nav-text">效果呈現</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E8%A8%AD%E5%AE%9A%E6%AA%94"><span class="nav-number">2.</span> <span class="nav-text">修改設定檔</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9C%A8%E9%A0%81%E8%85%B3%E6%B7%BB%E5%8A%A0%E7%B5%B1%E8%A8%88"><span class="nav-number">3.</span> <span class="nav-text">在頁腳添加統計</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B5%90%E6%9E%9C%E5%91%88%E7%8F%BE"><span class="nav-number">4.</span> <span class="nav-text">結果呈現</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%83%E8%80%83"><span class="nav-number">5.</span> <span class="nav-text">參考</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -516,7 +517,7 @@ NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
       repo        : 'pluto123.github.io',
       owner       : 'pluto123',
       admin       : ['pluto123'],
-      id          : 'fce75918c9caf762f4bc7a4e7266c89e',
+      id          : '2d9123075b46ee07d8ea7a089a98a147',
         language: 'zh-TW',
       distractionFreeMode: true
     });
