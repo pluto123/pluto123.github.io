@@ -20,15 +20,30 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Steven 的學習筆記">
-<meta property="og:url" content="http://example.com/categories/Fronted/React/index.html">
+  <meta name="description" content="定義虛擬 DOM 時，不要有引號創建虛擬 DOM 時，注意不會將標籤內容加上引號即不需要將下圖黃色區塊額外加上引號  正確的方式是可以用 &amp;#123; &amp;#125; 將標籤框住">
+<meta property="og:type" content="article">
+<meta property="og:title" content="前端 - React 學習 - 002 Jsx 的一些規則">
+<meta property="og:url" content="http://example.com/2021/10/19/frontend-react-002-jsx-rule/index.html">
 <meta property="og:site_name" content="Steven 的學習筆記">
+<meta property="og:description" content="定義虛擬 DOM 時，不要有引號創建虛擬 DOM 時，注意不會將標籤內容加上引號即不需要將下圖黃色區塊額外加上引號  正確的方式是可以用 &amp;#123; &amp;#125; 將標籤框住">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2021/10/19/frontend-react-002-jsx-rule/01.png">
+<meta property="og:image" content="http://example.com/2021/10/19/frontend-react-002-jsx-rule/02.png">
+<meta property="og:image" content="http://example.com/2021/10/19/frontend-react-002-jsx-rule/03.png">
+<meta property="og:image" content="http://example.com/2021/10/19/frontend-react-002-jsx-rule/04.png">
+<meta property="og:image" content="http://example.com/2021/10/19/frontend-react-002-jsx-rule/05.png">
+<meta property="og:image" content="http://example.com/2021/10/19/frontend-react-002-jsx-rule/06.png">
+<meta property="og:image" content="http://example.com/2021/10/19/frontend-react-002-jsx-rule/07.png">
+<meta property="og:image" content="http://example.com/2021/10/19/frontend-react-002-jsx-rule/08.png">
+<meta property="og:image" content="http://example.com/2021/10/19/frontend-react-002-jsx-rule/09.png">
+<meta property="article:published_time" content="2021-10-19T12:37:48.000Z">
+<meta property="article:modified_time" content="2021-10-20T02:14:05.005Z">
 <meta property="article:author" content="Steven Wu">
+<meta property="article:tag" content="Jsx">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2021/10/19/frontend-react-002-jsx-rule/01.png">
 
-<link rel="canonical" href="http://example.com/categories/Fronted/React/">
+<link rel="canonical" href="http://example.com/2021/10/19/frontend-react-002-jsx-rule/">
 
 
 <script id="page-configurations">
@@ -36,12 +51,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'en'
   };
 </script>
 
-  <title>Category: React | Steven 的學習筆記</title>
+  <title>前端 - React 學習 - 002 Jsx 的一些規則 | Steven 的學習筆記</title>
   
 
 
@@ -177,57 +192,151 @@
         <div class="content-wrap">
           
 
-          <div class="content category">
+          <div class="content post posts-expand">
             
 
+    
   
   
-  
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <h2 class="collection-header">React
-          <small>Category</small>
-        </h2>
-      </div>
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/10/19/frontend-react-002-jsx-rule/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Steven Wu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Steven 的學習筆記">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          前端 - React 學習 - 002 Jsx 的一些規則
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-10-19 20:37:48" itemprop="dateCreated datePublished" datetime="2021-10-19T20:37:48+08:00">2021-10-19</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-10-20 10:14:05" itemprop="dateModified" datetime="2021-10-20T10:14:05+08:00">2021-10-20</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Frontend/" itemprop="url" rel="index"><span itemprop="name">Frontend</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Frontend/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>555</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>1 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <span class="collection-header">2021</span>
+        <ol>
+<li><p>定義虛擬 DOM 時，不要有引號<br>創建虛擬 DOM 時，注意不會將標籤內容加上引號<br>即不需要將下圖黃色區塊額外加上引號</p>
+<img src="/2021/10/19/frontend-react-002-jsx-rule/01.png" class="" title="create virtual DOM NG">
+<p>正確的方式是可以用 <code>&#123; &#125;</code> 將標籤框住</p>
+<img src="/2021/10/19/frontend-react-002-jsx-rule/02.png" class="" title="create virtual DOM OK">
+<span id="more"></span></li>
+<li><p>標籤中混入 js 表達式時，要用 <code>&#123; &#125;</code><br>比如說在 <code>&lt;h1&gt;&lt;/h1&gt;</code>內容要由變數 myData 中取得，<br>則需要寫成底下圖片中的方式 :</p>
+<img src="/2021/10/19/frontend-react-002-jsx-rule/03.png" class="" title="js"></li>
+<li><p>樣式的類名指定不要用 class，要用 className<br>錯誤的方式 :</p>
+<img src="/2021/10/19/frontend-react-002-jsx-rule/04.png" class="" title="class"></li>
+</ol>
+<p>正確的方式 :</p>
+<img src="/2021/10/19/frontend-react-002-jsx-rule/05.png" class="" title="className">
+
+<ol start="4">
+<li><p>內聯樣式要用 <code>style=&#123;&#123;key:value&#125;&#125;</code> 形式書寫<br>如下所示 :</p>
+<img src="/2021/10/19/frontend-react-002-jsx-rule/06.png" class="" title="style"></li>
+<li><p>虛擬 DOM 必須只有一個根標籤<br>不能存在兩個根標籤</p>
+<img src="/2021/10/19/frontend-react-002-jsx-rule/07.png" class="" title="two roots"></li>
+</ol>
+<p>可以用 <code>&lt;div&gt;&lt;/div&gt;</code> 包裹住</p>
+<img src="/2021/10/19/frontend-react-002-jsx-rule/08.png" class="" title="the root">
+
+<ol start="6">
+<li><p>標籤必須閉合<br>即像在 html 中 <code>&lt;input type=&quot;text&quot;&gt;</code> 的寫法是可以的，<br>但是在 jsx 中必須要有結束標籤 <code>&lt;input type=&quot;text&quot;&gt;&lt;/input&gt;</code> 或 <code>&lt;input type=&quot;text&quot;/&gt;</code></p>
+<img src="/2021/10/19/frontend-react-002-jsx-rule/09.png" class="" title="the close"></li>
+<li><p>標籤首字母的意義<br>(1) 若小寫字母開頭，則將改標籤轉為 html 同名元素．若 html 中無該標籤對應的同名元素則報錯．<br>(2) 若大寫字母開頭，React 就會去渲染對應的組件，若組件沒有定義則會報錯．</p>
+</li>
+</ol>
+
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+    
+    
+    
 
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-10-17T20:39:46+08:00"
-              content="2021-10-17">
-          10-17
-        </time>
-      </div>
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Jsx/" rel="tag"># Jsx</a>
+          </div>
 
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/10/17/fronted-react-001-hello-react/" itemprop="url">
-            <span itemprop="name">前端 - React 學習 - 001 Hello React</span>
-          </a>
-      </div>
+        
 
-    </header>
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/10/19/tools-blog-hexo-next-statistics-visitor/" rel="prev" title="為 Next 主題添加訪客與訪問量統計">
+      <i class="fa fa-chevron-left"></i> 為 Next 主題添加訪客與訪問量統計
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/10/19/frontend-react-003-jsx-tag/" rel="next" title="前端 - React 學習 - 003 jsx 中只能混入 js 表達式">
+      前端 - React 學習 - 003 jsx 中只能混入 js 表達式 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
   </article>
-
-    </div>
-  </div>
   
   
-  
-
   
 
 
 
           </div>
           
+    <div class="comments" id="gitalk-container"></div>
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -287,7 +396,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-count">8</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -300,7 +409,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">6</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -337,13 +446,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">4k</span>
+    <span title="Symbols count total">8k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
-    <span title="Reading time total">4 mins.</span>
+    <span title="Reading time total">7 mins.</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
   </div>
@@ -416,6 +525,25 @@
 
   
 
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '4930808f816a28eedad7',
+      clientSecret: '20b0570483dc737ad14b42abc3ab1866089ce63e',
+      repo        : 'pluto123.github.io',
+      owner       : 'pluto123',
+      admin       : ['pluto123'],
+      id          : 'fe57cc7d1b7dcacb7f89a387e7c12d2d',
+        language: 'zh-TW',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
 
 </body>
 </html>

@@ -21,7 +21,7 @@
 </ol>
 <h1 id="安裝-Hexo-CLI"><a href="#安裝-Hexo-CLI" class="headerlink" title="安裝 Hexo CLI"></a>安裝 Hexo CLI</h1><p>輸入底下命令</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ npm install -g hexo-cli</span><br></pre></td></tr></table></figure>
-<img src="/2021/10/10/tools-blog-hexo-install/install_hexo.png" class="" title="install_hexo">
+
 
 <h1 id="建立-Blog-目錄並初始化"><a href="#建立-Blog-目錄並初始化" class="headerlink" title="建立 Blog 目錄並初始化"></a>建立 Blog 目錄並初始化</h1><p>建立一個目錄放置 blog<br>我是建立一個 Blog 目錄，進入 Blog 目錄中，並進行初始化．<br>命令如下 :</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ mkdir Blog</span><br><span class="line">$ <span class="built_in">cd</span> Blog</span><br><span class="line">$ hexo init</span><br></pre></td></tr></table></figure>
@@ -62,7 +62,7 @@
     <content><![CDATA[<h1 id="安裝-hexo-generator-searchdb"><a href="#安裝-hexo-generator-searchdb" class="headerlink" title="安裝 hexo-generator-searchdb"></a>安裝 hexo-generator-searchdb</h1><p>在終端機上輸入</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ npm install hexo-generator-searchdb --save</span><br></pre></td></tr></table></figure>
 <img src="/2021/10/16/tools-blog-hexo-next-search/01.png" class="" title="install hexo-generator-searchdb">
-
+<span id="more"></span>
 <h1 id="修改設定檔"><a href="#修改設定檔" class="headerlink" title="修改設定檔"></a>修改設定檔</h1><p>打開 themes/next/_config.yml<br>將 local_search 的 enable 設為 true</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">local_search:</span><br><span class="line">  <span class="built_in">enable</span>: <span class="literal">true</span></span><br><span class="line">  trigger: auto</span><br><span class="line">  top_n_per_article: 1</span><br><span class="line">  unescape: <span class="literal">false</span></span><br><span class="line">  preload: <span class="literal">false</span></span><br></pre></td></tr></table></figure>
 <img src="/2021/10/16/tools-blog-hexo-next-search/02.png" class="" title="enable local_search">
@@ -84,7 +84,7 @@
     <content><![CDATA[<h1 id="安裝-hexo-symbols-count-time"><a href="#安裝-hexo-symbols-count-time" class="headerlink" title="安裝 hexo-symbols-count-time"></a>安裝 hexo-symbols-count-time</h1><p>在終端機上輸入</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ npm install hexo-symbols-count-time --save</span><br></pre></td></tr></table></figure>
 <img src="/2021/10/16/tools-blog-hexo-next-symbol-count/01.png" class="" title="install hexo-symbols-count-time">
-
+<span id="more"></span>
 <h1 id="修改設定檔"><a href="#修改設定檔" class="headerlink" title="修改設定檔"></a>修改設定檔</h1><p>打開 themes/next/_config.yml<br>將 item_text_total 設為 true</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">symbols_count_time:</span><br><span class="line">  separated_meta: <span class="literal">true</span></span><br><span class="line">  item_text_post: <span class="literal">true</span></span><br><span class="line">  item_text_total: <span class="literal">true</span></span><br></pre></td></tr></table></figure>
 <img src="/2021/10/16/tools-blog-hexo-next-symbol-count/02.png" class="" title="enable item_text_total">
@@ -102,21 +102,21 @@
   </entry>
   <entry>
     <title>前端 - React 學習 - 001 Hello React</title>
-    <url>/2021/10/17/fronted-react-001-hello-react/</url>
+    <url>/2021/10/17/frontend-react-001-hello-react/</url>
     <content><![CDATA[<h1 id="使用-VS-Code-建立一個專案"><a href="#使用-VS-Code-建立一個專案" class="headerlink" title="使用 VS Code 建立一個專案"></a>使用 VS Code 建立一個專案</h1><p>打開 VS Code 並點選 Open Folder…</p>
-<img src="/2021/10/17/fronted-react-001-hello-react/01.png" class="" title="click Open-Folder">
+<img src="/2021/10/17/frontend-react-001-hello-react/01.png" class="" title="click Open-Folder">
 <span id="more"></span>
 <p>建立一個工作目錄 React</p>
-<img src="/2021/10/17/fronted-react-001-hello-react/02.png" class="" title="create a folder React">
+<img src="/2021/10/17/frontend-react-001-hello-react/02.png" class="" title="create a folder React">
 <p>建立完成</p>
-<img src="/2021/10/17/fronted-react-001-hello-react/03.png" class="" title="create a React project">
+<img src="/2021/10/17/frontend-react-001-hello-react/03.png" class="" title="create a React project">
 
 <h1 id="建立一個實驗目錄並建立一個-html-檔案"><a href="#建立一個實驗目錄並建立一個-html-檔案" class="headerlink" title="建立一個實驗目錄並建立一個 html 檔案"></a>建立一個實驗目錄並建立一個 html 檔案</h1><p>在 React 目錄中按下滑鼠右鍵，點選 New Folder 並建立 React 01 目錄</p>
-<img src="/2021/10/17/fronted-react-001-hello-react/04.png" class="" title="create a folder for experiment 1">
+<img src="/2021/10/17/frontend-react-001-hello-react/04.png" class="" title="create a folder for experiment 1">
 <p>在 React 01 上按下滑鼠右鍵，點選 New File 建立 hello_react.html</p>
-<img src="/2021/10/17/fronted-react-001-hello-react/05.png" class="" title="create a file">
+<img src="/2021/10/17/frontend-react-001-hello-react/05.png" class="" title="create a file">
 <p>最終目錄結構如下:</p>
-<img src="/2021/10/17/fronted-react-001-hello-react/06.png" class="" title="folder and file result">
+<img src="/2021/10/17/frontend-react-001-hello-react/06.png" class="" title="folder and file result">
 
 <h1 id="引入相關設定並展示結果"><a href="#引入相關設定並展示結果" class="headerlink" title="引入相關設定並展示結果"></a>引入相關設定並展示結果</h1><p>編輯 hello_react.html</p>
 <figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">&quot;X-UA-Compatible&quot;</span> <span class="attr">content</span>=<span class="string">&quot;IE=edge&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">&quot;viewport&quot;</span> <span class="attr">content</span>=<span class="string">&quot;width=device-width, initial-scale=1.0&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>hello_reactjs<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 準備好一個容器 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;test&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 引入 react 核心庫 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;https://unpkg.com/react@17/umd/react.development.js&quot;</span> <span class="attr">crossorigin</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 引入 react-dom，用於 react 操作 DOM --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;https://unpkg.com/react-dom@17/umd/react-dom.development.js&quot;</span> <span class="attr">crossorigin</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 引入 babel，用於將 jsx 轉為 js --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;https://unpkg.com/babel-standalone@6/babel.min.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- </span></span><br><span class="line"><span class="comment">        此處 type 一定要設為 text/babel</span></span><br><span class="line"><span class="comment">        這樣 babel 才知道要將此處的 jsx 編譯成 js</span></span><br><span class="line"><span class="comment">     --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/babel&quot;</span>&gt;</span><span class="javascript"></span></span><br><span class="line"><span class="javascript">        <span class="comment">// 1. 創建虛擬 DOM</span></span></span><br><span class="line"><span class="javascript">        <span class="keyword">const</span> VDOM = <span class="xml"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>Hello, React<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span>  <span class="comment">// 此處一定不要寫引號，因為不是字串</span></span></span><br><span class="line"><span class="javascript">        <span class="comment">// 2. 渲染虛擬 DOM 到頁面上</span></span></span><br><span class="line"><span class="javascript">        ReactDOM.render(VDOM, <span class="built_in">document</span>.getElementById(<span class="string">&#x27;test&#x27;</span>))</span></span><br><span class="line"><span class="javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
@@ -127,20 +127,116 @@
 <li>此為開始學習 Ract 的最簡單方式，之後還會介紹比較正式複雜的方式</li>
 </ol>
 <h1 id="結果呈現"><a href="#結果呈現" class="headerlink" title="結果呈現"></a>結果呈現</h1><p>首先在 VS Code 中需安裝延伸套件 Live Server</p>
-<img src="/2021/10/17/fronted-react-001-hello-react/07.png" class="" title="install Live Server">
+<img src="/2021/10/17/frontend-react-001-hello-react/07.png" class="" title="install Live Server">
 <p>在該檔案上按下滑鼠右鍵點選 Open with Live Server</p>
-<img src="/2021/10/17/fronted-react-001-hello-react/08.png" class="" title="Open with Live Server">
+<img src="/2021/10/17/frontend-react-001-hello-react/08.png" class="" title="Open with Live Server">
 <p>最終在瀏覽器上呈現出以下畫面:</p>
-<img src="/2021/10/17/fronted-react-001-hello-react/09.png" class="" title="result in browser">
+<img src="/2021/10/17/frontend-react-001-hello-react/09.png" class="" title="result in browser">
 
 <h1 id="參考"><a href="#參考" class="headerlink" title="參考"></a>參考</h1><p><a href="https://reactjs.org/docs/add-react-to-a-website.html">https://reactjs.org/docs/add-react-to-a-website.html</a></p>
 ]]></content>
       <categories>
-        <category>Fronted</category>
+        <category>Frontend</category>
         <category>React</category>
       </categories>
       <tags>
         <tag>Hello</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>前端 - React 學習 - 002 Jsx 的一些規則</title>
+    <url>/2021/10/19/frontend-react-002-jsx-rule/</url>
+    <content><![CDATA[<ol>
+<li><p>定義虛擬 DOM 時，不要有引號<br>創建虛擬 DOM 時，注意不會將標籤內容加上引號<br>即不需要將下圖黃色區塊額外加上引號</p>
+<img src="/2021/10/19/frontend-react-002-jsx-rule/01.png" class="" title="create virtual DOM NG">
+<p>正確的方式是可以用 <code>&#123; &#125;</code> 將標籤框住</p>
+<img src="/2021/10/19/frontend-react-002-jsx-rule/02.png" class="" title="create virtual DOM OK">
+<span id="more"></span></li>
+<li><p>標籤中混入 js 表達式時，要用 <code>&#123; &#125;</code><br>比如說在 <code>&lt;h1&gt;&lt;/h1&gt;</code>內容要由變數 myData 中取得，<br>則需要寫成底下圖片中的方式 :</p>
+<img src="/2021/10/19/frontend-react-002-jsx-rule/03.png" class="" title="js"></li>
+<li><p>樣式的類名指定不要用 class，要用 className<br>錯誤的方式 :</p>
+<img src="/2021/10/19/frontend-react-002-jsx-rule/04.png" class="" title="class"></li>
+</ol>
+<p>正確的方式 :</p>
+<img src="/2021/10/19/frontend-react-002-jsx-rule/05.png" class="" title="className">
+
+<ol start="4">
+<li><p>內聯樣式要用 <code>style=&#123;&#123;key:value&#125;&#125;</code> 形式書寫<br>如下所示 :</p>
+<img src="/2021/10/19/frontend-react-002-jsx-rule/06.png" class="" title="style"></li>
+<li><p>虛擬 DOM 必須只有一個根標籤<br>不能存在兩個根標籤</p>
+<img src="/2021/10/19/frontend-react-002-jsx-rule/07.png" class="" title="two roots"></li>
+</ol>
+<p>可以用 <code>&lt;div&gt;&lt;/div&gt;</code> 包裹住</p>
+<img src="/2021/10/19/frontend-react-002-jsx-rule/08.png" class="" title="the root">
+
+<ol start="6">
+<li><p>標籤必須閉合<br>即像在 html 中 <code>&lt;input type=&quot;text&quot;&gt;</code> 的寫法是可以的，<br>但是在 jsx 中必須要有結束標籤 <code>&lt;input type=&quot;text&quot;&gt;&lt;/input&gt;</code> 或 <code>&lt;input type=&quot;text&quot;/&gt;</code></p>
+<img src="/2021/10/19/frontend-react-002-jsx-rule/09.png" class="" title="the close"></li>
+<li><p>標籤首字母的意義<br>(1) 若小寫字母開頭，則將改標籤轉為 html 同名元素．若 html 中無該標籤對應的同名元素則報錯．<br>(2) 若大寫字母開頭，React 就會去渲染對應的組件，若組件沒有定義則會報錯．</p>
+</li>
+</ol>
+]]></content>
+      <categories>
+        <category>Frontend</category>
+        <category>React</category>
+      </categories>
+      <tags>
+        <tag>Jsx</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>前端 - React 學習 - 003 jsx 中只能混入 js 表達式</title>
+    <url>/2021/10/19/frontend-react-003-jsx-tag/</url>
+    <content><![CDATA[<p>考量底下的代碼</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/babel&quot;</span>&gt;</span><span class="javascript"></span></span><br><span class="line"><span class="javascript">    <span class="comment">// 1. 創建虛擬 DOM</span></span></span><br><span class="line"><span class="javascript">    <span class="keyword">const</span> VDOM = (</span></span><br><span class="line"><span class="javascript">        <span class="xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span></span><br><span class="line"><span class="xml"><span class="javascript">            <span class="tag">&lt;<span class="name">h1</span>&gt;</span>前端 js 框架列表<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span></span><br><span class="line"><span class="xml"><span class="javascript">            <span class="tag">&lt;<span class="name">ul</span>&gt;</span></span></span></span><br><span class="line"><span class="xml"><span class="javascript">                <span class="tag">&lt;<span class="name">li</span>&gt;</span>Angular<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span></span></span><br><span class="line"><span class="xml"><span class="javascript">                <span class="tag">&lt;<span class="name">li</span>&gt;</span>React<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span></span></span><br><span class="line"><span class="xml"><span class="javascript">                <span class="tag">&lt;<span class="name">li</span>&gt;</span>Vue<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span></span></span><br><span class="line"><span class="xml"><span class="javascript">            <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span></span></span><br><span class="line"><span class="xml"><span class="javascript">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span></span><br><span class="line"><span class="javascript">    )  </span></span><br><span class="line"><span class="javascript">    <span class="comment">// 2. 渲染虛擬 DOM 到頁面上</span></span></span><br><span class="line"><span class="javascript">    ReactDOM.render(VDOM, <span class="built_in">document</span>.getElementById(<span class="string">&#x27;test&#x27;</span>))</span></span><br><span class="line"><span class="javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>若我們想用一個模擬數據 <code>[&#39;Angular&#39;, &#39;React&#39;, &#39;Vue&#39;]</code><br>用來替換掉代碼中寫死的部分，將代碼修改成 :</p>
+<span id="more"></span>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/babel&quot;</span>&gt;</span><span class="javascript"></span></span><br><span class="line"><span class="javascript">    <span class="comment">// 模擬數據</span></span></span><br><span class="line"><span class="javascript">    <span class="keyword">const</span> data = [<span class="string">&#x27;Angular&#x27;</span>, <span class="string">&#x27;React&#x27;</span>, <span class="string">&#x27;Vue&#x27;</span>]</span></span><br><span class="line"><span class="javascript">    <span class="comment">// 1. 創建虛擬 DOM</span></span></span><br><span class="line"><span class="javascript">    <span class="keyword">const</span> VDOM = (</span></span><br><span class="line"><span class="javascript">        <span class="xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span></span><br><span class="line"><span class="xml"><span class="javascript">            <span class="tag">&lt;<span class="name">h1</span>&gt;</span>前端 js 框架列表<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span></span><br><span class="line"><span class="xml"><span class="javascript">            <span class="tag">&lt;<span class="name">ul</span>&gt;</span></span></span></span><br><span class="line"><span class="xml"><span class="javascript">                &#123;data&#125;</span></span></span><br><span class="line"><span class="xml"><span class="javascript">            <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span></span></span><br><span class="line"><span class="xml"><span class="javascript">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span></span><br><span class="line"><span class="javascript">    )  </span></span><br><span class="line"><span class="javascript">    <span class="comment">// 2. 渲染虛擬 DOM 到頁面上</span></span></span><br><span class="line"><span class="javascript">    ReactDOM.render(VDOM, <span class="built_in">document</span>.getElementById(<span class="string">&#x27;test&#x27;</span>))</span></span><br><span class="line"><span class="javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>則在頁面呈現的結果如下 : </p>
+<img src="/2021/10/19/frontend-react-003-jsx-tag/01.png" class="" title="wrong">
+<p>會發現 React 會把 <code>[&#39;Angular&#39;, &#39;React&#39;, &#39;Vue&#39;]</code> 數據一個一個讀出<br>此時若能在裡面寫一個 for 語句將所有的資料一個一個讀出來，如下所示 :</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/babel&quot;</span>&gt;</span><span class="javascript"></span></span><br><span class="line"><span class="javascript">    <span class="comment">// 模擬數據</span></span></span><br><span class="line"><span class="javascript">    <span class="keyword">const</span> data = [<span class="string">&#x27;Angular&#x27;</span>, <span class="string">&#x27;React&#x27;</span>, <span class="string">&#x27;Vue&#x27;</span>]</span></span><br><span class="line"><span class="javascript">    <span class="comment">// 1. 創建虛擬 DOM</span></span></span><br><span class="line"><span class="javascript">    <span class="keyword">const</span> VDOM = (</span></span><br><span class="line"><span class="javascript">        <span class="xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span></span><br><span class="line"><span class="xml"><span class="javascript">            <span class="tag">&lt;<span class="name">h1</span>&gt;</span>前端 js 框架列表<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span></span><br><span class="line"><span class="xml"><span class="javascript">            <span class="tag">&lt;<span class="name">ul</span>&gt;</span></span></span></span><br><span class="line"><span class="xml"><span class="javascript">                for (var i = 0; i &lt; data.length; i++) &#123;</span></span></span><br><span class="line"><span class="xml"><span class="javascript">                    <span class="tag">&lt;<span class="name">li</span>&gt;</span>data[i]<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span></span></span><br><span class="line"><span class="xml"><span class="javascript">                &#125;</span></span></span><br><span class="line"><span class="xml"><span class="javascript">            <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span></span></span><br><span class="line"><span class="xml"><span class="javascript">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span></span><br><span class="line"><span class="javascript">    )  </span></span><br><span class="line"><span class="javascript">    <span class="comment">// 2. 渲染虛擬 DOM 到頁面上</span></span></span><br><span class="line"><span class="javascript">    ReactDOM.render(VDOM, <span class="built_in">document</span>.getElementById(<span class="string">&#x27;test&#x27;</span>))</span></span><br><span class="line"><span class="javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>上面結果會出現語法錯誤，因為此處只能寫 js 表達式，不可以寫 js 語句(代碼)</p>
+<ol>
+<li>表達式 :<br> (1) 變數 a<br> (2) a+b<br> (3) demo(1)<br> (4) arr.map()<br> (5) function test() {}</li>
+<li>語句<br> (1) if 語句<br> (2) for 語句<br> (3) switch 語句</li>
+</ol>
+<p>所以用另一個方法 : 使用 arr.map()</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/babel&quot;</span>&gt;</span><span class="javascript"></span></span><br><span class="line"><span class="javascript">    <span class="comment">// 模擬數據</span></span></span><br><span class="line"><span class="javascript">    <span class="keyword">const</span> data = [<span class="string">&#x27;Angular&#x27;</span>, <span class="string">&#x27;React&#x27;</span>, <span class="string">&#x27;Vue&#x27;</span>]</span></span><br><span class="line"><span class="javascript">    <span class="comment">// 1. 創建虛擬 DOM</span></span></span><br><span class="line"><span class="javascript">    <span class="keyword">const</span> VDOM = (</span></span><br><span class="line"><span class="javascript">        <span class="xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span></span><br><span class="line"><span class="xml"><span class="javascript">            <span class="tag">&lt;<span class="name">h1</span>&gt;</span>前端 js 框架列表<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span></span><br><span class="line"><span class="xml"><span class="javascript">            <span class="tag">&lt;<span class="name">ul</span>&gt;</span></span></span></span><br><span class="line"><span class="xml"><span class="javascript">                data.map((item, index)=&gt;&#123;</span></span></span><br><span class="line"><span class="xml"><span class="javascript">                    return <span class="tag">&lt;<span class="name">li</span> <span class="attr">key</span>=<span class="string">&#123;index&#125;</span>&gt;</span>&#123;item&#125;<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span></span></span><br><span class="line"><span class="xml"><span class="javascript">                &#125;)</span></span></span><br><span class="line"><span class="xml"><span class="javascript">            <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span></span></span><br><span class="line"><span class="xml"><span class="javascript">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span></span><br><span class="line"><span class="javascript">    )  </span></span><br><span class="line"><span class="javascript">    <span class="comment">// 2. 渲染虛擬 DOM 到頁面上</span></span></span><br><span class="line"><span class="javascript">    ReactDOM.render(VDOM, <span class="built_in">document</span>.getElementById(<span class="string">&#x27;test&#x27;</span>))</span></span><br><span class="line"><span class="javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>最後結果如下圖所示 :</p>
+<img src="/2021/10/19/frontend-react-003-jsx-tag/02.png" class="" title="correct">]]></content>
+      <categories>
+        <category>Frontend</category>
+        <category>React</category>
+      </categories>
+      <tags>
+        <tag>Jsx</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>前端 - React 學習 - 004 使用函數建立組件</title>
+    <url>/2021/10/19/frontend-react-004-create-component-by-function/</url>
+    <content><![CDATA[<ol>
+<li><p>創建一個函數<br>底下是錯誤的寫法 : </p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/babel&quot;</span>&gt;</span><span class="javascript"></span></span><br><span class="line"><span class="javascript">    <span class="comment">// 1. 創建函數式組件</span></span></span><br><span class="line"><span class="javascript">    <span class="function"><span class="keyword">function</span> <span class="title">demo</span>(<span class="params"></span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">h2</span>&gt;</span>我是用函數定義的組件<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span></span></span><br><span class="line"><span class="javascript">    &#125;</span></span><br><span class="line"><span class="javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><font color=#FF0000>注意</font> : 首字母必須大寫，否則在標籤引用時會出錯，<br>因為 React 對小寫開頭的標籤會直接對應去找 html 語法中有提供的標籤．</p>
+<span id="more"></span>
+<p>正確的寫法如下 :</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/babel&quot;</span>&gt;</span><span class="javascript"></span></span><br><span class="line"><span class="javascript">    <span class="comment">// 1. 創建函數式組件</span></span></span><br><span class="line"><span class="javascript">    <span class="function"><span class="keyword">function</span> <span class="title">Demo</span>(<span class="params"></span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">h2</span>&gt;</span>我是用函數定義的組件<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span></span></span><br><span class="line"><span class="javascript">    &#125;</span></span><br><span class="line"><span class="javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li><p>渲染到頁面上<br>錯誤的寫法 1 :</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/babel&quot;</span>&gt;</span><span class="javascript"></span></span><br><span class="line"><span class="javascript">    <span class="comment">// 1. 創建函數式組件</span></span></span><br><span class="line"><span class="javascript">    <span class="function"><span class="keyword">function</span> <span class="title">Demo</span>(<span class="params"></span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">h2</span>&gt;</span>我是用函數定義的組件<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span></span></span><br><span class="line"><span class="javascript">    &#125;</span></span><br><span class="line"><span class="javascript">        </span></span><br><span class="line"><span class="javascript">    <span class="comment">// 2. 渲染組件到頁面上</span></span></span><br><span class="line"><span class="javascript">    ReactDOM.render(Demo, <span class="built_in">document</span>.getElementById(<span class="string">&#x27;test&#x27;</span>))</span></span><br><span class="line"><span class="javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>錯誤的寫法 2 :</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/babel&quot;</span>&gt;</span><span class="javascript"></span></span><br><span class="line"><span class="javascript">    <span class="comment">// 1. 創建函數式組件</span></span></span><br><span class="line"><span class="javascript">    <span class="function"><span class="keyword">function</span> <span class="title">Demo</span>(<span class="params"></span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">h2</span>&gt;</span>我是用函數定義的組件<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span></span></span><br><span class="line"><span class="javascript">    &#125;</span></span><br><span class="line"><span class="javascript">        </span></span><br><span class="line"><span class="javascript">    <span class="comment">// 2. 渲染組件到頁面上</span></span></span><br><span class="line"><span class="javascript">    ReactDOM.render(&lt;Demo&gt;, <span class="built_in">document</span>.getElementById(<span class="string">&#x27;test&#x27;</span>))</span></span><br><span class="line"><span class="javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><font color=#FF0000>注意</font> : 要使用標籤形式，且必須是要閉合的<br>正確的寫法如下 :</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/babel&quot;</span>&gt;</span><span class="javascript"></span></span><br><span class="line"><span class="javascript">    <span class="comment">// 1. 創建函數式組件</span></span></span><br><span class="line"><span class="javascript">    <span class="function"><span class="keyword">function</span> <span class="title">Demo</span>(<span class="params"></span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">h2</span>&gt;</span>我是用函數定義的組件<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span></span></span><br><span class="line"><span class="javascript">    &#125;</span></span><br><span class="line"><span class="javascript">        </span></span><br><span class="line"><span class="javascript">    <span class="comment">// 2. 渲染組件到頁面上</span></span></span><br><span class="line"><span class="javascript">    ReactDOM.render(<span class="xml"><span class="tag">&lt;<span class="name">Demo</span>/&gt;</span></span>, <span class="built_in">document</span>.getElementById(<span class="string">&#x27;test&#x27;</span>))</span></span><br><span class="line"><span class="javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<h1 id="結果呈現"><a href="#結果呈現" class="headerlink" title="結果呈現"></a>結果呈現</h1><img src="/2021/10/19/frontend-react-004-create-component-by-function/01.png" class="" title="result">]]></content>
+      <categories>
+        <category>Frontend</category>
+        <category>React</category>
+      </categories>
+      <tags>
+        <tag>Component</tag>
       </tags>
   </entry>
   <entry>

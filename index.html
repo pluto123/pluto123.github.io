@@ -183,6 +183,312 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/10/19/frontend-react-004-create-component-by-function/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Steven Wu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Steven 的學習筆記">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/10/19/frontend-react-004-create-component-by-function/" class="post-title-link" itemprop="url">前端 - React 學習 - 004 使用函數建立組件</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-10-19 23:19:40" itemprop="dateCreated datePublished" datetime="2021-10-19T23:19:40+08:00">2021-10-19</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-10-20 10:14:05" itemprop="dateModified" datetime="2021-10-20T10:14:05+08:00">2021-10-20</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Frontend/" itemprop="url" rel="index"><span itemprop="name">Frontend</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Frontend/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>1.1k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>1 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ol>
+<li><p>創建一個函數<br>底下是錯誤的寫法 : </p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/babel&quot;</span>&gt;</span><span class="javascript"></span></span><br><span class="line"><span class="javascript">    <span class="comment">// 1. 創建函數式組件</span></span></span><br><span class="line"><span class="javascript">    <span class="function"><span class="keyword">function</span> <span class="title">demo</span>(<span class="params"></span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">h2</span>&gt;</span>我是用函數定義的組件<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span></span></span><br><span class="line"><span class="javascript">    &#125;</span></span><br><span class="line"><span class="javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><font color=#FF0000>注意</font> : 首字母必須大寫，否則在標籤引用時會出錯，<br>因為 React 對小寫開頭的標籤會直接對應去找 html 語法中有提供的標籤．</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/10/19/frontend-react-004-create-component-by-function/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/10/19/frontend-react-003-jsx-tag/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Steven Wu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Steven 的學習筆記">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/10/19/frontend-react-003-jsx-tag/" class="post-title-link" itemprop="url">前端 - React 學習 - 003 jsx 中只能混入 js 表達式</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-10-19 22:20:18" itemprop="dateCreated datePublished" datetime="2021-10-19T22:20:18+08:00">2021-10-19</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-10-20 10:14:05" itemprop="dateModified" datetime="2021-10-20T10:14:05+08:00">2021-10-20</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Frontend/" itemprop="url" rel="index"><span itemprop="name">Frontend</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Frontend/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>1.8k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>2 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>考量底下的代碼</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/babel&quot;</span>&gt;</span><span class="javascript"></span></span><br><span class="line"><span class="javascript">    <span class="comment">// 1. 創建虛擬 DOM</span></span></span><br><span class="line"><span class="javascript">    <span class="keyword">const</span> VDOM = (</span></span><br><span class="line"><span class="javascript">        <span class="xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span></span><br><span class="line"><span class="xml"><span class="javascript">            <span class="tag">&lt;<span class="name">h1</span>&gt;</span>前端 js 框架列表<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span></span><br><span class="line"><span class="xml"><span class="javascript">            <span class="tag">&lt;<span class="name">ul</span>&gt;</span></span></span></span><br><span class="line"><span class="xml"><span class="javascript">                <span class="tag">&lt;<span class="name">li</span>&gt;</span>Angular<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span></span></span><br><span class="line"><span class="xml"><span class="javascript">                <span class="tag">&lt;<span class="name">li</span>&gt;</span>React<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span></span></span><br><span class="line"><span class="xml"><span class="javascript">                <span class="tag">&lt;<span class="name">li</span>&gt;</span>Vue<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span></span></span><br><span class="line"><span class="xml"><span class="javascript">            <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span></span></span><br><span class="line"><span class="xml"><span class="javascript">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span></span><br><span class="line"><span class="javascript">    )  </span></span><br><span class="line"><span class="javascript">    <span class="comment">// 2. 渲染虛擬 DOM 到頁面上</span></span></span><br><span class="line"><span class="javascript">    ReactDOM.render(VDOM, <span class="built_in">document</span>.getElementById(<span class="string">&#x27;test&#x27;</span>))</span></span><br><span class="line"><span class="javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>若我們想用一個模擬數據 <code>[&#39;Angular&#39;, &#39;React&#39;, &#39;Vue&#39;]</code><br>用來替換掉代碼中寫死的部分，將代碼修改成 :</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/10/19/frontend-react-003-jsx-tag/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/10/19/frontend-react-002-jsx-rule/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Steven Wu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Steven 的學習筆記">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/10/19/frontend-react-002-jsx-rule/" class="post-title-link" itemprop="url">前端 - React 學習 - 002 Jsx 的一些規則</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-10-19 20:37:48" itemprop="dateCreated datePublished" datetime="2021-10-19T20:37:48+08:00">2021-10-19</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-10-20 10:14:05" itemprop="dateModified" datetime="2021-10-20T10:14:05+08:00">2021-10-20</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Frontend/" itemprop="url" rel="index"><span itemprop="name">Frontend</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Frontend/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>555</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>1 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ol>
+<li><p>定義虛擬 DOM 時，不要有引號<br>創建虛擬 DOM 時，注意不會將標籤內容加上引號<br>即不需要將下圖黃色區塊額外加上引號</p>
+<img src="/2021/10/19/frontend-react-002-jsx-rule/01.png" class="" title="create virtual DOM NG">
+<p>正確的方式是可以用 <code>&#123; &#125;</code> 將標籤框住</p>
+<img src="/2021/10/19/frontend-react-002-jsx-rule/02.png" class="" title="create virtual DOM OK">
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/10/19/frontend-react-002-jsx-rule/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/10/19/tools-blog-hexo-next-statistics-visitor/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -280,7 +586,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/10/17/fronted-react-001-hello-react/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/10/17/frontend-react-001-hello-react/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -294,7 +600,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/10/17/fronted-react-001-hello-react/" class="post-title-link" itemprop="url">前端 - React 學習 - 001 Hello React</a>
+            <a href="/2021/10/17/frontend-react-001-hello-react/" class="post-title-link" itemprop="url">前端 - React 學習 - 001 Hello React</a>
         </h2>
 
         <div class="post-meta">
@@ -311,7 +617,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-10-18 09:55:08" itemprop="dateModified" datetime="2021-10-18T09:55:08+08:00">2021-10-18</time>
+                <time title="Modified: 2021-10-20 10:14:04" itemprop="dateModified" datetime="2021-10-20T10:14:04+08:00">2021-10-20</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -319,11 +625,11 @@
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Fronted/" itemprop="url" rel="index"><span itemprop="name">Fronted</span></a>
+                  <a href="/categories/Frontend/" itemprop="url" rel="index"><span itemprop="name">Frontend</span></a>
                 </span>
                   , 
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Fronted/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
+                  <a href="/categories/Frontend/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
                 </span>
             </span>
 
@@ -353,10 +659,10 @@
 
       
           <h1 id="使用-VS-Code-建立一個專案"><a href="#使用-VS-Code-建立一個專案" class="headerlink" title="使用 VS Code 建立一個專案"></a>使用 VS Code 建立一個專案</h1><p>打開 VS Code 並點選 Open Folder…</p>
-<img src="/2021/10/17/fronted-react-001-hello-react/01.png" class="" title="click Open-Folder">
+<img src="/2021/10/17/frontend-react-001-hello-react/01.png" class="" title="click Open-Folder">
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2021/10/17/fronted-react-001-hello-react/#more" rel="contents">
+              <a class="btn" href="/2021/10/17/frontend-react-001-hello-react/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -411,7 +717,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-10-18 09:48:32" itemprop="dateModified" datetime="2021-10-18T09:48:32+08:00">2021-10-18</time>
+                <time title="Modified: 2021-10-20 10:14:04" itemprop="dateModified" datetime="2021-10-20T10:14:04+08:00">2021-10-20</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -459,12 +765,14 @@
           <h1 id="安裝-hexo-symbols-count-time"><a href="#安裝-hexo-symbols-count-time" class="headerlink" title="安裝 hexo-symbols-count-time"></a>安裝 hexo-symbols-count-time</h1><p>在終端機上輸入</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install hexo-symbols-count-time --save</span><br></pre></td></tr></table></figure>
 <img src="/2021/10/16/tools-blog-hexo-next-symbol-count/01.png" class="" title="install hexo-symbols-count-time">
-
-<h1 id="修改設定檔"><a href="#修改設定檔" class="headerlink" title="修改設定檔"></a>修改設定檔</h1><p>打開 themes/next/_config.yml<br>將 item_text_total 設為 true</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">symbols_count_time:</span><br><span class="line">  separated_meta: <span class="literal">true</span></span><br><span class="line">  item_text_post: <span class="literal">true</span></span><br><span class="line">  item_text_total: <span class="literal">true</span></span><br></pre></td></tr></table></figure>
-<img src="/2021/10/16/tools-blog-hexo-next-symbol-count/02.png" class="" title="enable item_text_total">
-
-<h1 id="效果呈現"><a href="#效果呈現" class="headerlink" title="效果呈現"></a>效果呈現</h1><img src="/2021/10/16/tools-blog-hexo-next-symbol-count/03.png" class="" title="result">
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/10/16/tools-blog-hexo-next-symbol-count/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -514,7 +822,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-10-18 09:48:32" itemprop="dateModified" datetime="2021-10-18T09:48:32+08:00">2021-10-18</time>
+                <time title="Modified: 2021-10-20 10:14:04" itemprop="dateModified" datetime="2021-10-20T10:14:04+08:00">2021-10-20</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -562,12 +870,14 @@
           <h1 id="安裝-hexo-generator-searchdb"><a href="#安裝-hexo-generator-searchdb" class="headerlink" title="安裝 hexo-generator-searchdb"></a>安裝 hexo-generator-searchdb</h1><p>在終端機上輸入</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install hexo-generator-searchdb --save</span><br></pre></td></tr></table></figure>
 <img src="/2021/10/16/tools-blog-hexo-next-search/01.png" class="" title="install hexo-generator-searchdb">
-
-<h1 id="修改設定檔"><a href="#修改設定檔" class="headerlink" title="修改設定檔"></a>修改設定檔</h1><p>打開 themes/next/_config.yml<br>將 local_search 的 enable 設為 true</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">local_search:</span><br><span class="line">  <span class="built_in">enable</span>: <span class="literal">true</span></span><br><span class="line">  trigger: auto</span><br><span class="line">  top_n_per_article: 1</span><br><span class="line">  unescape: <span class="literal">false</span></span><br><span class="line">  preload: <span class="literal">false</span></span><br></pre></td></tr></table></figure>
-<img src="/2021/10/16/tools-blog-hexo-next-search/02.png" class="" title="enable local_search">
-
-<h1 id="效果呈現"><a href="#效果呈現" class="headerlink" title="效果呈現"></a>效果呈現</h1><img src="/2021/10/16/tools-blog-hexo-next-search/03.png" class="" title="result">
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/10/16/tools-blog-hexo-next-search/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -751,7 +1061,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-count">8</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -764,7 +1074,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">6</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -801,13 +1111,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">4k</span>
+    <span title="Symbols count total">8k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
-    <span title="Reading time total">4 mins.</span>
+    <span title="Reading time total">7 mins.</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
   </div>
