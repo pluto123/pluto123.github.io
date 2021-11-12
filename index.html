@@ -95,6 +95,7 @@
       <h1 class="site-title">Steven 的學習筆記</h1>
       <span class="logo-line-after"><i></i></span>
     </a>
+      <p class="site-subtitle" itemprop="description">沒有解決不了的問題<br>只有未找到解決方法</p>
   </div>
 
   <div class="site-nav-right">
@@ -183,6 +184,102 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/11/tip-maven-module-cycles/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Steven Wu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Steven 的學習筆記">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/11/11/tip-maven-module-cycles/" class="post-title-link" itemprop="url">Tip - Java Annotation processing is not supported for module cycles.</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-11-11 15:43:05" itemprop="dateCreated datePublished" datetime="2021-11-11T15:43:05+08:00">2021-11-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-11-12 10:47:57" itemprop="dateModified" datetime="2021-11-12T10:47:57+08:00">2021-11-12</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Tip/" itemprop="url" rel="index"><span itemprop="name">Tip</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>513</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>1 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Java-Annotation-processing-is-not-supported-for-module-cycles"><a href="#Java-Annotation-processing-is-not-supported-for-module-cycles" class="headerlink" title="Java: Annotation processing is not supported for module cycles."></a>Java: Annotation processing is not supported for module cycles.</h1><p>這是因為 Maven Module 中出現依賴循環問題，可以用以下方式檢查並解決。</p>
+<h1 id="檢查方式"><a href="#檢查方式" class="headerlink" title="檢查方式"></a>檢查方式</h1><p>點選【Analyze】下的【Module Dependencies…】打開模組相依視窗。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/11/11/tip-maven-module-cycles/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/11/tip-react-scripts-is-not-a-Command/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -208,7 +305,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2021-11-11 10:07:26 / Modified: 10:37:58" itemprop="dateCreated datePublished" datetime="2021-11-11T10:07:26+08:00">2021-11-11</time>
+              <time title="Created: 2021-11-11 10:07:26 / Modified: 10:41:15" itemprop="dateCreated datePublished" datetime="2021-11-11T10:07:26+08:00">2021-11-11</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -247,11 +344,14 @@
       
           <p>當我們由 Git 庫下載 React 源碼後，第一次啟動<code>npm start</code>會發現以下錯誤 :</p>
 <img src="/2021/11/11/tip-react-scripts-is-not-a-Command/01.png" class="">
-<p>這是因為一般上傳 React 專案時，是不會連該專案所安裝的模組 (下圖黃色框部分) 都上傳，而只是上傳該專案所用的模組設定檔(<code>package.json</code>下圖紅色框部分)，所以我們需要在重新安裝一下。</p>
-<img src="/2021/11/11/tip-react-scripts-is-not-a-Command/02.png" class="">
-<p>解決方式 : 在終端機上輸入<code>npm install</code>進行安裝。</p>
-<img src="/2021/11/11/tip-react-scripts-is-not-a-Command/03.png" class="">
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/11/11/tip-react-scripts-is-not-a-Command/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -1063,107 +1163,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/10/23/frontend-react-022-force-update-life-cycle/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Steven Wu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Steven 的學習筆記">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/10/23/frontend-react-022-force-update-life-cycle/" class="post-title-link" itemprop="url">前端 - React 學習 - 022 組件的生命週期(舊)-強制更新</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-10-23 22:45:57" itemprop="dateCreated datePublished" datetime="2021-10-23T22:45:57+08:00">2021-10-23</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-10-26 10:50:12" itemprop="dateModified" datetime="2021-10-26T10:50:12+08:00">2021-10-26</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Frontend/" itemprop="url" rel="index"><span itemprop="name">Frontend</span></a>
-                </span>
-                  , 
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Frontend/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>1.3k</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>1 mins.</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>組件的生命週期圖</p>
-<img src="/2021/10/23/frontend-react-022-force-update-life-cycle/01.png" class="" title="life cycle">
-<p>演示第四種，當按下強制更新按鈕時就會直接呼叫<code>forceUpdate()</code>進行更新。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/10/23/frontend-react-022-force-update-life-cycle/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1233,7 +1232,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">35</span>
+          <span class="site-state-item-count">36</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -1246,7 +1245,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-count">18</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -1291,7 +1290,7 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">84k</span>
+    <span title="Symbols count total">85k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
