@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="使用 axios 對 GitHib 發起 Ajax 請求若不熟悉者，請參考前篇文章【前端 - React 學習 - 028 To Do List】的實作步驟．這邊有引入bootstrap.css，一般這種第三方 CSS，最好的方式就是在 public 下建立一個 css 目錄統一擺放，然後在index.html引入． 123456789101112&lt;!DOCTYPE html&gt;&amp;lt">
+<meta property="og:type" content="article">
+<meta property="og:title" content="前端 - React 學習 - 029 Github Search">
+<meta property="og:url" content="http://example.com/2021/11/14/frontend-react-029-github-search/index.html">
+<meta property="og:site_name" content="Steven 的學習筆記">
+<meta property="og:description" content="使用 axios 對 GitHib 發起 Ajax 請求若不熟悉者，請參考前篇文章【前端 - React 學習 - 028 To Do List】的實作步驟．這邊有引入bootstrap.css，一般這種第三方 CSS，最好的方式就是在 public 下建立一個 css 目錄統一擺放，然後在index.html引入． 123456789101112&lt;!DOCTYPE html&gt;&amp;lt">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2021/11/14/frontend-react-029-github-search/01.png">
+<meta property="og:image" content="http://example.com/2021/11/14/frontend-react-029-github-search/02.png">
+<meta property="og:image" content="http://example.com/2021/11/14/frontend-react-029-github-search/03.png">
+<meta property="article:published_time" content="2021-11-14T11:21:39.000Z">
+<meta property="article:modified_time" content="2021-11-15T01:14:03.752Z">
+<meta property="article:author" content="Steven Wu">
+<meta property="article:tag" content="axios">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2021/11/14/frontend-react-029-github-search/01.png">
+
+<link rel="canonical" href="http://example.com/2021/11/14/frontend-react-029-github-search/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>前端 - React 學習 - 029 Github Search | Steven 的學習筆記</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Steven 的學習筆記</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">沒有解決不了的問題<br>只有未找到解決方法</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/14/frontend-react-029-github-search/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Steven Wu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Steven 的學習筆記">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          前端 - React 學習 - 029 Github Search
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-11-14 19:21:39" itemprop="dateCreated datePublished" datetime="2021-11-14T19:21:39+08:00">2021-11-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-11-15 09:14:03" itemprop="dateModified" datetime="2021-11-15T09:14:03+08:00">2021-11-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Frontend/" itemprop="url" rel="index"><span itemprop="name">Frontend</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Frontend/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>9.1k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>8 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="使用-axios-對-GitHib-發起-Ajax-請求"><a href="#使用-axios-對-GitHib-發起-Ajax-請求" class="headerlink" title="使用 axios 對 GitHib 發起 Ajax 請求"></a>使用 axios 對 GitHib 發起 Ajax 請求</h1><p>若不熟悉者，請參考前篇文章【前端 - React 學習 - 028 To Do List】的實作步驟．這邊有引入<code>bootstrap.css</code>，一般這種第三方 CSS，最好的方式就是在 public 下建立一個 css 目錄統一擺放，然後在<code>index.html</code>引入．</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;utf-8&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">&quot;icon&quot;</span> <span class="attr">href</span>=<span class="string">&quot;%PUBLIC_URL%/favicon.ico&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">&quot;stylesheet&quot;</span> <span class="attr">href</span>=<span class="string">&quot;./css/bootstrap.css&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Github Search<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;root&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<span id="more"></span>
+<p>App.jsx</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123;Component&#125; <span class="keyword">from</span> <span class="string">&quot;react&quot;</span></span><br><span class="line"><span class="keyword">import</span> List <span class="keyword">from</span> <span class="string">&quot;./components/List&quot;</span></span><br><span class="line"><span class="keyword">import</span> Search <span class="keyword">from</span> <span class="string">&quot;./components/Search&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> <span class="title">App</span> <span class="keyword">extends</span> <span class="title">Component</span></span>&#123;</span><br><span class="line">  <span class="function"><span class="title">render</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      <span class="xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;container&quot;</span>&gt;</span></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;<span class="name">Search</span> /&gt;</span></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;<span class="name">List</span> /&gt;</span></span></span><br><span class="line"><span class="xml">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>components/Search/index.jsx</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React, &#123; Component &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> <span class="title">Search</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="title">render</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> (</span><br><span class="line">            <span class="xml"><span class="tag">&lt;<span class="name">section</span> <span class="attr">className</span>=<span class="string">&quot;jumbotron&quot;</span>&gt;</span></span></span><br><span class="line"><span class="xml">                <span class="tag">&lt;<span class="name">h3</span> <span class="attr">className</span>=<span class="string">&quot;jumbotron-heading&quot;</span>&gt;</span>Search Github Users<span class="tag">&lt;/<span class="name">h3</span>&gt;</span></span></span><br><span class="line"><span class="xml">                <span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="xml">                    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">placeholder</span>=<span class="string">&quot;enter the name you search&quot;</span>/&gt;</span><span class="symbol">&amp;nbsp;</span></span></span><br><span class="line"><span class="xml">                    <span class="tag">&lt;<span class="name">button</span>&gt;</span>Search<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="xml">                <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="xml">            <span class="tag">&lt;/<span class="name">section</span>&gt;</span></span></span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>components/List/index.jsx</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React, &#123; Component &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">&#x27;./index.css&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> <span class="title">List</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="title">render</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> (</span><br><span class="line">            <span class="xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;row&quot;</span>&gt;</span></span></span><br><span class="line"><span class="xml">                <span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;card&quot;</span>&gt;</span></span></span><br><span class="line"><span class="xml">                    <span class="tag">&lt;<span class="name">a</span> <span class="attr">rel</span>=<span class="string">&quot;noreferrer&quot;</span> <span class="attr">href</span>=<span class="string">&quot;https://github.com/reactjs&quot;</span> <span class="attr">target</span>=<span class="string">&quot;_blank&quot;</span>&gt;</span></span></span><br><span class="line"><span class="xml">                        <span class="tag">&lt;<span class="name">img</span> <span class="attr">alt</span>=<span class="string">&quot;head_portrait&quot;</span> <span class="attr">src</span>=<span class="string">&quot;https://avatars.githubusercontent.com/u/6412038?v=3&quot;</span> <span class="attr">style</span>=<span class="string">&#123;&#123;width:</span> &#x27;<span class="attr">100px</span>&#x27;&#125;&#125;/&gt;</span></span></span><br><span class="line"><span class="xml">                    <span class="tag">&lt;/<span class="name">a</span>&gt;</span></span></span><br><span class="line"><span class="xml">                    <span class="tag">&lt;<span class="name">p</span> <span class="attr">className</span>=<span class="string">&quot;card-text&quot;</span>&gt;</span>reactjs<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="xml">                <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="xml">                <span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;card&quot;</span>&gt;</span></span></span><br><span class="line"><span class="xml">                    <span class="tag">&lt;<span class="name">a</span> <span class="attr">rel</span>=<span class="string">&quot;noreferrer&quot;</span> <span class="attr">href</span>=<span class="string">&quot;https://github.com/reactjs&quot;</span> <span class="attr">target</span>=<span class="string">&quot;_blank&quot;</span>&gt;</span></span></span><br><span class="line"><span class="xml">                        <span class="tag">&lt;<span class="name">img</span> <span class="attr">alt</span>=<span class="string">&quot;head_portrait&quot;</span> <span class="attr">src</span>=<span class="string">&quot;https://avatars.githubusercontent.com/u/6412038?v=3&quot;</span> <span class="attr">style</span>=<span class="string">&#123;&#123;width:</span> &#x27;<span class="attr">100px</span>&#x27;&#125;&#125;/&gt;</span></span></span><br><span class="line"><span class="xml">                    <span class="tag">&lt;/<span class="name">a</span>&gt;</span></span></span><br><span class="line"><span class="xml">                    <span class="tag">&lt;<span class="name">p</span> <span class="attr">className</span>=<span class="string">&quot;card-text&quot;</span>&gt;</span>reactjs<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="xml">                <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="xml">                <span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;card&quot;</span>&gt;</span></span></span><br><span class="line"><span class="xml">                    <span class="tag">&lt;<span class="name">a</span> <span class="attr">rel</span>=<span class="string">&quot;noreferrer&quot;</span> <span class="attr">href</span>=<span class="string">&quot;https://github.com/reactjs&quot;</span> <span class="attr">target</span>=<span class="string">&quot;_blank&quot;</span>&gt;</span></span></span><br><span class="line"><span class="xml">                        <span class="tag">&lt;<span class="name">img</span> <span class="attr">alt</span>=<span class="string">&quot;head_portrait&quot;</span> <span class="attr">src</span>=<span class="string">&quot;https://avatars.githubusercontent.com/u/6412038?v=3&quot;</span> <span class="attr">style</span>=<span class="string">&#123;&#123;width:</span> &#x27;<span class="attr">100px</span>&#x27;&#125;&#125;/&gt;</span></span></span><br><span class="line"><span class="xml">                    <span class="tag">&lt;/<span class="name">a</span>&gt;</span></span></span><br><span class="line"><span class="xml">                    <span class="tag">&lt;<span class="name">p</span> <span class="attr">className</span>=<span class="string">&quot;card-text&quot;</span>&gt;</span>reactjs<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="xml">                <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="xml">                <span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;card&quot;</span>&gt;</span></span></span><br><span class="line"><span class="xml">                    <span class="tag">&lt;<span class="name">a</span> <span class="attr">rel</span>=<span class="string">&quot;noreferrer&quot;</span> <span class="attr">href</span>=<span class="string">&quot;https://github.com/reactjs&quot;</span> <span class="attr">target</span>=<span class="string">&quot;_blank&quot;</span>&gt;</span></span></span><br><span class="line"><span class="xml">                        <span class="tag">&lt;<span class="name">img</span> <span class="attr">alt</span>=<span class="string">&quot;head_portrait&quot;</span> <span class="attr">src</span>=<span class="string">&quot;https://avatars.githubusercontent.com/u/6412038?v=3&quot;</span> <span class="attr">style</span>=<span class="string">&#123;&#123;width:</span> &#x27;<span class="attr">100px</span>&#x27;&#125;&#125;/&gt;</span></span></span><br><span class="line"><span class="xml">                    <span class="tag">&lt;/<span class="name">a</span>&gt;</span></span></span><br><span class="line"><span class="xml">                    <span class="tag">&lt;<span class="name">p</span> <span class="attr">className</span>=<span class="string">&quot;card-text&quot;</span>&gt;</span>reactjs<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="xml">                <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="xml">                <span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;card&quot;</span>&gt;</span></span></span><br><span class="line"><span class="xml">                    <span class="tag">&lt;<span class="name">a</span> <span class="attr">rel</span>=<span class="string">&quot;noreferrer&quot;</span> <span class="attr">href</span>=<span class="string">&quot;https://github.com/reactjs&quot;</span> <span class="attr">target</span>=<span class="string">&quot;_blank&quot;</span>&gt;</span></span></span><br><span class="line"><span class="xml">                        <span class="tag">&lt;<span class="name">img</span> <span class="attr">alt</span>=<span class="string">&quot;head_portrait&quot;</span> <span class="attr">src</span>=<span class="string">&quot;https://avatars.githubusercontent.com/u/6412038?v=3&quot;</span> <span class="attr">style</span>=<span class="string">&#123;&#123;width:</span> &#x27;<span class="attr">100px</span>&#x27;&#125;&#125;/&gt;</span></span></span><br><span class="line"><span class="xml">                    <span class="tag">&lt;/<span class="name">a</span>&gt;</span></span></span><br><span class="line"><span class="xml">                    <span class="tag">&lt;<span class="name">p</span> <span class="attr">className</span>=<span class="string">&quot;card-text&quot;</span>&gt;</span>reactjs<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="xml">                <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="xml">            <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>components/List/index.css</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.album</span> &#123;</span><br><span class="line">    <span class="attribute">min-height</span>: <span class="number">50rem</span>; <span class="comment">/* Can be removed; just added for demo purposes */</span></span><br><span class="line">    <span class="attribute">padding-top</span>: <span class="number">3rem</span>;</span><br><span class="line">    <span class="attribute">padding-bottom</span>: <span class="number">3rem</span>;</span><br><span class="line">    <span class="attribute">background-color</span>: <span class="number">#f7f7f7</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line"><span class="selector-class">.card</span> &#123;</span><br><span class="line">    <span class="attribute">float</span>: left;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">33.333%</span>;</span><br><span class="line">    <span class="attribute">padding</span>: .<span class="number">75rem</span>;</span><br><span class="line">    <span class="attribute">margin-bottom</span>: <span class="number">2rem</span>;</span><br><span class="line">    <span class="attribute">border</span>: <span class="number">1px</span> solid <span class="number">#efefef</span>;</span><br><span class="line">    <span class="attribute">text-align</span>: center;</span><br><span class="line">&#125;</span><br><span class="line">  </span><br><span class="line"><span class="selector-class">.card</span> &gt; <span class="selector-tag">img</span> &#123;</span><br><span class="line">    <span class="attribute">margin-bottom</span>: .<span class="number">75rem</span>;</span><br><span class="line">    <span class="attribute">border-radius</span>: <span class="number">100px</span>;</span><br><span class="line">&#125;</span><br><span class="line">  </span><br><span class="line"><span class="selector-class">.card-text</span> &#123;</span><br><span class="line">    <span class="attribute">font-size</span>: <span class="number">85%</span>;</span><br><span class="line">&#125;  </span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>設定 Search 按鈕回調函數<br>components/Search/index.jsx</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React, &#123; Component &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> <span class="title">Search</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    search = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">        <span class="comment">// 獲取用戶的輸入</span></span><br><span class="line">        <span class="comment">//const &#123;value&#125; = this.keyWordElement</span></span><br><span class="line">        <span class="comment">//const &#123;keyWordElement:&#123;value&#125;&#125; = this  // 連續解構賦值</span></span><br><span class="line">        <span class="keyword">const</span> &#123;<span class="attr">keyWordElement</span>:&#123;<span class="attr">value</span>:keyWord&#125;&#125; = <span class="built_in">this</span>  <span class="comment">// 連續解構賦值並重命名為 keyWord</span></span><br><span class="line">        <span class="built_in">console</span>.log(keyWord)</span><br><span class="line">        <span class="comment">// 發送網路請求</span></span><br><span class="line">        axios.get(<span class="string">`https://api.github.com/search/users?q=<span class="subst">$&#123;keyWord&#125;</span>`</span>).then(</span><br><span class="line">            <span class="function"><span class="params">response</span> =&gt;</span> &#123;<span class="built_in">console</span>.log(<span class="string">&#x27;成功&#x27;</span>, response.data)&#125;,</span><br><span class="line">            <span class="function"><span class="params">error</span> =&gt;</span> &#123;<span class="built_in">console</span>.log(<span class="string">&#x27;失敗&#x27;</span>, error)&#125;</span><br><span class="line">        )</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="title">render</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> (</span><br><span class="line">            <span class="xml"><span class="tag">&lt;<span class="name">section</span> <span class="attr">className</span>=<span class="string">&quot;jumbotron&quot;</span>&gt;</span></span></span><br><span class="line"><span class="xml">                <span class="tag">&lt;<span class="name">h3</span> <span class="attr">className</span>=<span class="string">&quot;jumbotron-heading&quot;</span>&gt;</span>Search Github Users<span class="tag">&lt;/<span class="name">h3</span>&gt;</span></span></span><br><span class="line"><span class="xml">                <span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="xml">                    <span class="tag">&lt;<span class="name">input</span> <span class="attr">ref</span>=<span class="string">&#123;c</span> =&gt;</span> this.keyWordElement = c&#125; type=&quot;text&quot; placeholder=&quot;enter the name you search&quot;/&gt;<span class="symbol">&amp;nbsp;</span></span></span><br><span class="line"><span class="xml">                    <span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>=<span class="string">&#123;this.search&#125;</span>&gt;</span>Search<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="xml">                <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="xml">            <span class="tag">&lt;/<span class="name">section</span>&gt;</span></span></span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>將搜索出的資料透過父組件 App 傳遞給子組件 List<br>在 App.jsx 中初始化狀態，設定回呼函數給 Search 組件更新狀態，並透過 props 傳遞給 List 組件．</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123;Component&#125; <span class="keyword">from</span> <span class="string">&quot;react&quot;</span></span><br><span class="line"><span class="keyword">import</span> List <span class="keyword">from</span> <span class="string">&quot;./components/List&quot;</span></span><br><span class="line"><span class="keyword">import</span> Search <span class="keyword">from</span> <span class="string">&quot;./components/Search&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> <span class="title">App</span> <span class="keyword">extends</span> <span class="title">Component</span></span>&#123;</span><br><span class="line">  state = &#123;</span><br><span class="line">    <span class="attr">users</span>:[]</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  saveUsers = <span class="function">(<span class="params">users</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">this</span>.setState(&#123;users&#125;)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="title">render</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123;users&#125; = <span class="built_in">this</span>.state</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      <span class="xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;container&quot;</span>&gt;</span></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;<span class="name">Search</span> <span class="attr">saveUsers</span>=<span class="string">&#123;this.saveUsers&#125;/</span>&gt;</span></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;<span class="name">List</span> <span class="attr">users</span>=<span class="string">&#123;users&#125;/</span>&gt;</span></span></span><br><span class="line"><span class="xml">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在 Search 組件中取得 GitHub 資料後進行呼叫<code>saveUsers()</code>將資料儲存到 App 組件</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React, &#123; Component &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> axios <span class="keyword">from</span> <span class="string">&#x27;axios&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> <span class="title">Search</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">    search = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">        ...</span><br><span class="line">        axios.get(<span class="string">`https://api.github.com/search/users?q=<span class="subst">$&#123;keyWord&#125;</span>`</span>).then(</span><br><span class="line">            <span class="function"><span class="params">response</span> =&gt;</span> &#123;</span><br><span class="line">                <span class="built_in">console</span>.log(<span class="string">&#x27;成功&#x27;</span>, response.data)</span><br><span class="line">                <span class="built_in">this</span>.props.saveUsers(response.data.items)</span><br><span class="line">            &#125;,</span><br><span class="line">            <span class="function"><span class="params">error</span> =&gt;</span> &#123;<span class="built_in">console</span>.log(<span class="string">&#x27;失敗&#x27;</span>, error)&#125;</span><br><span class="line">        )</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最後將資料傳遞給 List 組件做展示</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React, &#123; Component &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">&#x27;./index.css&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> <span class="title">List</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="title">render</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> (</span><br><span class="line">            <span class="xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;row&quot;</span>&gt;</span></span></span><br><span class="line"><span class="xml">                &#123;</span></span><br><span class="line"><span class="xml">                    this.props.users.map((userObj) =&gt; &#123;</span></span><br><span class="line"><span class="xml">                        return (</span></span><br><span class="line"><span class="xml">                            <span class="tag">&lt;<span class="name">div</span> <span class="attr">key</span>=<span class="string">&#123;userObj.id&#125;</span> <span class="attr">className</span>=<span class="string">&quot;card&quot;</span>&gt;</span></span></span><br><span class="line"><span class="xml">                                <span class="tag">&lt;<span class="name">a</span> <span class="attr">rel</span>=<span class="string">&quot;noreferrer&quot;</span> <span class="attr">href</span>=<span class="string">&#123;userObj.html_url&#125;</span> <span class="attr">target</span>=<span class="string">&quot;_blank&quot;</span>&gt;</span></span></span><br><span class="line"><span class="xml">                                    <span class="tag">&lt;<span class="name">img</span> <span class="attr">alt</span>=<span class="string">&quot;head_portrait&quot;</span> <span class="attr">src</span>=<span class="string">&#123;userObj.avatar_url&#125;</span> <span class="attr">style</span>=<span class="string">&#123;&#123;width:</span> &#x27;<span class="attr">100px</span>&#x27;&#125;&#125;/&gt;</span></span></span><br><span class="line"><span class="xml">                                <span class="tag">&lt;/<span class="name">a</span>&gt;</span></span></span><br><span class="line"><span class="xml">                                <span class="tag">&lt;<span class="name">p</span> <span class="attr">className</span>=<span class="string">&quot;card-text&quot;</span>&gt;</span>&#123;userObj.login&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="xml">                            <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="xml">                        )</span></span><br><span class="line"><span class="xml">                    &#125;)</span></span><br><span class="line"><span class="xml">            &#125;</span></span><br><span class="line"><span class="xml">            <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>結果呈現 ：</p>
+<img src="/2021/11/14/frontend-react-029-github-search/01.png" class="" title="01.png"></li>
+<li><p>完善List 組件<br>List 組件除了要顯示查詢出的使用者之外，還要在不同的情況下顯示提示訊息，如 : 初次進入的提示訊息、查詢中的提示及錯誤提示…等．所以我們在 App.jsx 的<code>state</code>中新增加<code>isFirst</code>欄位用於記錄是否是初次進入，<code>isLoading</code>欄位用於識別是否處於加載中，而<code>err</code>用於記錄錯誤訊息．</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> <span class="title">App</span> <span class="keyword">extends</span> <span class="title">Component</span></span>&#123;</span><br><span class="line">  state = &#123;</span><br><span class="line">    <span class="attr">users</span>:[],  <span class="comment">// 儲存查詢出的使用者資訊</span></span><br><span class="line">    <span class="attr">isFirst</span>: <span class="literal">true</span>,  <span class="comment">// 是否第一次進入</span></span><br><span class="line">    <span class="attr">isLoading</span>: <span class="literal">false</span>,  <span class="comment">// 識別是否處於加載中</span></span><br><span class="line">    <span class="attr">err</span>: <span class="string">&#x27;&#x27;</span>  <span class="comment">// 紀錄請求錯誤訊息</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  updateAppState = <span class="function">(<span class="params">stateObj</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">this</span>.setState(stateObj)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="title">render</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      <span class="xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;container&quot;</span>&gt;</span></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;<span class="name">Search</span> <span class="attr">updateAppState</span>=<span class="string">&#123;this.updateAppState&#125;/</span>&gt;</span></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;<span class="name">List</span> &#123;<span class="attr">...this.state</span>&#125;/&gt;</span></span></span><br><span class="line"><span class="xml">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><font color="#FF0000">注意:</font> 使用批量傳入方式(<code>&lt;List &#123;...this.state&#125;/&gt;</code>)將狀態傳給 Ｌist 組件</p>
+</li>
+</ul>
+<p>修改 Search 組件，處理各種情境下的狀態，並使用新的回調函數<code>updateAppState</code>更新 App 的 state</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> <span class="title">Search</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">    search = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">        <span class="comment">// 獲取用戶的輸入</span></span><br><span class="line">        <span class="keyword">const</span> &#123;<span class="attr">keyWordElement</span>:&#123;<span class="attr">value</span>:keyWord&#125;&#125; = <span class="built_in">this</span>  <span class="comment">// 連續解構賦值並重命名為 keyWord</span></span><br><span class="line">        <span class="comment">// 發送請求前更新 App 狀態</span></span><br><span class="line">        <span class="built_in">this</span>.props.updateAppState(&#123;<span class="attr">isFirst</span>:<span class="literal">false</span>, <span class="attr">isLoading</span>:<span class="literal">true</span>&#125;)</span><br><span class="line">        <span class="comment">// 發送網路請求</span></span><br><span class="line">        axios.get(<span class="string">`https://api.github.com/search/users?q=<span class="subst">$&#123;keyWord&#125;</span>`</span>).then(</span><br><span class="line">            <span class="function"><span class="params">response</span> =&gt;</span> &#123;</span><br><span class="line">                <span class="comment">// 請求成功後更新 App 狀態</span></span><br><span class="line">                <span class="built_in">this</span>.props.updateAppState(&#123;<span class="attr">isLoading</span>:<span class="literal">false</span>, <span class="attr">users</span>:response.data.items&#125;)</span><br><span class="line">            &#125;,</span><br><span class="line">            <span class="function"><span class="params">error</span> =&gt;</span> &#123;</span><br><span class="line">                <span class="comment">// 請求成功後更新 App 狀態</span></span><br><span class="line">                <span class="built_in">this</span>.props.updateAppState(&#123;<span class="attr">isLoading</span>:<span class="literal">false</span>, <span class="attr">err</span>:error.message&#125;)</span><br><span class="line">            &#125;</span><br><span class="line">        )</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><font color="#FF0000">注意:</font>在錯誤時必須是儲存 error 的 message 資訊，否則在錯誤時會出現底下畫面 :</p>
+<img src="/2021/11/14/frontend-react-029-github-search/02.png" class="" title="02.png">
+<p>我們想要的結果如下 :</p>
+<img src="/2021/11/14/frontend-react-029-github-search/03.png" class="" title="03.png">
+<p>接著依據不同情境在 List 組件顯示出不一樣的結果</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> <span class="title">List</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="title">render</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">        <span class="keyword">const</span> &#123;users, isFirst, isLoading, err&#125; = <span class="built_in">this</span>.props</span><br><span class="line">        <span class="keyword">return</span> (</span><br><span class="line">            <span class="xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;row&quot;</span>&gt;</span></span></span><br><span class="line"><span class="xml">                &#123;</span></span><br><span class="line"><span class="xml">                    isFirst ? <span class="tag">&lt;<span class="name">h2</span>&gt;</span>Enter user name to search<span class="tag">&lt;/<span class="name">h2</span>&gt;</span> :</span></span><br><span class="line"><span class="xml">                    isLoading ? <span class="tag">&lt;<span class="name">h2</span>&gt;</span>Loading...<span class="tag">&lt;/<span class="name">h2</span>&gt;</span> :</span></span><br><span class="line"><span class="xml">                    err ? <span class="tag">&lt;<span class="name">h2</span> <span class="attr">style</span>=<span class="string">&#123;&#123;color:</span>&#x27;<span class="attr">red</span>&#x27;&#125;&#125;&gt;</span>&#123;err&#125;<span class="tag">&lt;/<span class="name">h2</span>&gt;</span> :</span></span><br><span class="line"><span class="xml">                    users.map((userObj) =&gt; &#123;</span></span><br><span class="line"><span class="xml">                        return (</span></span><br><span class="line"><span class="xml">                            <span class="tag">&lt;<span class="name">div</span> <span class="attr">key</span>=<span class="string">&#123;userObj.id&#125;</span> <span class="attr">className</span>=<span class="string">&quot;card&quot;</span>&gt;</span></span></span><br><span class="line"><span class="xml">                                <span class="tag">&lt;<span class="name">a</span> <span class="attr">rel</span>=<span class="string">&quot;noreferrer&quot;</span> <span class="attr">href</span>=<span class="string">&#123;userObj.html_url&#125;</span> <span class="attr">target</span>=<span class="string">&quot;_blank&quot;</span>&gt;</span></span></span><br><span class="line"><span class="xml">                                    <span class="tag">&lt;<span class="name">img</span> <span class="attr">alt</span>=<span class="string">&quot;head_portrait&quot;</span> <span class="attr">src</span>=<span class="string">&#123;userObj.avatar_url&#125;</span> <span class="attr">style</span>=<span class="string">&#123;&#123;width:</span> &#x27;<span class="attr">100px</span>&#x27;&#125;&#125;/&gt;</span></span></span><br><span class="line"><span class="xml">                                <span class="tag">&lt;/<span class="name">a</span>&gt;</span></span></span><br><span class="line"><span class="xml">                                <span class="tag">&lt;<span class="name">p</span> <span class="attr">className</span>=<span class="string">&quot;card-text&quot;</span>&gt;</span>&#123;userObj.login&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="xml">                            <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="xml">                        )</span></span><br><span class="line"><span class="xml">                    &#125;)</span></span><br><span class="line"><span class="xml">            &#125;</span></span><br><span class="line"><span class="xml">            <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><font color="#FF0000">注意:</font>因為在 JSX 中不可以寫 JS 語句，只可以寫表達式，所以要用 if 語句時，就要使用三元表達式代替．</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/axios/" rel="tag"># axios</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/11/11/tip-maven-module-cycles/" rel="prev" title="Tip - Java Annotation processing is not supported for module cycles.">
+      <i class="fa fa-chevron-left"></i> Tip - Java Annotation processing is not supported for module cycles.
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-axios-%E5%B0%8D-GitHib-%E7%99%BC%E8%B5%B7-Ajax-%E8%AB%8B%E6%B1%82"><span class="nav-number">1.</span> <span class="nav-text">使用 axios 對 GitHib 發起 Ajax 請求</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Steven Wu</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">37</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/pluto123" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;pluto123" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:yuh.chang.wu@gmail.com" title="E-Mail → mailto:yuh.chang.wu@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Steven Wu</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">94k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">1:25</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span><br></span>	
+
+<span class="post-meta-item-icon">
+    <i class="fa fa-users"></i>
+</span>
+<span>總訪客：&nbsp<span id="busuanzi_value_site_uv"><i class="fa fa-spinner fa-spin"></i></span>&nbsp人</span>
+    <span class="post-meta-divider">|</span>
+<span class="post-meta-item-icon">
+    <i class="fa fa-eye"></i>
+</span>
+<span>總訪問量：&nbsp<span id="busuanzi_value_site_pv"><i class="fa fa-spinner fa-spin"></i></span>&nbsp次</span>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '4930808f816a28eedad7',
+      clientSecret: '20b0570483dc737ad14b42abc3ab1866089ce63e',
+      repo        : 'pluto123.github.io',
+      owner       : 'pluto123',
+      admin       : ['pluto123'],
+      id          : '52c070d11d450feb3ae19f8d6b885442',
+        language: 'zh-TW',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>
