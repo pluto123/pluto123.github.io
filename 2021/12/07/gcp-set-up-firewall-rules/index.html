@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5G1RK23V7S"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-5G1RK23V7S');
+</script>
+  <meta name="description" content="防火牆規則設定選擇一個專案，由他的 Dashboard 中進入 Compute Engine   點選 Set up firewall rules 設定防火牆規則   點選 CREATE FIREWALL RULE 建立新的防火牆規則   輸入 Name and Description，依需要設定其他部分   而 Targets 有三種選項 :   All instances in the net">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GCP - 設定防火牆規則">
+<meta property="og:url" content="http://example.com/2021/12/07/gcp-set-up-firewall-rules/index.html">
+<meta property="og:site_name" content="Steven 的學習筆記">
+<meta property="og:description" content="防火牆規則設定選擇一個專案，由他的 Dashboard 中進入 Compute Engine   點選 Set up firewall rules 設定防火牆規則   點選 CREATE FIREWALL RULE 建立新的防火牆規則   輸入 Name and Description，依需要設定其他部分   而 Targets 有三種選項 :   All instances in the net">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2021/12/07/gcp-set-up-firewall-rules/01.png">
+<meta property="og:image" content="http://example.com/2021/12/07/gcp-set-up-firewall-rules/02.png">
+<meta property="og:image" content="http://example.com/2021/12/07/gcp-set-up-firewall-rules/03.png">
+<meta property="og:image" content="http://example.com/2021/12/07/gcp-set-up-firewall-rules/04.png">
+<meta property="og:image" content="http://example.com/2021/12/07/gcp-set-up-firewall-rules/05.png">
+<meta property="og:image" content="http://example.com/2021/12/07/gcp-set-up-firewall-rules/06.png">
+<meta property="og:image" content="http://example.com/2021/12/07/gcp-set-up-firewall-rules/07.png">
+<meta property="og:image" content="http://example.com/2021/12/07/gcp-set-up-firewall-rules/08.png">
+<meta property="og:image" content="http://example.com/2021/12/07/gcp-set-up-firewall-rules/09.png">
+<meta property="og:image" content="http://example.com/2021/12/07/gcp-set-up-firewall-rules/10.png">
+<meta property="og:image" content="http://example.com/2021/12/07/gcp-set-up-firewall-rules/11.png">
+<meta property="og:image" content="http://example.com/2021/12/07/gcp-set-up-firewall-rules/12.png">
+<meta property="og:image" content="http://example.com/2021/12/07/gcp-set-up-firewall-rules/13.png">
+<meta property="og:image" content="http://example.com/2021/12/07/gcp-set-up-firewall-rules/14.png">
+<meta property="article:published_time" content="2021-12-07T03:17:04.000Z">
+<meta property="article:modified_time" content="2021-12-07T03:53:17.279Z">
+<meta property="article:author" content="Steven Wu">
+<meta property="article:tag" content="Firewall">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2021/12/07/gcp-set-up-firewall-rules/01.png">
+
+<link rel="canonical" href="http://example.com/2021/12/07/gcp-set-up-firewall-rules/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>GCP - 設定防火牆規則 | Steven 的學習筆記</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5G1RK23V7S"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-5G1RK23V7S');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Steven 的學習筆記</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">沒有解決不了的問題<br>只有未找到解決方法</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/12/07/gcp-set-up-firewall-rules/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Steven Wu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Steven 的學習筆記">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          GCP - 設定防火牆規則
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-12-07 11:17:04 / Modified: 11:53:17" itemprop="dateCreated datePublished" datetime="2021-12-07T11:17:04+08:00">2021-12-07</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/GCP/" itemprop="url" rel="index"><span itemprop="name">GCP</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>568</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>1 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="防火牆規則設定"><a href="#防火牆規則設定" class="headerlink" title="防火牆規則設定"></a>防火牆規則設定</h1><p>選擇一個專案，由他的 Dashboard 中進入 Compute Engine</p>
+<img src="/2021/12/07/gcp-set-up-firewall-rules/01.png" class="" title="01.png">
+
+<p>點選 Set up firewall rules 設定防火牆規則</p>
+<img src="/2021/12/07/gcp-set-up-firewall-rules/02.png" class="" title="02.png">
+
+<p>點選 CREATE FIREWALL RULE 建立新的防火牆規則</p>
+<img src="/2021/12/07/gcp-set-up-firewall-rules/03.png" class="" title="03.png">
+
+<p>輸入 Name and Description，依需要設定其他部分</p>
+<img src="/2021/12/07/gcp-set-up-firewall-rules/04.png" class="" title="04.png">
+
+<p>而 Targets 有三種選項 :</p>
+<img src="/2021/12/07/gcp-set-up-firewall-rules/05.png" class="" title="05.png">
+<ol>
+<li>All instances in the network : 建立一個規則讓所有連上網路的實例使用</li>
+<li>Specified target tags : 建立帶有 TAG 的規則讓有需要的實例使用</li>
+<li>Specified service account : 為某個服務建立規則使用<br>這邊使用建立一個 tag 為 mysql-server 的防火牆規則，並且使用 <code>0.0.0.0/0</code> 不限定來源 ip 範圍<img src="/2021/12/07/gcp-set-up-firewall-rules/06.png" class="" title="06.png">
+<span id="more"></span>
+設定允許哪個 PORT 讓哪種封包通過<img src="/2021/12/07/gcp-set-up-firewall-rules/07.png" class="" title="07.png"></li>
+</ol>
+<p>按下 CREATE 後，可以看見規則已經被建立好了，但是還沒有被我們的 Compute Engine 所引用</p>
+<img src="/2021/12/07/gcp-set-up-firewall-rules/08.png" class="" title="08.png">
+
+<h1 id="引用防火牆規則"><a href="#引用防火牆規則" class="headerlink" title="引用防火牆規則"></a>引用防火牆規則</h1><p>回到 Compute Engine 中，點選要設定防火牆規則的 instance</p>
+<img src="/2021/12/07/gcp-set-up-firewall-rules/09.png" class="" title="09.png">
+
+<p>點擊 EDIT 進行修改</p>
+<img src="/2021/12/07/gcp-set-up-firewall-rules/10.png" class="" title="10.png">
+
+<p>往下滑，找到 Firewalls 下的 Network tahs 加入剛剛建立的防火牆規則 <code>mysql-server</code></p>
+<img src="/2021/12/07/gcp-set-up-firewall-rules/11.png" class="" title="11.png">
+
+<p>記得往下滑到底，按下 SAVE</p>
+<img src="/2021/12/07/gcp-set-up-firewall-rules/12.png" class="" title="12.png">
+
+<h1 id="檢查"><a href="#檢查" class="headerlink" title="檢查"></a>檢查</h1><p>回到 VPC network 的 Firewall 中，點選防火牆規則 <code>mysql-server</code></p>
+<img src="/2021/12/07/gcp-set-up-firewall-rules/13.png" class="" title="13.png">
+
+<p>滑到最底下就可以看到有哪些 instance 有使用此規則</p>
+<img src="/2021/12/07/gcp-set-up-firewall-rules/14.png" class="" title="14.png">
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Firewall/" rel="tag"># Firewall</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/12/05/docker-install-mysql/" rel="prev" title="安裝 MySQL 使用 Docker">
+      <i class="fa fa-chevron-left"></i> 安裝 MySQL 使用 Docker
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%98%B2%E7%81%AB%E7%89%86%E8%A6%8F%E5%89%87%E8%A8%AD%E5%AE%9A"><span class="nav-number">1.</span> <span class="nav-text">防火牆規則設定</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%95%E7%94%A8%E9%98%B2%E7%81%AB%E7%89%86%E8%A6%8F%E5%89%87"><span class="nav-number">2.</span> <span class="nav-text">引用防火牆規則</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%AA%A2%E6%9F%A5"><span class="nav-number">3.</span> <span class="nav-text">檢查</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Steven Wu</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">68</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">49</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/pluto123" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;pluto123" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:yuh.chang.wu@gmail.com" title="E-Mail → mailto:yuh.chang.wu@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Steven Wu</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">183k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">2:46</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span><br></span>	
+
+<span class="post-meta-item-icon">
+    <i class="fa fa-users"></i>
+</span>
+<span>總訪客：&nbsp<span id="busuanzi_value_site_uv"><i class="fa fa-spinner fa-spin"></i></span>&nbsp人</span>
+    <span class="post-meta-divider">|</span>
+<span class="post-meta-item-icon">
+    <i class="fa fa-eye"></i>
+</span>
+<span>總訪問量：&nbsp<span id="busuanzi_value_site_pv"><i class="fa fa-spinner fa-spin"></i></span>&nbsp次</span>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '4930808f816a28eedad7',
+      clientSecret: '20b0570483dc737ad14b42abc3ab1866089ce63e',
+      repo        : 'pluto123.github.io',
+      owner       : 'pluto123',
+      admin       : ['pluto123'],
+      id          : '990d4d1c587096985c65c55936ae5660',
+        language: 'zh-TW',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>

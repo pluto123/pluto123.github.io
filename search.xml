@@ -2192,4 +2192,101 @@ or<figure class="highlight shell"><table><tr><td class="code"><pre><span class="
         <tag>configuration</tag>
       </tags>
   </entry>
+  <entry>
+    <title>安裝 MySQL 使用 Docker</title>
+    <url>/2021/12/05/docker-install-mysql/</url>
+    <content><![CDATA[<h1 id="查看適合的映像檔版本並下載"><a href="#查看適合的映像檔版本並下載" class="headerlink" title="查看適合的映像檔版本並下載"></a>查看適合的映像檔版本並下載</h1><p>查看 Docker Hub 中的 <a href="https://hub.docker.com/_/mysql">MySQL</a>，可以先看 Tags 分頁中選擇一版本</p>
+<img src="/2021/12/05/docker-install-mysql/01.png" class="" title="01.png">
+<span id="more"></span>
+<p>我選擇 5.7.36 版，使用以下命令下載 image file</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> docker pull mysql:5.7.36</span></span><br></pre></td></tr></table></figure>
+<img src="/2021/12/05/docker-install-mysql/02.png" class="" title="02.png">
+
+<h1 id="建立資料-volume"><a href="#建立資料-volume" class="headerlink" title="建立資料 volume"></a>建立資料 volume</h1><p>MySQL 有三個地方可綁定 volume</p>
+<ol>
+<li>資料 : <code>/var/lib/mysql</code></li>
+<li>設定 : <code>/etc/mysql</code><br>預設設定檔在 <code>/etc/mysql/my.cnf</code></li>
+<li>日誌 : <code>/var/log/mysql</code><br>建立三個資料 volume 用來擺放 MySQL 相關資料，<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo docker volume create mysql_data</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo docker volume create mysql_conf</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo docker volume create mysql_logs</span></span><br></pre></td></tr></table></figure>
+<img src="/2021/12/05/docker-install-mysql/03.png" class="" title="03.png"></li>
+</ol>
+<h1 id="啟動容器"><a href="#啟動容器" class="headerlink" title="啟動容器"></a>啟動容器</h1><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo docker run -d -p 3306:3306 \</span></span><br><span class="line"><span class="bash">-v mysql_data:/var/lib/mysql \</span></span><br><span class="line"><span class="bash">-v mysql_conf:/etc/mysql \</span></span><br><span class="line"><span class="bash">-v mysql_logs:/var/<span class="built_in">log</span>/mysql \</span></span><br><span class="line"><span class="bash">--name mysql -e MYSQL_ROOT_PASSWORD=your_password \</span></span><br><span class="line"><span class="bash">--restart always mysql:5.7.36</span></span><br></pre></td></tr></table></figure>
+<img src="/2021/12/05/docker-install-mysql/04.png" class="" title="04.png">
+
+<h1 id="檢查安裝"><a href="#檢查安裝" class="headerlink" title="檢查安裝"></a>檢查安裝</h1><p>除了使用以下命令查看容器是否建立成功外，</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo docker ps</span></span><br></pre></td></tr></table></figure>
+<p>也可以使用底下命令進入容器中</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ sudo docker exec -it mysql bash</span><br></pre></td></tr></table></figure>
+<p>或是使用 MySQL Client 連線</p>
+<img src="/2021/12/05/docker-install-mysql/05.png" class="" title="05.png">
+
+<p><font color="#FF0000">注意 : 若使用 MySQL 版本為 8 以上 </font><br>如果出現以下錯誤，則表示不允許遠端登入</p>
+<img src="/2021/12/05/docker-install-mysql/06.png" class="" title="06.png">
+<p>則需要使用以下命令先進入容器中，</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo docker <span class="built_in">exec</span> -it mysql bash</span></span><br></pre></td></tr></table></figure>
+<p>接著輸入</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">mysql&gt;</span><span class="bash"> ALTER USER root IDENTIFIED WITH mysql_native_password BY <span class="string">&#x27;your_password&#x27;</span>;</span></span><br></pre></td></tr></table></figure>
+<p>就可以透過 MySQL Client 登入<br>若是使用 MySQL 版本為 5 的，則進入容器中的 MySQL 命令列使用以下命令，</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">mysql&gt;</span><span class="bash"> GRANT ALL PRIVILEGES ON *.* to <span class="string">&#x27;root&#x27;</span>@<span class="string">&#x27;%&#x27;</span> IDENTIFIED BY <span class="string">&#x27;your_password&#x27;</span>;</span></span><br></pre></td></tr></table></figure>
+
+<p><font color="#FF0000">注意 : 若是使用 GCP 建立 MySQL 的話，還需要開始防火牆，請參照</font></p>
+<p><font color="#FF0000">注意 : 網路連線，尤其是公司網路，連不上時試試用手機網路</font></p>
+]]></content>
+      <categories>
+        <category>Docker</category>
+      </categories>
+      <tags>
+        <tag>MySQL</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>GCP - 設定防火牆規則</title>
+    <url>/2021/12/07/gcp-set-up-firewall-rules/</url>
+    <content><![CDATA[<h1 id="防火牆規則設定"><a href="#防火牆規則設定" class="headerlink" title="防火牆規則設定"></a>防火牆規則設定</h1><p>選擇一個專案，由他的 Dashboard 中進入 Compute Engine</p>
+<img src="/2021/12/07/gcp-set-up-firewall-rules/01.png" class="" title="01.png">
+
+<p>點選 Set up firewall rules 設定防火牆規則</p>
+<img src="/2021/12/07/gcp-set-up-firewall-rules/02.png" class="" title="02.png">
+
+<p>點選 CREATE FIREWALL RULE 建立新的防火牆規則</p>
+<img src="/2021/12/07/gcp-set-up-firewall-rules/03.png" class="" title="03.png">
+
+<p>輸入 Name and Description，依需要設定其他部分</p>
+<img src="/2021/12/07/gcp-set-up-firewall-rules/04.png" class="" title="04.png">
+
+<p>而 Targets 有三種選項 :</p>
+<img src="/2021/12/07/gcp-set-up-firewall-rules/05.png" class="" title="05.png">
+<ol>
+<li>All instances in the network : 建立一個規則讓所有連上網路的實例使用</li>
+<li>Specified target tags : 建立帶有 TAG 的規則讓有需要的實例使用</li>
+<li>Specified service account : 為某個服務建立規則使用<br>這邊使用建立一個 tag 為 mysql-server 的防火牆規則，並且使用 <code>0.0.0.0/0</code> 不限定來源 ip 範圍<img src="/2021/12/07/gcp-set-up-firewall-rules/06.png" class="" title="06.png">
+<span id="more"></span>
+設定允許哪個 PORT 讓哪種封包通過<img src="/2021/12/07/gcp-set-up-firewall-rules/07.png" class="" title="07.png"></li>
+</ol>
+<p>按下 CREATE 後，可以看見規則已經被建立好了，但是還沒有被我們的 Compute Engine 所引用</p>
+<img src="/2021/12/07/gcp-set-up-firewall-rules/08.png" class="" title="08.png">
+
+<h1 id="引用防火牆規則"><a href="#引用防火牆規則" class="headerlink" title="引用防火牆規則"></a>引用防火牆規則</h1><p>回到 Compute Engine 中，點選要設定防火牆規則的 instance</p>
+<img src="/2021/12/07/gcp-set-up-firewall-rules/09.png" class="" title="09.png">
+
+<p>點擊 EDIT 進行修改</p>
+<img src="/2021/12/07/gcp-set-up-firewall-rules/10.png" class="" title="10.png">
+
+<p>往下滑，找到 Firewalls 下的 Network tahs 加入剛剛建立的防火牆規則 <code>mysql-server</code></p>
+<img src="/2021/12/07/gcp-set-up-firewall-rules/11.png" class="" title="11.png">
+
+<p>記得往下滑到底，按下 SAVE</p>
+<img src="/2021/12/07/gcp-set-up-firewall-rules/12.png" class="" title="12.png">
+
+<h1 id="檢查"><a href="#檢查" class="headerlink" title="檢查"></a>檢查</h1><p>回到 VPC network 的 Firewall 中，點選防火牆規則 <code>mysql-server</code></p>
+<img src="/2021/12/07/gcp-set-up-firewall-rules/13.png" class="" title="13.png">
+
+<p>滑到最底下就可以看到有哪些 instance 有使用此規則</p>
+<img src="/2021/12/07/gcp-set-up-firewall-rules/14.png" class="" title="14.png">]]></content>
+      <categories>
+        <category>GCP</category>
+      </categories>
+      <tags>
+        <tag>Firewall</tag>
+      </tags>
+  </entry>
 </search>
