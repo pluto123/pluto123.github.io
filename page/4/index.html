@@ -202,7 +202,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/15/frontend-react-030-pass-message-use-pubsubjs/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/26/frontend-react-set-state-detail/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -216,7 +216,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/11/15/frontend-react-030-pass-message-use-pubsubjs/" class="post-title-link" itemprop="url">前端 - React 學習 - 030 使用 PubSubJS 在兄弟間傳遞訊息</a>
+            <a href="/2021/11/26/frontend-react-set-state-detail/" class="post-title-link" itemprop="url">前端 - React 學習 - setState() 進階說明</a>
         </h2>
 
         <div class="post-meta">
@@ -226,14 +226,14 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2021-11-15 10:31:32" itemprop="dateCreated datePublished" datetime="2021-11-15T10:31:32+08:00">2021-11-15</time>
+              <time title="Created: 2021-11-26 21:48:25" itemprop="dateCreated datePublished" datetime="2021-11-26T21:48:25+08:00">2021-11-26</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-11-16 17:11:27" itemprop="dateModified" datetime="2021-11-16T17:11:27+08:00">2021-11-16</time>
+                <time title="Modified: 2021-12-03 13:12:41" itemprop="dateModified" datetime="2021-12-03T13:12:41+08:00">2021-12-03</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -255,14 +255,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>1.9k</span>
+              <span>663</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>2 mins.</span>
+              <span>1 mins.</span>
             </span>
 
         </div>
@@ -274,11 +274,13 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="兄弟間傳遞消息"><a href="#兄弟間傳遞消息" class="headerlink" title="兄弟間傳遞消息"></a>兄弟間傳遞消息</h1><p>之前要在兄弟間傳遞訊息，都需要透過父組件幫忙傳遞，現在我們引入一個簡單的消息訂閱機制<a target="_blank" rel="noopener" href="https://github.com/mroderick/PubSubJS">PubSubJS</a>來幫助我們達成兄弟間訊息的傳遞。<br>我們延續前一篇文章的專案，並引入 PubSubJS 取代之前透過父組件 App 傳送訊息。<br>安裝 PubSubJS :</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install pubsub-js</span><br></pre></td></tr></table></figure>
+          <h1 id="setState-的兩種更新方式"><a href="#setState-的兩種更新方式" class="headerlink" title="setState() 的兩種更新方式"></a>setState() 的兩種更新方式</h1><ol>
+<li>使用對象<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">add = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123;count&#125; = <span class="built_in">this</span>.state</span><br><span class="line">    <span class="built_in">this</span>.setState(&#123;<span class="attr">count</span>:count+<span class="number">1</span>&#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>使用函數<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">minus = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">this</span>.setState(<span class="function">(<span class="params">state, props</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> &#123;<span class="attr">count</span>:state.count-<span class="number">1</span>&#125;</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+使用時機 :<br>如果新狀態跟前次狀態無關，則使用對象方式<br>如果新狀態跟前次狀態有關，則使用函數方式
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2021/11/15/frontend-react-030-pass-message-use-pubsubjs/#more" rel="contents">
+              <a class="btn" href="/2021/11/26/frontend-react-set-state-detail/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -302,7 +304,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/14/frontend-react-029-github-search/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/25/frontend-react-material-ui-library/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -316,7 +318,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/11/14/frontend-react-029-github-search/" class="post-title-link" itemprop="url">前端 - React 學習 - 029 Github Search</a>
+            <a href="/2021/11/25/frontend-react-material-ui-library/" class="post-title-link" itemprop="url">前端 - React UI 庫 - 使用 Material</a>
         </h2>
 
         <div class="post-meta">
@@ -326,14 +328,14 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2021-11-14 19:21:39" itemprop="dateCreated datePublished" datetime="2021-11-14T19:21:39+08:00">2021-11-14</time>
+              <time title="Created: 2021-11-25 11:26:49" itemprop="dateCreated datePublished" datetime="2021-11-25T11:26:49+08:00">2021-11-25</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-11-15 10:32:09" itemprop="dateModified" datetime="2021-11-15T10:32:09+08:00">2021-11-15</time>
+                <time title="Modified: 2021-12-30 10:32:52" itemprop="dateModified" datetime="2021-12-30T10:32:52+08:00">2021-12-30</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -355,103 +357,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>9.1k</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>8 mins.</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="使用-axios-對-GitHib-發起-Ajax-請求"><a href="#使用-axios-對-GitHib-發起-Ajax-請求" class="headerlink" title="使用 axios 對 GitHib 發起 Ajax 請求"></a>使用 axios 對 GitHib 發起 Ajax 請求</h1><p>若不熟悉者，請參考前篇文章【前端 - React 學習 - 028 To Do List】的實作步驟．這邊有引入<code>bootstrap.css</code>，一般這種第三方 CSS，最好的方式就是在 public 下建立一個 css 目錄統一擺放，然後在<code>index.html</code>引入．</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;utf-8&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">&quot;icon&quot;</span> <span class="attr">href</span>=<span class="string">&quot;%PUBLIC_URL%/favicon.ico&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">&quot;stylesheet&quot;</span> <span class="attr">href</span>=<span class="string">&quot;./css/bootstrap.css&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Github Search<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;root&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/11/14/frontend-react-029-github-search/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/11/tip-maven-module-cycles/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Steven Wu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Steven 的學習筆記">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/11/11/tip-maven-module-cycles/" class="post-title-link" itemprop="url">Tip - Java Annotation processing is not supported for module cycles.</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-11-11 15:43:05" itemprop="dateCreated datePublished" datetime="2021-11-11T15:43:05+08:00">2021-11-11</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-11-12 10:47:57" itemprop="dateModified" datetime="2021-11-12T10:47:57+08:00">2021-11-12</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Tip/" itemprop="url" rel="index"><span itemprop="name">Tip</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>513</span>
+              <span>651</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
@@ -470,11 +376,15 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="Java-Annotation-processing-is-not-supported-for-module-cycles"><a href="#Java-Annotation-processing-is-not-supported-for-module-cycles" class="headerlink" title="Java: Annotation processing is not supported for module cycles."></a>Java: Annotation processing is not supported for module cycles.</h1><p>這是因為 Maven Module 中出現依賴循環問題，可以用以下方式檢查並解決。</p>
-<h1 id="檢查方式"><a href="#檢查方式" class="headerlink" title="檢查方式"></a>檢查方式</h1><p>點選【Analyze】下的【Module Dependencies…】打開模組相依視窗。</p>
+          <h1 id="React-UI-library-Material-介紹"><a href="#React-UI-library-Material-介紹" class="headerlink" title="React UI library - Material 介紹"></a>React UI library - Material 介紹</h1><p><a target="_blank" rel="noopener" href="https://mui.com/">Material 官網</a><br>Live Demo 資源:<br><a target="_blank" rel="noopener" href="https://fonts.google.com/specimen/Roboto#standard-styles">Roboto font</a><br><a target="_blank" rel="noopener" href="https://fonts.google.com/icons">Font icons</a><br><a target="_blank" rel="noopener" href="https://mui.com/components/icons/">SVG icons</a></p>
+<ul>
+<li>安裝 v5.x<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> npm install @mui/material @emotion/react @emotion/styled</span></span><br></pre></td></tr></table></figure>
+or<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> npm install @mui/material @mui/styled-engine-sc styled-components</span></span><br></pre></td></tr></table></figure></li>
+<li>安裝 v4.x<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> npm install @material-ui/core@next @emotion/react @emotion/styled</span></span><br></pre></td></tr></table></figure>
+or<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> npm install @material-ui/core@next @material-ui/styled-engine-sc@next styled-components</span></span><br></pre></td></tr></table></figure>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2021/11/11/tip-maven-module-cycles/#more" rel="contents">
+              <a class="btn" href="/2021/11/25/frontend-react-material-ui-library/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -498,7 +408,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/11/tip-react-scripts-is-not-a-Command/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/24/frontend-react-041-react-redux-share-data/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -512,190 +422,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/11/11/tip-react-scripts-is-not-a-Command/" class="post-title-link" itemprop="url">Tip - 'react-scripts' 不是內部或外部命令、可執行的程式或批次檔。</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2021-11-11 10:07:26 / Modified: 10:41:15" itemprop="dateCreated datePublished" datetime="2021-11-11T10:07:26+08:00">2021-11-11</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Tip/" itemprop="url" rel="index"><span itemprop="name">Tip</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>162</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>1 mins.</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>當我們由 Git 庫下載 React 源碼後，第一次啟動<code>npm start</code>會發現以下錯誤 :</p>
-<img src="/2021/11/11/tip-react-scripts-is-not-a-Command/01.png" class="">
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/11/11/tip-react-scripts-is-not-a-Command/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/09/frontend-axios-002-request-cancel-interceptor/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Steven Wu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Steven 的學習筆記">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/11/09/frontend-axios-002-request-cancel-interceptor/" class="post-title-link" itemprop="url">前端 - axios 學習 - 002 取消請求和攔截器的使用</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2021-11-09 13:39:24 / Modified: 15:16:19" itemprop="dateCreated datePublished" datetime="2021-11-09T13:39:24+08:00">2021-11-09</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Frontend/" itemprop="url" rel="index"><span itemprop="name">Frontend</span></a>
-                </span>
-                  , 
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Frontend/Axios/" itemprop="url" rel="index"><span itemprop="name">Axios</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>2.8k</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>3 mins.</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="取消請求"><a href="#取消請求" class="headerlink" title="取消請求"></a>取消請求</h1><p>首先使用<code>new axios.CancelToken()</code>讓一個全局變數<code>cancel</code>接收取消函數，並將其返回值設定給<code>axios()</code>中的<code>cancelToken</code>屬性。<br>當需要取消請求時，可以藉由全局變數<code>cancel</code>取消。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/11/09/frontend-axios-002-request-cancel-interceptor/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/08/frontend-axios-001-basic-usage/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Steven Wu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Steven 的學習筆記">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/11/08/frontend-axios-001-basic-usage/" class="post-title-link" itemprop="url">前端 - axios 學習 - 001 Promise based 的 HTTP 請求工具</a>
+            <a href="/2021/11/24/frontend-react-041-react-redux-share-data/" class="post-title-link" itemprop="url">前端 - React 學習 - 041 react-redux 容器間共享數據</a>
         </h2>
 
         <div class="post-meta">
@@ -705,7 +432,7 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2021-11-08 13:39:07" itemprop="dateCreated datePublished" datetime="2021-11-08T13:39:07+08:00">2021-11-08</time>
+              <time title="Created: 2021-11-24 22:45:22" itemprop="dateCreated datePublished" datetime="2021-11-24T22:45:22+08:00">2021-11-24</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
@@ -724,7 +451,7 @@
                 </span>
                   , 
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Frontend/Axios/" itemprop="url" rel="index"><span itemprop="name">Axios</span></a>
+                  <a href="/categories/Frontend/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
                 </span>
             </span>
 
@@ -734,14 +461,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>5.8k</span>
+              <span>9.3k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>5 mins.</span>
+              <span>8 mins.</span>
             </span>
 
         </div>
@@ -753,11 +480,12 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>axios 是一個輕量級的 ajax 請求工具，是基於 Promise 開發而成的。在一些非 JQuery 的框架中，如 : React、VUE … 等，是一個非常好的工具。</p>
-<h1 id="事前準備"><a href="#事前準備" class="headerlink" title="事前準備"></a>事前準備</h1><p>因為需要與後端伺服器互動，所以我們先需要準備一個模擬伺服器，讓我們傳送 hTTP 請求時，可以傳回一些假資料讓我們互動測試，所以我們使用 Json Server。<br><a target="_blank" rel="noopener" href="https://github.com/typicode/json-server">Json Server</a></p>
+          <h1 id="在容器組件之間共享數據"><a href="#在容器組件之間共享數據" class="headerlink" title="在容器組件之間共享數據"></a>在容器組件之間共享數據</h1><p>整個專案的目錄結構如下 :</p>
+<img src="/2021/11/24/frontend-react-041-react-redux-share-data/01.png" class="" title="01.png">
+<p>通常都是將 UI 組件的靜態頁面寫好，接著擴展動態操作，根據操作將 action、reducer 及 store 寫好，最後把 UI 組件透過 connect() 變成容器組件．</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2021/11/08/frontend-axios-001-basic-usage/#more" rel="contents">
+              <a class="btn" href="/2021/11/24/frontend-react-041-react-redux-share-data/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -781,7 +509,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/10/30/frontend-react-028-to-do-list/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/23/linux-ubuntu-install-java-eclipse/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -795,7 +523,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/10/30/frontend-react-028-to-do-list/" class="post-title-link" itemprop="url">前端 - React 學習 - 028 To Do List</a>
+            <a href="/2021/11/23/linux-ubuntu-install-java-eclipse/" class="post-title-link" itemprop="url">在 Ubuntu 下安裝 JDK 及 Eclipse</a>
         </h2>
 
         <div class="post-meta">
@@ -804,27 +532,21 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
+              
 
-              <time title="Created: 2021-10-30 15:24:07" itemprop="dateCreated datePublished" datetime="2021-10-30T15:24:07+08:00">2021-10-30</time>
+              <time title="Created: 2021-11-23 14:50:19 / Modified: 15:26:57" itemprop="dateCreated datePublished" datetime="2021-11-23T14:50:19+08:00">2021-11-23</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-11-15 09:14:03" itemprop="dateModified" datetime="2021-11-15T09:14:03+08:00">2021-11-15</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Frontend/" itemprop="url" rel="index"><span itemprop="name">Frontend</span></a>
+                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
                 </span>
                   , 
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Frontend/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
+                  <a href="/categories/Linux/Ubuntu/" itemprop="url" rel="index"><span itemprop="name">Ubuntu</span></a>
                 </span>
             </span>
 
@@ -834,14 +556,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>23k</span>
+              <span>1.1k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>21 mins.</span>
+              <span>1 mins.</span>
             </span>
 
         </div>
@@ -853,10 +575,14 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="步驟一-靜態頁面-html"><a href="#步驟一-靜態頁面-html" class="headerlink" title="步驟一 - 靜態頁面 html"></a>步驟一 - 靜態頁面 html</h1><p>如果是初學者或是由舊有的項目轉成 react 時，先不要管組件的拆分，先把原先項目的 html 標籤都集中放在 App.jsx 中．<br>假設原先項目的 index.html 如下 :</p>
+          <h1 id="安裝流程"><a href="#安裝流程" class="headerlink" title="安裝流程"></a>安裝流程</h1><ul>
+<li><p>新增一個 PPA</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo add-apt-repository ppa:webupd8team/java</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo apt-get update</span></span><br></pre></td></tr></table></figure></li>
+<li><p>依照自己需要的 Java 版本安裝<br>安裝 Oracle JDK 6</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo apt-get install oracle-java6-installer  <span class="comment"># 安裝 Oracle JDK 6</span></span></span><br></pre></td></tr></table></figure>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2021/10/30/frontend-react-028-to-do-list/#more" rel="contents">
+              <a class="btn" href="/2021/11/23/linux-ubuntu-install-java-eclipse/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -880,7 +606,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/10/29/frontend-react-027-create-react-app/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/23/linux-install-jdk/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -894,7 +620,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/10/29/frontend-react-027-create-react-app/" class="post-title-link" itemprop="url">前端 - React 學習 - 027 使用 create-react-app 搭建 React 與目錄說明</a>
+            <a href="/2021/11/23/linux-install-jdk/" class="post-title-link" itemprop="url">如何在 Linux 上安裝 JDK</a>
         </h2>
 
         <div class="post-meta">
@@ -904,14 +630,14 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2021-10-29 18:43:50" itemprop="dateCreated datePublished" datetime="2021-10-29T18:43:50+08:00">2021-10-29</time>
+              <time title="Created: 2021-11-23 14:12:28" itemprop="dateCreated datePublished" datetime="2021-11-23T14:12:28+08:00">2021-11-23</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-11-08 10:55:35" itemprop="dateModified" datetime="2021-11-08T10:55:35+08:00">2021-11-08</time>
+                <time title="Modified: 2021-12-03 13:13:48" itemprop="dateModified" datetime="2021-12-03T13:13:48+08:00">2021-12-03</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -919,11 +645,7 @@
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Frontend/" itemprop="url" rel="index"><span itemprop="name">Frontend</span></a>
-                </span>
-                  , 
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Frontend/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
+                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
                 </span>
             </span>
 
@@ -933,14 +655,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>3k</span>
+              <span>866</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>3 mins.</span>
+              <span>1 mins.</span>
             </span>
 
         </div>
@@ -952,12 +674,13 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="使用-create-react-app-搭建專案"><a href="#使用-create-react-app-搭建專案" class="headerlink" title="使用 create-react-app 搭建專案"></a>使用 create-react-app 搭建專案</h1><ul>
-<li>使用 npm 安裝 create-react-app :<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install -g create-react-app</span><br></pre></td></tr></table></figure>
-<img src="/2021/10/29/frontend-react-027-create-react-app/01.png" class="">
+          <h1 id="下載-JDK-並解壓縮"><a href="#下載-JDK-並解壓縮" class="headerlink" title="下載 JDK 並解壓縮"></a>下載 JDK 並解壓縮</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> /opt/</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> wget --no-cookies --no-check-certificate --header <span class="string">&quot;Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie&quot;</span> <span class="string">&quot;http://download.oracle.com/otn-pub/java/jdk/8u161-b12/2f38c3b165be4555a1fa6e98c45e0808/jdk-8u161-linux-x64.tar.gz&quot;</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> tar xzf jdk-8u161-linux-x64.tar.gz</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="使用-alternatives-進行安裝"><a href="#使用-alternatives-進行安裝" class="headerlink" title="使用 alternatives 進行安裝"></a>使用 alternatives 進行安裝</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> /opt/jdk1.8.0_161/</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> alternatives --install /usr/bin/java java /opt/jdk1.8.0_161/bin/java 2</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> alternatives --config java</span></span><br></pre></td></tr></table></figure>
+<img src="/2021/11/23/linux-install-jdk/01.png" class="" title="01.png">
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2021/10/29/frontend-react-027-create-react-app/#more" rel="contents">
+              <a class="btn" href="/2021/11/23/linux-install-jdk/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -981,7 +704,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/10/24/frontend-react-026-diffing-key/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/23/database-foreign-key-updated-rule/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -995,7 +718,95 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/10/24/frontend-react-026-diffing-key/" class="post-title-link" itemprop="url">前端 - React 學習 - 026 Diffing 演算法與 key 的作用</a>
+            <a href="/2021/11/23/database-foreign-key-updated-rule/" class="post-title-link" itemprop="url">外鍵更新規則</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-11-23 13:56:00 / Modified: 14:01:02" itemprop="dateCreated datePublished" datetime="2021-11-23T13:56:00+08:00">2021-11-23</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Database/" itemprop="url" rel="index"><span itemprop="name">Database</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>186</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>1 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>一般外鍵更新的規則有以下四種 :</p>
+<ol>
+<li>CASCADE<br>只要被參考的欄位被刪除或更新，則對應的外鍵欄位也要一併被刪除或更新。                                    </li>
+<li>RESTRICT<br>只要有被參考到，則禁止刪除或更新。</li>
+<li>NO ACTION<br>被參考的欄位被更新或刪除，當作外鍵的欄位不做任何動作，直到根據外鍵做參考時才會發現錯誤。</li>
+<li>SET NULL<br>被參考的欄位被更新或刪除，則被當作外鍵的欄位將被設定為NULL，而外鍵欄位必需要被允許為空。</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/22/frontend-react-040-react-redux/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Steven Wu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Steven 的學習筆記">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/11/22/frontend-react-040-react-redux/" class="post-title-link" itemprop="url">前端 - React 學習 - 040 react-redux</a>
         </h2>
 
         <div class="post-meta">
@@ -1005,14 +816,14 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2021-10-24 13:39:16" itemprop="dateCreated datePublished" datetime="2021-10-24T13:39:16+08:00">2021-10-24</time>
+              <time title="Created: 2021-11-22 22:17:37" itemprop="dateCreated datePublished" datetime="2021-11-22T22:17:37+08:00">2021-11-22</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-10-26 09:55:14" itemprop="dateModified" datetime="2021-10-26T09:55:14+08:00">2021-10-26</time>
+                <time title="Modified: 2021-12-03 13:15:21" itemprop="dateModified" datetime="2021-12-03T13:15:21+08:00">2021-12-03</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1034,14 +845,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>3.7k</span>
+              <span>9.9k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>3 mins.</span>
+              <span>9 mins.</span>
             </span>
 
         </div>
@@ -1053,10 +864,13 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>Diffing 演算法是 React 用來比較新舊虛擬 DOM 之間是否有差異，而 React 只會針對有不同的標籤進行頁面更新．而比較的方式就是透過標籤上的 key 屬性進行第一次比對，若是相等則繼續看其內容是否也一樣，否則當作不一樣．<br>詳細說明一下動作流程 :<br>&emsp;&emsp;當 state 中的數據發生改變時，React 會根據新的 state 產生『新虛擬 DOM』，隨後透過 Diffing 演算法進行『新虛擬 DOM』和『舊虛擬 DOM』的比較．<br>比較的規則如下 :<br>&emsp;&emsp;依序拿『新虛擬 DOM』的標籤中的 key 值，到『舊虛擬 DOM』中尋找是否有相同的 key 值:<br>&emsp;&emsp;&emsp;&emsp;(1) 若有找到相同者 :<br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;進行虛擬 DOM 內容比較 :<br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;(1) 若相同，直接使用之前的真實 DOM<br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;(2) 不相同，生成新的真實 DOM 替換掉之前的<br>&emsp;&emsp;&emsp;&emsp;(2) 沒有者到相同者 :<br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;生成新的真實 DOM<br>因為標籤是有套嵌的，所以要一直遞迴地往下比較．</p>
+          <h1 id="redux-和-react-redux"><a href="#redux-和-react-redux" class="headerlink" title="redux 和 react-redux"></a>redux 和 react-redux</h1><p><a target="_blank" rel="noopener" href="https://react-redux.js.org/">react-redux</a> 是 react 開發的一個集中式狀態管理的庫．<br><a target="_blank" rel="noopener" href="https://redux.js.org/">redux</a> 為各種框架 (Vue、React …) 開發的．<br>兩者用法相似被並不一樣．<br>安裝 react-redux</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install react-redux</span><br></pre></td></tr></table></figure>
+<p>另外 redux-thunk 也是不可少的</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install redux-thunk</span><br></pre></td></tr></table></figure>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2021/10/24/frontend-react-026-diffing-key/#more" rel="contents">
+              <a class="btn" href="/2021/11/22/frontend-react-040-react-redux/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -1080,7 +894,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/10/24/frontend-react-025-new-life-cycle3/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/21/frontend-react-039-redux-advanced/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -1094,7 +908,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/10/24/frontend-react-025-new-life-cycle3/" class="post-title-link" itemprop="url">前端 - React 學習 - 025 新版組件生命週期-getSnapshotBeforeUpdate</a>
+            <a href="/2021/11/21/frontend-react-039-redux-advanced/" class="post-title-link" itemprop="url">前端 - React 學習 - 039 redux 進階使用</a>
         </h2>
 
         <div class="post-meta">
@@ -1104,14 +918,14 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2021-10-24 11:45:10" itemprop="dateCreated datePublished" datetime="2021-10-24T11:45:10+08:00">2021-10-24</time>
+              <time title="Created: 2021-11-21 23:11:02" itemprop="dateCreated datePublished" datetime="2021-11-21T23:11:02+08:00">2021-11-21</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-10-26 09:59:03" itemprop="dateModified" datetime="2021-10-26T09:59:03+08:00">2021-10-26</time>
+                <time title="Modified: 2021-11-23 14:04:26" itemprop="dateModified" datetime="2021-11-23T14:04:26+08:00">2021-11-23</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1133,7 +947,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>2.4k</span>
+              <span>1.7k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
@@ -1152,12 +966,213 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>新版本組件生命週期 :</p>
-<img src="/2021/10/24/frontend-react-025-new-life-cycle3/01.png" class="" title="new life cycle">
-<p>本篇文章將會介紹新的 API : <code>getSnapshotBeforeUpdate()</code></p>
+          <p>目標將原本的異步相加，改成用異步 action 方式．<br>修改 Count 組件，直接調用一個 [Action Creators] (createIncrementAsyncAction(data, time))</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">    incrementAsync = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">const</span> &#123;value&#125; = <span class="built_in">this</span>.selectNumber</span><br><span class="line"><span class="comment">//        setTimeout(()=&gt;&#123;</span></span><br><span class="line">            store.dispatch(createIncrementAsyncAction(value*<span class="number">1</span>, <span class="number">1000</span>))</span><br><span class="line"><span class="comment">//        &#125;, 1000)</span></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>在 count_action.js 中新增 createIncrementAsyncAction(data, time)</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> createIncrementAsyncAction = <span class="function">(<span class="params">data, time</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="function">()=&gt;</span>&#123;</span><br><span class="line">        <span class="built_in">setTimeout</span>(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">            store.dispatch(createIncrementAction(data))</span><br><span class="line">        &#125;, time)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2021/10/24/frontend-react-025-new-life-cycle3/#more" rel="contents">
+              <a class="btn" href="/2021/11/21/frontend-react-039-redux-advanced/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/21/frontend-react-038-redux-basic/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Steven Wu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Steven 的學習筆記">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/11/21/frontend-react-038-redux-basic/" class="post-title-link" itemprop="url">前端 - React 學習 - 038 redux 基本使用</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-11-21 15:34:40" itemprop="dateCreated datePublished" datetime="2021-11-21T15:34:40+08:00">2021-11-21</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-11-23 10:56:26" itemprop="dateModified" datetime="2021-11-23T10:56:26+08:00">2021-11-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Frontend/" itemprop="url" rel="index"><span itemprop="name">Frontend</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Frontend/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>6k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>5 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <img src="/2021/11/21/frontend-react-038-redux-basic/01.png" class="" title="01.png">
+<p>[React Components] 發送一個事件請求給 [Action Creators]，[Action Creators] 就該事件請求包裝成一個 action，內有類型 (type) 和 資料 (data)，然後透過 dispatch(action) 轉發給 [Store]，而 [Store] 就將前次狀態 (previosState) 和 action 交給適當的 [Reducers] 進行處理，並將處理結果 (newState) 返回給 [Store]，而有需要的組件則透過 getState() 取得資訊．</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/11/21/frontend-react-038-redux-basic/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/21/frontend-react-037-react-ui/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Steven Wu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Steven 的學習筆記">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/11/21/frontend-react-037-react-ui/" class="post-title-link" itemprop="url">前端 - React 學習 - 037 react ui 庫 - Ant-Design</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-11-21 10:56:45" itemprop="dateCreated datePublished" datetime="2021-11-21T10:56:45+08:00">2021-11-21</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-11-23 10:56:26" itemprop="dateModified" datetime="2021-11-23T10:56:26+08:00">2021-11-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Frontend/" itemprop="url" rel="index"><span itemprop="name">Frontend</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Frontend/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>3.4k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>3 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="三個較有名的-UI-庫"><a href="#三個較有名的-UI-庫" class="headerlink" title="三個較有名的 UI 庫"></a>三個較有名的 UI 庫</h1><ol>
+<li>MUI : <a target="_blank" rel="noopener" href="https://mui.com/zh/">https://mui.com/zh/</a><img src="/2021/11/21/frontend-react-037-react-ui/01.png" class="" title="01.png">
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/11/21/frontend-react-037-react-ui/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -1180,7 +1195,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -1246,20 +1261,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">68</span>
+          <span class="site-state-item-count">86</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-count">16</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">49</span>
+        <span class="site-state-item-count">75</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -1304,13 +1319,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">183k</span>
+    <span title="Symbols count total">231k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
-    <span title="Reading time total">2:46</span>
+    <span title="Reading time total">3:30</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
   </div>

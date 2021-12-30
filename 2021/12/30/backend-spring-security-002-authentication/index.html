@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5G1RK23V7S"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-5G1RK23V7S');
+</script>
+  <meta name="description" content="Spring security 官方文檔 Authentication Servlet Authentication ArchitectureSpring Security 用來驗證的主要組件 :  SecurityContextHolder : Spring Security 存放被驗證使用者詳細資料。 SecurityContext : 由 SecurityContextHolder 獲取到的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring Security 文件筆記 - 002 Authentication">
+<meta property="og:url" content="http://example.com/2021/12/30/backend-spring-security-002-authentication/index.html">
+<meta property="og:site_name" content="Steven 的學習筆記">
+<meta property="og:description" content="Spring security 官方文檔 Authentication Servlet Authentication ArchitectureSpring Security 用來驗證的主要組件 :  SecurityContextHolder : Spring Security 存放被驗證使用者詳細資料。 SecurityContext : 由 SecurityContextHolder 獲取到的">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2021/12/30/backend-spring-security-002-authentication/securitycontextholder.png">
+<meta property="og:image" content="http://example.com/2021/12/30/backend-spring-security-002-authentication/setting_securitycontextholder.png">
+<meta property="og:image" content="http://example.com/2021/12/30/backend-spring-security-002-authentication/providermanager.png">
+<meta property="og:image" content="http://example.com/2021/12/30/backend-spring-security-002-authentication/providermanager-parent.png">
+<meta property="og:image" content="http://example.com/2021/12/30/backend-spring-security-002-authentication/providermanagers-parent.png">
+<meta property="og:image" content="http://example.com/2021/12/30/backend-spring-security-002-authentication/abstractauthenticationprocessingfilter.png">
+<meta property="article:published_time" content="2021-12-30T05:06:36.000Z">
+<meta property="article:modified_time" content="2021-12-30T05:55:14.100Z">
+<meta property="article:author" content="Steven Wu">
+<meta property="article:tag" content="Official Document">
+<meta property="article:tag" content="Authentication">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2021/12/30/backend-spring-security-002-authentication/securitycontextholder.png">
+
+<link rel="canonical" href="http://example.com/2021/12/30/backend-spring-security-002-authentication/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Spring Security 文件筆記 - 002 Authentication | Steven 的學習筆記</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5G1RK23V7S"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-5G1RK23V7S');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Steven 的學習筆記</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">沒有解決不了的問題<br>只有未找到解決方法</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/12/30/backend-spring-security-002-authentication/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Steven Wu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Steven 的學習筆記">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Spring Security 文件筆記 - 002 Authentication
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-12-30 13:06:36 / Modified: 13:55:14" itemprop="dateCreated datePublished" datetime="2021-12-30T13:06:36+08:00">2021-12-30</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Spring-Security/" itemprop="url" rel="index"><span itemprop="name">Spring Security</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>5.3k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>5 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><a target="_blank" rel="noopener" href="https://docs.spring.io/spring-security/reference/index.html">Spring security 官方文檔</a></p>
+<h1 id="Authentication"><a href="#Authentication" class="headerlink" title="Authentication"></a><a target="_blank" rel="noopener" href="https://docs.spring.io/spring-security/reference/servlet/authentication/index.html">Authentication</a></h1><ul>
+<li><p><a target="_blank" rel="noopener" href="https://docs.spring.io/spring-security/reference/servlet/authentication/architecture.html">Servlet Authentication Architecture</a><br>Spring Security 用來驗證的主要組件 :</p>
+<ul>
+<li>SecurityContextHolder : Spring Security 存放被驗證使用者詳細資料。</li>
+<li>SecurityContext : 由 SecurityContextHolder 獲取到的，SecurityContext 包含當前被驗證使用者的 Authentication 物件。</li>
+<li>Authentication - 為 AuthenticationManager 的輸入，由使用者提交用來作驗證的證書來，或由 SecurityContext 取得。</li>
+<li>GrantedAuthority - 在 Authentication 物件上，授予主體的權限（即角色、範圍等）</li>
+<li>AuthenticationManager - 為 API 定義 Spring Security 的 Filter 如何執行驗證。</li>
+<li>ProviderManager - 一個常見的 AuthenticationManager 實作類。</li>
+<li>AuthenticationProvider - 被 ProviderManager 使用去執行某個類型的驗證。</li>
+<li>Request Credentials with AuthenticationEntryPoint - 用來要求客戶端提供證書 (如 : 傳導到登入頁面，或傳送 WWW-Authenticate 回應.. 等)</li>
+<li>AbstractAuthenticationProcessingFilter - 一個 Filter 用於驗證。提供一個好了解的驗證流程和各部分如何協同工作。<span id="more"></span></li>
+</ul>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://docs.spring.io/spring-security/reference/servlet/authentication/architecture.html#servlet-authentication-securitycontextholder">SecurityContextHolder</a></p>
+<img src="/2021/12/30/backend-spring-security-002-authentication/securitycontextholder.png" class="" title="securitycontextholder.png">
+<p>SecurityContextHolder 是 Spring Security 用來存放驗證使用者的詳細資料。要設定一個使用者是被驗證過的最簡單方式就是直接設定 SecurityContextHolder</p>
+<img src="/2021/12/30/backend-spring-security-002-authentication/setting_securitycontextholder.png" class="" title="setting_securitycontextholder.png">
+<ol>
+<li>先建立一個空的 SecurityContext 物件。這是一個重要的步驟，不要使用 SecurityContextHolder.getContext().setAuthentication(authentication) 方式以免造成在多執行緒中的 reac condition 現象。</li>
+<li>接下來，建立一個新的 Authentication 物件，並且把他設定到 SecurityContext。在這裡我們使用 TestingAuthenticationToken，因為他很簡單。在常見的生產環境中是使用UsernamePasswordAuthenticationToken(userDetails, password, authorities)。</li>
+<li>最後將 SecurityContext 設定給 SecurityContextHolder，而 Spring Security 將會使用新設定的資訊來驗證身分。</li>
+</ol>
+<p>如果要取得被驗證過的資訊，可以通過存取 SecurityContextHolder 獲得。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">SecurityContext context = SecurityContextHolder.getContext();</span><br><span class="line">Authentication authentication = context.getAuthentication();</span><br><span class="line">String username = authentication.getName();</span><br><span class="line">Object principal = authentication.getPrincipal();</span><br><span class="line">Collection&lt;? extends GrantedAuthority&gt; authorities = authentication.getAuthorities();</span><br></pre></td></tr></table></figure>
+<p>預設 SecurityContextHolder 會採用 ThreadLocal 方式進行詳細驗證資訊的儲存。也就是資訊只可以被同一個 Thread 所存取。所以當前請求被處理完後，thread 被清除一併也將資料清除掉。讓 FilterChainProxy 可確保 SecurityContext 可以被清除乾淨。<br>在有一些應用中會希望所有的 thread 都使用相同的 SecurityContext，我們可以在系統設定上做設定，另一種方式是調用     setStrategyName()。</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://docs.spring.io/spring-security/reference/servlet/authentication/architecture.html#servlet-authentication-securitycontext">SecurityContext</a><br>由 SecurityContextHolder 獲取到的驗證資訊，包含 Authentication 物件。</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://docs.spring.io/spring-security/reference/servlet/authentication/architecture.html#servlet-authentication-authentication">Authentication</a><br>Authentication 有兩個主要目的 :</p>
+<ul>
+<li>提供 AuthenticationManager 的輸入，用來驗證使用者</li>
+<li>提供已驗證使用者的資訊，可以由 SecurityContext 物件取的 Authentication</li>
+</ul>
+<p>Authentication 內包含 :</p>
+<ul>
+<li>principal - 識別使用者，在使用帳號與密碼方式時，通常是指 UserDetails 物件</li>
+<li>credentials : 通常是指密碼，在大部分的情況下，通常會在用戶通過身分驗證後被消除，確保密碼不會被洩漏。</li>
+<li>authorities - GrantedAuthority 是授予用戶權限。像是授予用戶角色或可見範圍。</li>
+</ul>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://docs.spring.io/spring-security/reference/servlet/authentication/architecture.html#servlet-authentication-granted-authority">GrantedAuthority</a><br>能使用 Authentication.getAuthorities() 獲取一群 GrantedAuthority 物件的集合。GrantedAuthority 用來授權使用者權限，一般是使用角色方式區分權限，如 :<br>ROLE_ADMINISTRATOR 或 ROLE_HR_SUPERVISOR。這些東西可以在後續中使用在 Web、方法與 domain 物件上依角色限制使用者存取。基於帳密認證方式的架構中，可在 UserDetailsService 中取得。</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://docs.spring.io/spring-security/reference/servlet/authentication/architecture.html#servlet-authentication-authenticationmanager">AuthenticationManager</a><br>AuthenticationManager 是定義 Spring Security 的過濾器如何執行身份驗證的 API。Spring Security的Filter 會調用   AuthenticationManager 然後設置在  SecurityContextHolder 中，並可由 SecurityContextHolder 中取得   Authentication。如果不與 Spring Security 的 Filters 集成，則可以直接設置 SecurityContextHolder 並不需要使用   AuthenticationManager.<br>雖然實現 AuthenticationManager 可以是任何方式，但最常見的 AuthenticationManager 是由 ProviderManager 實現。</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://docs.spring.io/spring-security/reference/servlet/authentication/architecture.html#servlet-authentication-providermanager">ProviderManager</a><br>ProviderManager 是一個對 AuthenticationManager 的常見實作。ProviderManager 委派一組 AuthenticationProviders 列表來進行認證工作。</p>
+<img src="/2021/12/30/backend-spring-security-002-authentication/providermanager.png" class="" title="providermanager.png">
+<p>AuthenticationProvider 都有機會表示身份驗證成功、失敗或表明它無法做出決定，並允許下個 AuthenticationProvider 做出決定。如果沒有配置 AuthenticationProviders 可以進行身份驗證，則身份驗證將會失敗，ProviderNotFoundException 這是一個特殊的AuthenticationException 會被拋出，表示 ProviderManager 未配置為支持 Authentication 類型。<br>AuthenticationProvider 知道如何執行特定的身分驗證。比如說一個 AuthenticationProvider 會執行驗證帳密方式，另一個 AuthenticationProvider 會使用 Security Assertion Markup Language (SAML) 方式驗證。我們可以使用不同的驗證方式，但是只需要不曝露出單一個 AuthenticationManager。<br>ProviderManager 允許配置一個可選的父類別 AuthenticationManager，在 AuthenticationProvider 無法執行身份驗證的情況下諮詢該父類別。父類別可以是任何類型 AuthenticationManager，但通常是實例 ProviderManager。</p>
+<img src="/2021/12/30/backend-spring-security-002-authentication/providermanager-parent.png" class="" title="providermanager-parent.png">
+<p>事實上，多個 ProviderManager 實例可能共享同一個父類別 AuthenticationManager。這在有些常見有多個 SecurityFilterChain 實例的情況下，具有共同身份驗證（共享父類別 AuthenticationManager），但也具有不同身份驗證機制（不同ProviderManager實例）。</p>
+<img src="/2021/12/30/backend-spring-security-002-authentication/providermanagers-parent.png" class="" title="providermanagers-parent.png">
+<p>默認情況下，ProviderManager 將嘗試從 Authentication 成功的身份驗證請求返回的對象之中，清除任何敏感憑據信息，這可以防  止密碼等信息在 HttpSession 上。<br>比如在一些無狀態應用中要增加效能，可能會緩存一個使用者物件，但這會造成一個問題，如果 Authentication 包含對緩存中對象  （例如UserDetails實例）的引用，並其憑據已刪除，則將無法再針對緩存值進行身份驗證。如果您使用緩存，則需要考慮到這一點。一個明顯的解決方案是緩存實作中或在 AuthenticationProvider 創建返回 Authentication 對象時，製作 Authentication 的副本。或者，您可以在 ProviderManager 上停用 eraseCredentialsAfterAuthentication 屬性。更多資訊<a target="_blank" rel="noopener" href="https://docs.spring.io/spring-security/site/docs/5.6.0/api/org/springframework/security/authentication/ProviderManager.html">Javadoc</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://docs.spring.io/spring-security/reference/servlet/authentication/architecture.html#servlet-authentication-authenticationprovider">AuthenticationProvider</a><br>可以將多個 AuthenticationProvider 注入 ProviderManager。而每個 AuthenticationProvider 會執行特定類型的身份驗證。  例如 : DaoAuthenticationProvider 支持基於用戶名/密碼的身份驗證，同時 JwtAuthenticationProvider 支持對 JWT 令牌進  行身份驗證。</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://docs.spring.io/spring-security/reference/servlet/authentication/architecture.html#servlet-authentication-authenticationentrypoint">Request Credentials with AuthenticationEntryPoint</a><br>AuthenticationEntryPoint 是用於送出一個請求，要求客戶端傳送憑證資訊。有時候客戶端會發出一個資源請求，且主動將憑證   (如 : 帳號密碼) 包含在請求中，則 Spring Security 就不需要發起憑證請求。<br>在其他情況下，客戶端會發出一個沒有驗證過的資源請求，則 AuthenticationEntryPoint 將會觸發執行重導向到登入頁面，響應一  個 <a target="_blank" rel="noopener" href="https://datatracker.ietf.org/doc/html/rfc7235#section-4.1">WWW-Authenticate header</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://docs.spring.io/spring-security/reference/servlet/authentication/architecture.html#servlet-authentication-abstractprocessingfilter">AbstractAuthenticationProcessingFilter</a><br>AbstractAuthenticationProcessingFilter 一個基礎 Filter 用於驗證使用者的憑證。在沒有憑證可被驗證前，Spring   Security 典型的作法是使用 AuthenticationEntryPoint 要求憑證。<br>接下來，AbstractAuthenticationProcessingFilter 可以對提交給它的任何身份驗證請求進行身份驗證。</p>
+<img src="/2021/12/30/backend-spring-security-002-authentication/abstractauthenticationprocessingfilter.png" class="" title="abstractauthenticationprocessingfilter.png">
+<ol>
+<li>當使用者傳送他們的證書時，AbstractAuthenticationProcessingFilter 將會由 HttpServletRequest 創建一個   Authentication 物件，而 Authentication 類別則依據 AbstractAuthenticationProcessingFilter 的子類別。例如 :   UsernamePasswordAuthenticationFilter 會從一個提交帳戶和密碼的 HttpServletRequest 中創建   UsernamePasswordAuthenticationToken。</li>
+<li>接下來，將 Authentication 被傳遞到 AuthenticationManager 中進行身份驗證 。</li>
+<li>如果驗證失敗則會<ul>
+<li>清除 SecurityContextHolder</li>
+<li>調用 RememberMeServices.loginFail，如果 remember me 沒有設定，則此步驟將會沒作用</li>
+<li>調用 AuthenticationFailureHandler</li>
+</ul>
+</li>
+<li>如果驗證成功則會<ul>
+<li>SessionAuthenticationStrategy 將會收到一個新登入通知</li>
+<li>Authentication 將會被設置到 SecurityContextHolder，之後 SecurityContextPersistenceFilter 會將   SecurityContext 儲存到 HttpSession。</li>
+<li>調用 RememberMeServices.loginSuccess，如果有設定的話。</li>
+<li>ApplicationEventPublisher 發佈一個 InteractiveAuthenticationSuccessEvent。</li>
+<li>調用 AuthenticationSuccessHandler。</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Official-Document/" rel="tag"># Official Document</a>
+              <a href="/tags/Authentication/" rel="tag"># Authentication</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/12/30/backend-spring-security-001-architecture/" rel="prev" title="Spring Security 文件筆記 - 001 Architecture">
+      <i class="fa fa-chevron-left"></i> Spring Security 文件筆記 - 001 Architecture
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Authentication"><span class="nav-number">1.</span> <span class="nav-text">Authentication</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Steven Wu</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">86</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">75</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/pluto123" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;pluto123" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:yuh.chang.wu@gmail.com" title="E-Mail → mailto:yuh.chang.wu@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Steven Wu</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">231k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">3:30</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span><br></span>	
+
+<span class="post-meta-item-icon">
+    <i class="fa fa-users"></i>
+</span>
+<span>總訪客：&nbsp<span id="busuanzi_value_site_uv"><i class="fa fa-spinner fa-spin"></i></span>&nbsp人</span>
+    <span class="post-meta-divider">|</span>
+<span class="post-meta-item-icon">
+    <i class="fa fa-eye"></i>
+</span>
+<span>總訪問量：&nbsp<span id="busuanzi_value_site_pv"><i class="fa fa-spinner fa-spin"></i></span>&nbsp次</span>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '4930808f816a28eedad7',
+      clientSecret: '20b0570483dc737ad14b42abc3ab1866089ce63e',
+      repo        : 'pluto123.github.io',
+      owner       : 'pluto123',
+      admin       : ['pluto123'],
+      id          : 'b5d870547c4222ab8a8ceb59dabadd4f',
+        language: 'zh-TW',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>

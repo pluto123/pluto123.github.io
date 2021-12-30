@@ -45,7 +45,7 @@
 <meta property="og:image" content="http://example.com/2021/12/03/docker-change-default-path/07.png">
 <meta property="og:image" content="http://example.com/2021/12/03/docker-change-default-path/08.png">
 <meta property="article:published_time" content="2021-12-03T01:48:37.000Z">
-<meta property="article:modified_time" content="2021-12-03T03:59:58.047Z">
+<meta property="article:modified_time" content="2021-12-08T07:41:44.970Z">
 <meta property="article:author" content="Steven Wu">
 <meta property="article:tag" content="configuration">
 <meta name="twitter:card" content="summary">
@@ -239,10 +239,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2021-12-03 09:48:37 / Modified: 11:59:58" itemprop="dateCreated datePublished" datetime="2021-12-03T09:48:37+08:00">2021-12-03</time>
+              <time title="Created: 2021-12-03 09:48:37" itemprop="dateCreated datePublished" datetime="2021-12-03T09:48:37+08:00">2021-12-03</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-12-08 15:41:44" itemprop="dateModified" datetime="2021-12-08T15:41:44+08:00">2021-12-08</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -259,7 +265,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>985</span>
+              <span>989</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
@@ -306,7 +312,7 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo docker run hello-world</span></span><br></pre></td></tr></table></figure>
 <img src="/2021/12/03/docker-change-default-path/07.png" class="" title="07.png">
 <p>可以成功下載並執行，表示修改後並不影響功能。<br>檢查目前 docker 的 root 目錄下的 <code>/data/docker/image/overlay2/repositories.json</code></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo cat ./docker/image/overlay2/repositories.json</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo cat /data/docker/image/overlay2/repositories.json</span></span><br></pre></td></tr></table></figure>
 <img src="/2021/12/03/docker-change-default-path/08.png" class="" title="08.png">
 <p>發現有新的 image (hello-world)<br>而在舊的目錄位置的<code>/var/lib/docker/image/overlay2/repositories.json</code></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo cat /var/lib/docker/image/overlay2/repositories.json</span></span><br></pre></td></tr></table></figure>
@@ -410,20 +416,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">68</span>
+          <span class="site-state-item-count">86</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-count">16</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">49</span>
+        <span class="site-state-item-count">75</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -468,13 +474,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">183k</span>
+    <span title="Symbols count total">231k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
-    <span title="Reading time total">2:46</span>
+    <span title="Reading time total">3:30</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
   </div>
