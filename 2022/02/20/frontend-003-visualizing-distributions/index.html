@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5G1RK23V7S"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-5G1RK23V7S');
+</script>
+  <meta name="description" content="若想了解特定變數在資料集中的分佈狀況，比如說 : 來店內消費的客戶的年齡分佈 單一變數的分佈視覺化直方圖以想了解來店內消費的客人年齡分佈為例，首先需要將客人年齡分組，然後統計每個分組內年齡層的客人數量，就可以開始繪製直方圖．每一次都要嘗試不同的矩形寬度 (即分組的區間大小)，以便測試產生的直方圖是否真的可準確反應原始資料．一般來說，寬度太小，容易造成過於尖銳且雜亂的視覺感受，且資料的主要趨勢會被模">
+<meta property="og:type" content="article">
+<meta property="og:title" content="資料視覺化 - 002 分佈視覺化">
+<meta property="og:url" content="http://example.com/2022/02/20/frontend-003-visualizing-distributions/index.html">
+<meta property="og:site_name" content="Steven 的學習筆記">
+<meta property="og:description" content="若想了解特定變數在資料集中的分佈狀況，比如說 : 來店內消費的客戶的年齡分佈 單一變數的分佈視覺化直方圖以想了解來店內消費的客人年齡分佈為例，首先需要將客人年齡分組，然後統計每個分組內年齡層的客人數量，就可以開始繪製直方圖．每一次都要嘗試不同的矩形寬度 (即分組的區間大小)，以便測試產生的直方圖是否真的可準確反應原始資料．一般來說，寬度太小，容易造成過於尖銳且雜亂的視覺感受，且資料的主要趨勢會被模">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-02-20T14:14:48.000Z">
+<meta property="article:modified_time" content="2022-03-11T07:47:34.841Z">
+<meta property="article:author" content="Steven Wu">
+<meta property="article:tag" content="Grouped and stacked bars">
+<meta property="article:tag" content="Dot plots and heatmaps">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2022/02/20/frontend-003-visualizing-distributions/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>資料視覺化 - 002 分佈視覺化 | Steven 的學習筆記</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5G1RK23V7S"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-5G1RK23V7S');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Steven 的學習筆記</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">沒有解決不了的問題<br>只有未找到解決方法</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/02/20/frontend-003-visualizing-distributions/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Steven Wu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Steven 的學習筆記">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          資料視覺化 - 002 分佈視覺化
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-02-20 22:14:48" itemprop="dateCreated datePublished" datetime="2022-02-20T22:14:48+08:00">2022-02-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-03-11 15:47:34" itemprop="dateModified" datetime="2022-03-11T15:47:34+08:00">2022-03-11</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Visualize/" itemprop="url" rel="index"><span itemprop="name">Visualize</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>1.8k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>2 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>若想了解特定變數在資料集中的分佈狀況，比如說 : 來店內消費的客戶的年齡分佈</p>
+<h1 id="單一變數的分佈視覺化"><a href="#單一變數的分佈視覺化" class="headerlink" title="單一變數的分佈視覺化"></a>單一變數的分佈視覺化</h1><h2 id="直方圖"><a href="#直方圖" class="headerlink" title="直方圖"></a>直方圖</h2><p>以想了解來店內消費的客人年齡分佈為例，首先需要將客人年齡分組，然後統計每個分組內年齡層的客人數量，就可以開始繪製直方圖．每一次都要嘗試不同的矩形寬度 (即分組的區間大小)，以便測試產生的直方圖是否真的可準確反應原始資料．一般來說，寬度太小，容易造成過於尖銳且雜亂的視覺感受，且資料的主要趨勢會被模糊，而寬度太大，則會造成某些局部細小的趨勢被模糊．</p>
+<h2 id="密度圖"><a href="#密度圖" class="headerlink" title="密度圖"></a>密度圖</h2><p>在密度圖中，需要估算資料的基本機率分佈，估算的方法稱為核密度估算 (kernel desnsity estimation)，常用的有高斯核密度估算．<br>與直方圖相同，帶寬的大小會影響視覺的呈現，所以需要多嘗試不同的帶寬，另外對於大型資料集而言，比較可以呈現出可靠且豐富的資訊，對於資料量較小的資料集，可能會產生誤導．<br>核密度估算有一個缺點，就是在尾部的地方也會估算出值，但是這也估算區域的值是否合理就需要考量一下，如 : 年齡分佈有可能會算出負數區域也有一些分佈，但是在現實情況下是不合理的，應該在視覺呈現上剔除掉以免造成誤解．</p>
+<h1 id="多個變數的分佈視覺化"><a href="#多個變數的分佈視覺化" class="headerlink" title="多個變數的分佈視覺化"></a>多個變數的分佈視覺化</h1><p>如果我們除了想要知道年齡分佈外，也想要了解在同分組的客人性別分布，則可以使用堆疊直方圖，但是堆疊直方圖有兩個缺點:</p>
+<ol>
+<li>上面堆疊的直方，不知道起點是由 0 開始，還是由下面的直方終點開始</li>
+<li>因為是不同起始點，所以難以比較同分組的男女生人數到底誰多<br>要解決上述缺點，可以使用重疊直方圖，即男和女的直方起點都是由零開始，重疊的部分用另一種顏色表示，但是這樣會造成讓使用者以為有三個變數的堆疊直方，而使用重疊密度圖一樣有這個問題．<br>所以比較好的方式是分成兩個重疊密度圖，一個是全部與男性客人的重疊密度圖，另一個是全部與女性客人的重疊密度圖．<br>另一個比較準確地呈現出資料視覺化的方式是分別繪製男性和女性的直方圖，將其中一個向右旋轉 90 度，另一個向左旋轉 90 度，通常這種圖形被稱為 age pyramid，但是此圖在超過兩個以上就無法繪製．<br>超過兩個以上的分佈圖，還是以重疊密度圖的方式顯示較清楚．</li>
+</ol>
+<h1 id="經驗累積分佈函數"><a href="#經驗累積分佈函數" class="headerlink" title="經驗累積分佈函數"></a>經驗累積分佈函數</h1><p>以上的圖形 (直方圖/密度圖) 所呈現的結果，有很大程度上取決於使用者所選擇的參數 (寬度/帶寬)，這兩者都被視為對資料的解讀，而非直接的視覺化．為了要解決此問題，則有了經驗累積分佈函數 (ECDF) 和分位圖 (Q-Q 圖) 的產生．<br>比如說我們需要依據每家店的銷售額區分幾個等級，則我們首先將銷售額的多寡進行排序，x 軸為銷售額，y 軸為排名，由排名最低者開始繪製，依序繪製到最高者，每一家店的銷售額和排名決定一點，依據將每點連接起來成一個直線，<br>通常會針對 y 軸作正規化，讓 y 軸呈現的是累積頻率由 0 到 1 的範圍，做完正規化後，則 y 軸低於 0.25 以下的店家銷售額是多少，位於 0.5 的銷售額則是所有店家銷售額的中位數所在．<br>但是在有資料不平均的情況下，比如說大部分的鄉鎮人口都是比較稀少的，只有幾個鄉鎮人口數遠遠大於其他鄉鎮，此時不管用密度圖或是經驗累積分佈函數，則大部分都集中在 0 處，完全沒有可見的細部分佈呈現，所以遇到此狀況時，會將資料進行對數轉換．</p>
+<h1 id="分位圖"><a href="#分位圖" class="headerlink" title="分位圖"></a>分位圖</h1><p>???</p>
+<h1 id="箱型圖"><a href="#箱型圖" class="headerlink" title="箱型圖"></a>箱型圖</h1><p>在一些情況下，我們會希望了解在不同月份的銷售額變化，也想要同時呈現出不同分店的銷售額分佈，所以我們就可以用箱型圖來呈現．</p>
+<h1 id="提琴圖"><a href="#提琴圖" class="headerlink" title="提琴圖"></a>提琴圖</h1><p>可替換箱型圖，以得到更細緻的資料視覺呈現，尤其是當有雙峰出現時，是箱型圖所無法呈現的．因為提琴圖是從密度估計而來的，所以資料量較少時，可能使無資料的地方看起來有資料，或者實際上非常稀疏的資料集，看起來很密集．<br>為了解決提琴圖因為資料數量較少時的缺點，我們可以直接將所有單個資料繪製成點，稱為帶狀圖 (strip chart)，只要確認沒有太多的點是重疊的，這樣的帶狀圖基本上是可以良好地表達出資料視覺．如果有太多點重疊在一起，則在繪製上在 x 維度上隨機添加一些微小的數值，以便讓點可以散開一些，此種技巧稱為抖動 (jittering)．<br>另外也有結合提琴圖與帶狀圖的 Sina 圖 (Sina plot) 可使用．</p>
+<h1 id="脊線圖"><a href="#脊線圖" class="headerlink" title="脊線圖"></a>脊線圖</h1><p>如果你想呈現出隨著時間推移的分佈趨勢，此圖表的目的是為了比較個分組的密度形狀和相對高度．也可以用來比要兩種趨勢分佈，比如說將兩家分店的銷售額依據月份分別做成兩個脊線圖並且將其重疊在一個圖表中，就可以很清楚地反應出兩家店每月的銷售額的分佈變化．</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Grouped-and-stacked-bars/" rel="tag"># Grouped and stacked bars</a>
+              <a href="/tags/Dot-plots-and-heatmaps/" rel="tag"># Dot plots and heatmaps</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/02/20/frontend-002-visualizing-amounts/" rel="prev" title="資料視覺化 - 002 數量視覺化">
+      <i class="fa fa-chevron-left"></i> 資料視覺化 - 002 數量視覺化
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/04/19/nvidia-001-version-mismatch/" rel="next" title="Nvidia-001-version-mismatch">
+      Nvidia-001-version-mismatch <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%96%AE%E4%B8%80%E8%AE%8A%E6%95%B8%E7%9A%84%E5%88%86%E4%BD%88%E8%A6%96%E8%A6%BA%E5%8C%96"><span class="nav-number">1.</span> <span class="nav-text">單一變數的分佈視覺化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%B4%E6%96%B9%E5%9C%96"><span class="nav-number">1.1.</span> <span class="nav-text">直方圖</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%86%E5%BA%A6%E5%9C%96"><span class="nav-number">1.2.</span> <span class="nav-text">密度圖</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A4%9A%E5%80%8B%E8%AE%8A%E6%95%B8%E7%9A%84%E5%88%86%E4%BD%88%E8%A6%96%E8%A6%BA%E5%8C%96"><span class="nav-number">2.</span> <span class="nav-text">多個變數的分佈視覺化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B6%93%E9%A9%97%E7%B4%AF%E7%A9%8D%E5%88%86%E4%BD%88%E5%87%BD%E6%95%B8"><span class="nav-number">3.</span> <span class="nav-text">經驗累積分佈函數</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%86%E4%BD%8D%E5%9C%96"><span class="nav-number">4.</span> <span class="nav-text">分位圖</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AE%B1%E5%9E%8B%E5%9C%96"><span class="nav-number">5.</span> <span class="nav-text">箱型圖</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8F%90%E7%90%B4%E5%9C%96"><span class="nav-number">6.</span> <span class="nav-text">提琴圖</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%84%8A%E7%B7%9A%E5%9C%96"><span class="nav-number">7.</span> <span class="nav-text">脊線圖</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Steven Wu</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">112</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">112</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/pluto123" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;pluto123" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:yuh.chang.wu@gmail.com" title="E-Mail → mailto:yuh.chang.wu@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Steven Wu</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">473k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">7:10</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span><br></span>	
+
+<span class="post-meta-item-icon">
+    <i class="fa fa-users"></i>
+</span>
+<span>總訪客：&nbsp<span id="busuanzi_value_site_uv"><i class="fa fa-spinner fa-spin"></i></span>&nbsp人</span>
+    <span class="post-meta-divider">|</span>
+<span class="post-meta-item-icon">
+    <i class="fa fa-eye"></i>
+</span>
+<span>總訪問量：&nbsp<span id="busuanzi_value_site_pv"><i class="fa fa-spinner fa-spin"></i></span>&nbsp次</span>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '4930808f816a28eedad7',
+      clientSecret: '20b0570483dc737ad14b42abc3ab1866089ce63e',
+      repo        : 'pluto123.github.io',
+      owner       : 'pluto123',
+      admin       : ['pluto123'],
+      id          : '1184de609a0d2c8c5313b6abdf70c7a7',
+        language: 'zh-TW',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>

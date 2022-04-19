@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5G1RK23V7S"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-5G1RK23V7S');
+</script>
+  <meta name="description" content="長條圖假如我們對某些類別的數值大小感興趣，如 : 不同品牌的銷售量，則很適合用長條圖來呈現．一般來說，長條的寬度最好大於類別名稱的寬度，但是有時候類別的名稱太長，導致長條的寬度也不美觀．一種解決的方式是將類別名稱旋轉一個角度，不過會造成閱讀上的困擾，比較好的作法是改成橫向的長條圖．當長條圖的類別「不具有順序性」時，長條圖的排列最好依據數值的大小遞增&#x2F;遞減排序． 分組與堆疊長條圖長條圖是針對單一個分">
+<meta property="og:type" content="article">
+<meta property="og:title" content="資料視覺化 - 002 數量視覺化">
+<meta property="og:url" content="http://example.com/2022/02/20/frontend-002-visualizing-amounts/index.html">
+<meta property="og:site_name" content="Steven 的學習筆記">
+<meta property="og:description" content="長條圖假如我們對某些類別的數值大小感興趣，如 : 不同品牌的銷售量，則很適合用長條圖來呈現．一般來說，長條的寬度最好大於類別名稱的寬度，但是有時候類別的名稱太長，導致長條的寬度也不美觀．一種解決的方式是將類別名稱旋轉一個角度，不過會造成閱讀上的困擾，比較好的作法是改成橫向的長條圖．當長條圖的類別「不具有順序性」時，長條圖的排列最好依據數值的大小遞增&#x2F;遞減排序． 分組與堆疊長條圖長條圖是針對單一個分">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-02-20T14:14:17.000Z">
+<meta property="article:modified_time" content="2022-03-11T07:47:34.808Z">
+<meta property="article:author" content="Steven Wu">
+<meta property="article:tag" content="Bar plots">
+<meta property="article:tag" content="Grouped and stacked bars">
+<meta property="article:tag" content="Dot plots and heatmaps">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2022/02/20/frontend-002-visualizing-amounts/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>資料視覺化 - 002 數量視覺化 | Steven 的學習筆記</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5G1RK23V7S"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-5G1RK23V7S');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Steven 的學習筆記</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">沒有解決不了的問題<br>只有未找到解決方法</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/02/20/frontend-002-visualizing-amounts/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Steven Wu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Steven 的學習筆記">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          資料視覺化 - 002 數量視覺化
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-02-20 22:14:17" itemprop="dateCreated datePublished" datetime="2022-02-20T22:14:17+08:00">2022-02-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-03-11 15:47:34" itemprop="dateModified" datetime="2022-03-11T15:47:34+08:00">2022-03-11</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Visualize/" itemprop="url" rel="index"><span itemprop="name">Visualize</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>861</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>1 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="長條圖"><a href="#長條圖" class="headerlink" title="長條圖"></a>長條圖</h1><p>假如我們對某些類別的數值大小感興趣，如 : 不同品牌的銷售量，則很適合用長條圖來呈現．<br>一般來說，長條的寬度最好大於類別名稱的寬度，但是有時候類別的名稱太長，導致長條的寬度也不美觀．一種解決的方式是將類別名稱旋轉一個角度，不過會造成閱讀上的困擾，比較好的作法是改成橫向的長條圖．<br>當長條圖的類別「不具有順序性」時，長條圖的排列最好依據數值的大小遞增/遞減排序．</p>
+<h1 id="分組與堆疊長條圖"><a href="#分組與堆疊長條圖" class="headerlink" title="分組與堆疊長條圖"></a>分組與堆疊長條圖</h1><p>長條圖是針對單一個分類所繪製的，當我們需要顯示多個分類時，就可以用分組長條圖來表示，一般來說，除非是特別需要強調類別之間的比較，比如說 : 要比較同月份不同區域的銷售金額，強調的是不同區域的銷售金額的比較，則 x 軸為月份， y 軸為銷售金額，而將區域分組比較，但是分組內的類別個數也不宜太多，否則會容易混淆，失去比較意義．<br>另外如果分組內的類別個數過多，可能要在長條圖的顏色選擇上下功夫，選擇同色系漸變的色系是個不錯的選擇；或是將分組長條圖，分成數個長條子圖做並排呈現．<br>如果說分組的數據，堆疊起來具有意義時，才使用堆疊長條圖，比如說將同月份不同區域的銷售金額堆疊起來，則可以看出該月份該產品的總銷售金額，這樣的堆疊才有意義．此外若是 y 軸堆疊的數值，只是少量且簡單的數值，有時候不繪製 y 軸，直接在長條上標明數值，會比較清楚易懂．</p>
+<h1 id="點圖和熱圖"><a href="#點圖和熱圖" class="headerlink" title="點圖和熱圖"></a>點圖和熱圖</h1><p>長條圖的一個重要限制就是必須由 0 開始，讓長條的長度與數值成比例．對於有些情境下，這樣可能會模糊焦點，比如說，每個月的銷售金額都差不多時，則長條圖繪製起來會沒差異，但是使用點圖在特定的某一小範圍做圖，則會放大看出數據之間的差異．跟長條圖一樣，如果數據的排序不影響圖表的解讀，最好依序遞增或遞減排列數值．<br>又比如說，要一年十二個月中，要比較每個月 20 種商品的銷售金額，如果我們使用分組長條圖的話，則會顯得資訊量太多，不容易讓人理解，此時我們可以使用熱圖方式，將銷售金額轉換成顏色，這樣就可以形成一個 12 X 20 的方格，再依據銷售金額對應的顏色，繪製到所屬的方格中做呈現，同理我們也需要依據情境進行必要的排序，以凸顯我們要強調的資訊．</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Bar-plots/" rel="tag"># Bar plots</a>
+              <a href="/tags/Grouped-and-stacked-bars/" rel="tag"># Grouped and stacked bars</a>
+              <a href="/tags/Dot-plots-and-heatmaps/" rel="tag"># Dot plots and heatmaps</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/02/19/frontend-001-visualize/" rel="prev" title="資料視覺化 - 001 資料對應視覺">
+      <i class="fa fa-chevron-left"></i> 資料視覺化 - 001 資料對應視覺
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/02/20/frontend-003-visualizing-distributions/" rel="next" title="資料視覺化 - 002 分佈視覺化">
+      資料視覺化 - 002 分佈視覺化 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%95%B7%E6%A2%9D%E5%9C%96"><span class="nav-number">1.</span> <span class="nav-text">長條圖</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%86%E7%B5%84%E8%88%87%E5%A0%86%E7%96%8A%E9%95%B7%E6%A2%9D%E5%9C%96"><span class="nav-number">2.</span> <span class="nav-text">分組與堆疊長條圖</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%BB%9E%E5%9C%96%E5%92%8C%E7%86%B1%E5%9C%96"><span class="nav-number">3.</span> <span class="nav-text">點圖和熱圖</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Steven Wu</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">112</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">112</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/pluto123" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;pluto123" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:yuh.chang.wu@gmail.com" title="E-Mail → mailto:yuh.chang.wu@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Steven Wu</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">473k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">7:10</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span><br></span>	
+
+<span class="post-meta-item-icon">
+    <i class="fa fa-users"></i>
+</span>
+<span>總訪客：&nbsp<span id="busuanzi_value_site_uv"><i class="fa fa-spinner fa-spin"></i></span>&nbsp人</span>
+    <span class="post-meta-divider">|</span>
+<span class="post-meta-item-icon">
+    <i class="fa fa-eye"></i>
+</span>
+<span>總訪問量：&nbsp<span id="busuanzi_value_site_pv"><i class="fa fa-spinner fa-spin"></i></span>&nbsp次</span>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '4930808f816a28eedad7',
+      clientSecret: '20b0570483dc737ad14b42abc3ab1866089ce63e',
+      repo        : 'pluto123.github.io',
+      owner       : 'pluto123',
+      admin       : ['pluto123'],
+      id          : '8c27b65818a53c411eba8a86c1bc6a07',
+        language: 'zh-TW',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>

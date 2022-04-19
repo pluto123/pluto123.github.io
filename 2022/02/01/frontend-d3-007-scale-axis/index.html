@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5G1RK23V7S"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-5G1RK23V7S');
+</script>
+  <meta name="description" content="Scale連續性的 Scale就是由一組數值對應到另一組數值，提供以下幾種 scale  d3.scaleLinear() d3.scalePow() d3.scaleSqrt() d3.scaleLog() d3.scaleTime() d3.scaleUtc()連續性 Scale 具有的方法 sc( x ) : 輸入一個在 Domain 上的數值 ( x )，返回一個在 Range 上的值 s">
+<meta property="og:type" content="article">
+<meta property="og:title" content="D3 - 007 Scale 和 Axis">
+<meta property="og:url" content="http://example.com/2022/02/01/frontend-d3-007-scale-axis/index.html">
+<meta property="og:site_name" content="Steven 的學習筆記">
+<meta property="og:description" content="Scale連續性的 Scale就是由一組數值對應到另一組數值，提供以下幾種 scale  d3.scaleLinear() d3.scalePow() d3.scaleSqrt() d3.scaleLog() d3.scaleTime() d3.scaleUtc()連續性 Scale 具有的方法 sc( x ) : 輸入一個在 Domain 上的數值 ( x )，返回一個在 Range 上的值 s">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2022/02/01/frontend-d3-007-scale-axis/01.png">
+<meta property="og:image" content="http://example.com/2022/02/01/frontend-d3-007-scale-axis/02.png">
+<meta property="og:image" content="http://example.com/2022/02/01/frontend-d3-007-scale-axis/03.png">
+<meta property="og:image" content="http://example.com/2022/02/01/frontend-d3-007-scale-axis/04.png">
+<meta property="article:published_time" content="2022-02-01T10:32:48.000Z">
+<meta property="article:modified_time" content="2022-02-08T08:17:14.050Z">
+<meta property="article:author" content="Steven Wu">
+<meta property="article:tag" content="Scale">
+<meta property="article:tag" content="Axis">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2022/02/01/frontend-d3-007-scale-axis/01.png">
+
+<link rel="canonical" href="http://example.com/2022/02/01/frontend-d3-007-scale-axis/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>D3 - 007 Scale 和 Axis | Steven 的學習筆記</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5G1RK23V7S"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-5G1RK23V7S');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Steven 的學習筆記</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">沒有解決不了的問題<br>只有未找到解決方法</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/02/01/frontend-d3-007-scale-axis/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Steven Wu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Steven 的學習筆記">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          D3 - 007 Scale 和 Axis
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-02-01 18:32:48" itemprop="dateCreated datePublished" datetime="2022-02-01T18:32:48+08:00">2022-02-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-02-08 16:17:14" itemprop="dateModified" datetime="2022-02-08T16:17:14+08:00">2022-02-08</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/D3/" itemprop="url" rel="index"><span itemprop="name">D3</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>15k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>14 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Scale"><a href="#Scale" class="headerlink" title="Scale"></a>Scale</h1><h2 id="連續性的-Scale"><a href="#連續性的-Scale" class="headerlink" title="連續性的 Scale"></a>連續性的 Scale</h2><p>就是由一組數值對應到另一組數值，提供以下幾種 scale</p>
+<ul>
+<li>d3.scaleLinear()</li>
+<li>d3.scalePow()</li>
+<li>d3.scaleSqrt()</li>
+<li>d3.scaleLog()</li>
+<li>d3.scaleTime()</li>
+<li>d3.scaleUtc()<br>連續性 Scale 具有的方法</li>
+<li>sc( x ) : 輸入一個在 Domain 上的數值 ( x )，返回一個在 Range 上的值</li>
+<li>sc.invert( y ) : 輸入一個在 Range 上的數值 ( y )，返回一個在 Domain 上的值</li>
+<li>sc.domain( [invalues] ) : 設定 Doamin </li>
+<li>sc.range( [outvalues] ) : 設定 Range</li>
+<li>sc.clamp( boolean ) : 若啟用 clamping 則傳回的職會被限定在 range 中</li>
+<li>sc.ticks( count ) : 傳回相等間隔的陣列，會從 Domain 上切割成 count 等份</li>
+<li>sc.tickFormat( count, format ) : 以 format 物件格式化傳回的陣列</li>
+<li>sc.nice( count ) : 延伸 Domain，使其裁切更好</li>
+<li>sc.copy() : 傳回目前 scale 的複本</li>
+</ul>
+<h2 id="自訂-scale"><a href="#自訂-scale" class="headerlink" title="自訂 scale"></a>自訂 scale</h2><p>可編寫自己的映射函數</p>
+<ul>
+<li>d3.scaleSequential( interpolator )</li>
+<li>d3.scaleDiverging( interpolator )</li>
+</ul>
+<h2 id="分箱-Scale"><a href="#分箱-Scale" class="headerlink" title="分箱 Scale"></a>分箱 Scale</h2><p>用來對應一組連續數值到一組離散的箱子</p>
+<ul>
+<li>d3.scaleQuantize() : 以輸入域分箱</li>
+<li>d3.scaleThreshold() : 以臨界值分箱</li>
+<li>d3.scaleQuantile() : 以資料集中度分箱<img src="/2022/02/01/frontend-d3-007-scale-axis/01.png" class="" title="01.png">
+引入一個 svg 檔<br>public/data/ch7.svg<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.w3.org/2000/svg&quot;</span> <span class="attr">xmlns:svg</span>=<span class="string">&quot;http://www.w3.org/2000/svg&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">defs</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">g</span> <span class="attr">id</span>=<span class="string">&quot;quantize&quot;</span> <span class="attr">transform</span>=<span class="string">&quot;translate(25,10)&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">text</span> <span class="attr">x</span>=<span class="string">&quot;75&quot;</span> <span class="attr">y</span>=<span class="string">&quot;25&quot;</span> <span class="attr">text-anchor</span>=<span class="string">&quot;middle&quot;</span> <span class="attr">font-family</span>=<span class="string">&quot;sans-serif&quot;</span> <span class="attr">font-size</span>=<span class="string">&quot;14&quot;</span>&gt;</span>d3.scaleQuantize()<span class="tag">&lt;/<span class="name">text</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">line</span> <span class="attr">x1</span>=<span class="string">&quot;0&quot;</span> <span class="attr">y1</span>=<span class="string">&quot;115&quot;</span> <span class="attr">x2</span>=<span class="string">&quot;150&quot;</span> <span class="attr">y2</span>=<span class="string">&quot;115&quot;</span> <span class="attr">stroke</span>=<span class="string">&quot;black&quot;</span> /&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">line</span> <span class="attr">x1</span>=<span class="string">&quot;0&quot;</span> <span class="attr">y1</span>=<span class="string">&quot;120&quot;</span> <span class="attr">x2</span>=<span class="string">&quot;0&quot;</span> <span class="attr">y2</span>=<span class="string">&quot;110&quot;</span> <span class="attr">stroke</span>=<span class="string">&quot;black&quot;</span> /&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">line</span> <span class="attr">x1</span>=<span class="string">&quot;150&quot;</span> <span class="attr">y1</span>=<span class="string">&quot;120&quot;</span> <span class="attr">x2</span>=<span class="string">&quot;150&quot;</span> <span class="attr">y2</span>=<span class="string">&quot;110&quot;</span> <span class="attr">stroke</span>=<span class="string">&quot;black&quot;</span> /&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">rect</span> <span class="attr">x</span>=<span class="string">&quot;19&quot;</span>  <span class="attr">y</span>=<span class="string">&quot;60&quot;</span> <span class="attr">width</span>=<span class="string">&quot;12&quot;</span> <span class="attr">height</span>=<span class="string">&quot;12&quot;</span> <span class="attr">fill</span>=<span class="string">&quot;blue&quot;</span>/&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">rect</span> <span class="attr">x</span>=<span class="string">&quot;69&quot;</span>  <span class="attr">y</span>=<span class="string">&quot;60&quot;</span> <span class="attr">width</span>=<span class="string">&quot;12&quot;</span> <span class="attr">height</span>=<span class="string">&quot;12&quot;</span> <span class="attr">fill</span>=<span class="string">&quot;blue&quot;</span>/&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">rect</span> <span class="attr">x</span>=<span class="string">&quot;119&quot;</span> <span class="attr">y</span>=<span class="string">&quot;60&quot;</span> <span class="attr">width</span>=<span class="string">&quot;12&quot;</span> <span class="attr">height</span>=<span class="string">&quot;12&quot;</span> <span class="attr">fill</span>=<span class="string">&quot;blue&quot;</span>/&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">line</span> <span class="attr">x1</span>=<span class="string">&quot;50&quot;</span> <span class="attr">y1</span>=<span class="string">&quot;125&quot;</span> <span class="attr">x2</span>=<span class="string">&quot;50&quot;</span> <span class="attr">y2</span>=<span class="string">&quot;50&quot;</span> <span class="attr">stroke</span>=<span class="string">&quot;black&quot;</span> <span class="attr">stroke-dasharray</span>=<span class="string">&quot;3 3&quot;</span>/&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">line</span> <span class="attr">x1</span>=<span class="string">&quot;100&quot;</span> <span class="attr">y1</span>=<span class="string">&quot;125&quot;</span> <span class="attr">x2</span>=<span class="string">&quot;100&quot;</span> <span class="attr">y2</span>=<span class="string">&quot;50&quot;</span> <span class="attr">stroke</span>=<span class="string">&quot;black&quot;</span> <span class="attr">stroke-dasharray</span>=<span class="string">&quot;3 3&quot;</span>/&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">text</span> <span class="attr">x</span>=<span class="string">&quot;75&quot;</span> <span class="attr">y</span>=<span class="string">&quot;150&quot;</span> <span class="attr">text-anchor</span>=<span class="string">&quot;middle&quot;</span> <span class="attr">font-family</span>=<span class="string">&quot;sans-serif&quot;</span> <span class="attr">font-size</span>=<span class="string">&quot;14&quot;</span>&gt;</span>Equally sized bins<span class="tag">&lt;/<span class="name">text</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">g</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">g</span> <span class="attr">id</span>=<span class="string">&quot;threshold&quot;</span> <span class="attr">transform</span>=<span class="string">&quot;translate(225,10)&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">text</span> <span class="attr">x</span>=<span class="string">&quot;75&quot;</span> <span class="attr">y</span>=<span class="string">&quot;25&quot;</span> <span class="attr">text-anchor</span>=<span class="string">&quot;middle&quot;</span> <span class="attr">font-family</span>=<span class="string">&quot;sans-serif&quot;</span> <span class="attr">font-size</span>=<span class="string">&quot;14&quot;</span>&gt;</span>d3.scaleThreshold()<span class="tag">&lt;/<span class="name">text</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">line</span> <span class="attr">x1</span>=<span class="string">&quot;0&quot;</span> <span class="attr">y1</span>=<span class="string">&quot;115&quot;</span> <span class="attr">x2</span>=<span class="string">&quot;150&quot;</span> <span class="attr">y2</span>=<span class="string">&quot;115&quot;</span> <span class="attr">stroke</span>=<span class="string">&quot;black&quot;</span> /&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">line</span> <span class="attr">x1</span>=<span class="string">&quot;0&quot;</span> <span class="attr">y1</span>=<span class="string">&quot;120&quot;</span> <span class="attr">x2</span>=<span class="string">&quot;0&quot;</span> <span class="attr">y2</span>=<span class="string">&quot;110&quot;</span> <span class="attr">stroke</span>=<span class="string">&quot;black&quot;</span> /&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">line</span> <span class="attr">x1</span>=<span class="string">&quot;150&quot;</span> <span class="attr">y1</span>=<span class="string">&quot;120&quot;</span> <span class="attr">x2</span>=<span class="string">&quot;150&quot;</span> <span class="attr">y2</span>=<span class="string">&quot;110&quot;</span> <span class="attr">stroke</span>=<span class="string">&quot;black&quot;</span> /&gt;</span>	</span><br><span class="line">      <span class="tag">&lt;<span class="name">rect</span> <span class="attr">x</span>=<span class="string">&quot;14&quot;</span>  <span class="attr">y</span>=<span class="string">&quot;60&quot;</span> <span class="attr">width</span>=<span class="string">&quot;12&quot;</span> <span class="attr">height</span>=<span class="string">&quot;12&quot;</span> <span class="attr">fill</span>=<span class="string">&quot;blue&quot;</span>/&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">rect</span> <span class="attr">x</span>=<span class="string">&quot;49&quot;</span>  <span class="attr">y</span>=<span class="string">&quot;60&quot;</span> <span class="attr">width</span>=<span class="string">&quot;12&quot;</span> <span class="attr">height</span>=<span class="string">&quot;12&quot;</span> <span class="attr">fill</span>=<span class="string">&quot;blue&quot;</span>/&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">rect</span> <span class="attr">x</span>=<span class="string">&quot;104&quot;</span> <span class="attr">y</span>=<span class="string">&quot;60&quot;</span> <span class="attr">width</span>=<span class="string">&quot;12&quot;</span> <span class="attr">height</span>=<span class="string">&quot;12&quot;</span> <span class="attr">fill</span>=<span class="string">&quot;blue&quot;</span>/&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">line</span> <span class="attr">x1</span>=<span class="string">&quot;40&quot;</span> <span class="attr">y1</span>=<span class="string">&quot;125&quot;</span> <span class="attr">x2</span>=<span class="string">&quot;40&quot;</span> <span class="attr">y2</span>=<span class="string">&quot;50&quot;</span> <span class="attr">stroke</span>=<span class="string">&quot;black&quot;</span> <span class="attr">stroke-dasharray</span>=<span class="string">&quot;3 3&quot;</span>/&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">line</span> <span class="attr">x1</span>=<span class="string">&quot;70&quot;</span> <span class="attr">y1</span>=<span class="string">&quot;125&quot;</span> <span class="attr">x2</span>=<span class="string">&quot;70&quot;</span> <span class="attr">y2</span>=<span class="string">&quot;50&quot;</span> <span class="attr">stroke</span>=<span class="string">&quot;black&quot;</span> <span class="attr">stroke-dasharray</span>=<span class="string">&quot;3 3&quot;</span>/&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">polyline</span> <span class="attr">points</span>=<span class="string">&quot;40,115 45,130 35,130&quot;</span> <span class="attr">fill</span>=<span class="string">&quot;red&quot;</span> /&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">polyline</span> <span class="attr">points</span>=<span class="string">&quot;70,115 75,130 65,130&quot;</span> <span class="attr">fill</span>=<span class="string">&quot;red&quot;</span> /&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">text</span> <span class="attr">x</span>=<span class="string">&quot;75&quot;</span> <span class="attr">y</span>=<span class="string">&quot;150&quot;</span> <span class="attr">text-anchor</span>=<span class="string">&quot;middle&quot;</span> <span class="attr">font-family</span>=<span class="string">&quot;sans-serif&quot;</span> <span class="attr">font-size</span>=<span class="string">&quot;14&quot;</span>&gt;</span>Explicit thresholds<span class="tag">&lt;/<span class="name">text</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">g</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">g</span> <span class="attr">id</span>=<span class="string">&quot;quantile&quot;</span> <span class="attr">transform</span>=<span class="string">&quot;translate(425,10)&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">text</span> <span class="attr">x</span>=<span class="string">&quot;75&quot;</span> <span class="attr">y</span>=<span class="string">&quot;25&quot;</span> <span class="attr">text-anchor</span>=<span class="string">&quot;middle&quot;</span> <span class="attr">font-family</span>=<span class="string">&quot;sans-serif&quot;</span> <span class="attr">font-size</span>=<span class="string">&quot;14&quot;</span>&gt;</span>d3.scaleQuantile()<span class="tag">&lt;/<span class="name">text</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">line</span> <span class="attr">x1</span>=<span class="string">&quot;0&quot;</span> <span class="attr">y1</span>=<span class="string">&quot;115&quot;</span> <span class="attr">x2</span>=<span class="string">&quot;150&quot;</span> <span class="attr">y2</span>=<span class="string">&quot;115&quot;</span> <span class="attr">stroke</span>=<span class="string">&quot;black&quot;</span> /&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">line</span> <span class="attr">x1</span>=<span class="string">&quot;0&quot;</span> <span class="attr">y1</span>=<span class="string">&quot;120&quot;</span> <span class="attr">x2</span>=<span class="string">&quot;0&quot;</span> <span class="attr">y2</span>=<span class="string">&quot;110&quot;</span> <span class="attr">stroke</span>=<span class="string">&quot;black&quot;</span> /&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">line</span> <span class="attr">x1</span>=<span class="string">&quot;150&quot;</span> <span class="attr">y1</span>=<span class="string">&quot;120&quot;</span> <span class="attr">x2</span>=<span class="string">&quot;150&quot;</span> <span class="attr">y2</span>=<span class="string">&quot;110&quot;</span> <span class="attr">stroke</span>=<span class="string">&quot;black&quot;</span> /&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">rect</span> <span class="attr">id</span>=<span class="string">&quot;bin1&quot;</span> <span class="attr">x</span>=<span class="string">&quot;19&quot;</span>  <span class="attr">y</span>=<span class="string">&quot;60&quot;</span> <span class="attr">width</span>=<span class="string">&quot;12&quot;</span> <span class="attr">height</span>=<span class="string">&quot;12&quot;</span> <span class="attr">fill</span>=<span class="string">&quot;blue&quot;</span>/&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">rect</span> <span class="attr">id</span>=<span class="string">&quot;bin2&quot;</span> <span class="attr">x</span>=<span class="string">&quot;69&quot;</span>  <span class="attr">y</span>=<span class="string">&quot;60&quot;</span> <span class="attr">width</span>=<span class="string">&quot;12&quot;</span> <span class="attr">height</span>=<span class="string">&quot;12&quot;</span> <span class="attr">fill</span>=<span class="string">&quot;blue&quot;</span>/&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">rect</span> <span class="attr">id</span>=<span class="string">&quot;bin2&quot;</span> <span class="attr">x</span>=<span class="string">&quot;119&quot;</span> <span class="attr">y</span>=<span class="string">&quot;60&quot;</span> <span class="attr">width</span>=<span class="string">&quot;12&quot;</span> <span class="attr">height</span>=<span class="string">&quot;12&quot;</span> <span class="attr">fill</span>=<span class="string">&quot;blue&quot;</span>/&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">line</span> <span class="attr">id</span>=<span class="string">&quot;bd1&quot;</span> <span class="attr">x1</span>=<span class="string">&quot;50&quot;</span> <span class="attr">y1</span>=<span class="string">&quot;125&quot;</span> <span class="attr">x2</span>=<span class="string">&quot;50&quot;</span> <span class="attr">y2</span>=<span class="string">&quot;50&quot;</span> <span class="attr">stroke</span>=<span class="string">&quot;black&quot;</span> <span class="attr">stroke-dasharray</span>=<span class="string">&quot;3 3&quot;</span>/&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">line</span> <span class="attr">id</span>=<span class="string">&quot;bd2&quot;</span> <span class="attr">x1</span>=<span class="string">&quot;100&quot;</span> <span class="attr">y1</span>=<span class="string">&quot;125&quot;</span> <span class="attr">x2</span>=<span class="string">&quot;100&quot;</span> <span class="attr">y2</span>=<span class="string">&quot;50&quot;</span> <span class="attr">stroke</span>=<span class="string">&quot;black&quot;</span> <span class="attr">stroke-dasharray</span>=<span class="string">&quot;3 3&quot;</span>/&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">text</span> <span class="attr">x</span>=<span class="string">&quot;75&quot;</span> <span class="attr">y</span>=<span class="string">&quot;150&quot;</span> <span class="attr">text-anchor</span>=<span class="string">&quot;middle&quot;</span> <span class="attr">font-family</span>=<span class="string">&quot;sans-serif&quot;</span> <span class="attr">font-size</span>=<span class="string">&quot;14&quot;</span>&gt;</span>Implicit thresholds<span class="tag">&lt;/<span class="name">text</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">text</span> <span class="attr">x</span>=<span class="string">&quot;75&quot;</span> <span class="attr">y</span>=<span class="string">&quot;170&quot;</span> <span class="attr">text-anchor</span>=<span class="string">&quot;middle&quot;</span> <span class="attr">font-family</span>=<span class="string">&quot;sans-serif&quot;</span> <span class="attr">font-size</span>=<span class="string">&quot;14&quot;</span>&gt;</span>Equally populated bins<span class="tag">&lt;/<span class="name">text</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">g</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">defs</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> d3 <span class="keyword">from</span> <span class="string">&#x27;d3&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; useEffect &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">makeDemo07_1</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> gauss = d3.randomNormal( <span class="number">75</span>, <span class="number">40</span> );</span><br><span class="line">    <span class="keyword">var</span> uni = d3.randomUniform( <span class="number">2</span>, <span class="number">10</span> );</span><br><span class="line">    <span class="keyword">var</span> data = [];</span><br><span class="line">    <span class="keyword">for</span>( ; data.length &lt; <span class="number">50</span> ; ) &#123;</span><br><span class="line">	    <span class="keyword">var</span> g = gauss();</span><br><span class="line">	    <span class="keyword">if</span>( g &gt; <span class="number">0</span> &amp;&amp; g &lt; <span class="number">150</span> ) &#123;</span><br><span class="line">	        data.push( g )</span><br><span class="line">	    &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">var</span> sc = d3.scaleQuantile().domain(data).range( [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>] );</span><br><span class="line"><span class="comment">//    console.log( sc.invertExtent(1), sc.invertExtent(2), sc.invertExtent(3) );</span></span><br><span class="line">    </span><br><span class="line">    d3.select( <span class="string">&quot;#quantile&quot;</span> ).selectAll( <span class="string">&quot;circle&quot;</span> ).data(data).enter()</span><br><span class="line">	.append( <span class="string">&quot;circle&quot;</span> ).attr( <span class="string">&quot;r&quot;</span>, <span class="number">2</span> ).attr( <span class="string">&quot;fill&quot;</span>, <span class="string">&quot;red&quot;</span> )</span><br><span class="line">	.attr( <span class="string">&quot;cy&quot;</span>, <span class="function">()=&gt;</span><span class="number">115</span>+uni() ).attr( <span class="string">&quot;cx&quot;</span>, <span class="function"><span class="params">d</span>=&gt;</span>d );</span><br><span class="line">    d3.select( <span class="string">&quot;#bd1&quot;</span> )</span><br><span class="line">	.attr( <span class="string">&quot;x1&quot;</span>, sc.invertExtent(<span class="number">1</span>)[<span class="number">1</span>] )</span><br><span class="line">	.attr( <span class="string">&quot;x2&quot;</span>, sc.invertExtent(<span class="number">1</span>)[<span class="number">1</span>] );</span><br><span class="line">    d3.select( <span class="string">&quot;#bd2&quot;</span> )</span><br><span class="line">	.attr( <span class="string">&quot;x1&quot;</span>, sc.invertExtent(<span class="number">2</span>)[<span class="number">1</span>] )</span><br><span class="line">	.attr( <span class="string">&quot;x2&quot;</span>, sc.invertExtent(<span class="number">2</span>)[<span class="number">1</span>] );</span><br><span class="line">    d3.select( <span class="string">&quot;#bin1&quot;</span> ).attr( <span class="string">&quot;x&quot;</span>, d3.mean(sc.invertExtent(<span class="number">1</span>))-<span class="number">6</span> );</span><br><span class="line">    d3.select( <span class="string">&quot;#bin2&quot;</span> ).attr( <span class="string">&quot;x&quot;</span>, d3.mean(sc.invertExtent(<span class="number">2</span>))-<span class="number">6</span> );</span><br><span class="line">    d3.select( <span class="string">&quot;#bin3&quot;</span> ).attr( <span class="string">&quot;x&quot;</span>, d3.mean(sc.invertExtent(<span class="number">3</span>))-<span class="number">6</span> );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">readSvg</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// svg</span></span><br><span class="line">    d3.svg( <span class="string">&quot;data/ch7.svg&quot;</span> ).then( <span class="function"><span class="keyword">function</span>(<span class="params">res</span>) </span>&#123;</span><br><span class="line">        d3.select( <span class="string">&quot;svg&quot;</span> ).insert( <span class="function">()=&gt;</span>res.firstChild, <span class="string">&quot;:first-child&quot;</span> );</span><br><span class="line">        d3.select( <span class="string">&quot;#test&quot;</span> ).append( <span class="string">&quot;use&quot;</span> ).attr( <span class="string">&quot;href&quot;</span>, <span class="string">&quot;#quantize&quot;</span> );</span><br><span class="line">        d3.select( <span class="string">&quot;#test&quot;</span> ).append( <span class="string">&quot;use&quot;</span> ).attr( <span class="string">&quot;href&quot;</span>, <span class="string">&quot;#threshold&quot;</span>);</span><br><span class="line">        d3.select( <span class="string">&quot;#test&quot;</span> ).append( <span class="string">&quot;use&quot;</span> ).attr( <span class="string">&quot;href&quot;</span>, <span class="string">&quot;#quantile&quot;</span>);</span><br><span class="line">        makeDemo07_1()</span><br><span class="line">    &#125; );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Demo07_1</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    useEffect(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">        readSvg()</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        (<span class="xml"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">id</span>=<span class="string">&quot;test&quot;</span> <span class="attr">height</span>=<span class="string">&quot;200&quot;</span> <span class="attr">width</span>=<span class="string">&quot;600&quot;</span> <span class="attr">style</span>=<span class="string">&#123;&#123;</span>&quot;<span class="attr">background</span>&quot; <span class="attr">:</span> &#x27;<span class="attr">rgb</span>(<span class="attr">230</span>, <span class="attr">230</span>, <span class="attr">230</span>)&#x27;&#125;&#125;&gt;</span></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span>)</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> Demo07_1;</span><br></pre></td></tr></table></figure>
+分箱 Scale 具有的方法</li>
+<li>sc( x ) : 輸入一個在 Domain 上的數值 ( x )，返回一個在 Range 上的值</li>
+<li>sc.invertExtent( y ) : 輸入一個在 Range 上的數值 ( y )，在 Domain 的範圍內，返回一個 2 元素的陣列，代表對應箱子的邊界值</li>
+<li>sc.domain( [invalues] ) : 設定 Doamin </li>
+<li>sc.range( [outvalues] ) : 設定 Range</li>
+<li>sc.copy() : 傳回目前 scale 的複本</li>
+</ul>
+<h2 id="離散式-Scale"><a href="#離散式-Scale" class="headerlink" title="離散式 Scale"></a>離散式 Scale</h2><p>用來把一組離散值對應到令一組離散值</p>
+<ul>
+<li>d3.scaleOrdinal( [outvalues] )</li>
+<li>d3.scalePoint()</li>
+<li>d3.scaleBand()<br>離散 Scale 具有的方法</li>
+<li>sc( x ) : 輸入一個在 Domain 上的數值 ( x )，返回一個在 Range 上的值</li>
+<li>sc.domain( [invalues] ) : 設定 Doamin </li>
+<li>sc.range( [outvalues] ) : 設定 Range</li>
+<li>sc.unknown( value ) : 為未知的輸入設定其輸出值</li>
+<li>sc.copy() : 傳回目前 scale 的複本</li>
+</ul>
+<h1 id="Axis"><a href="#Axis" class="headerlink" title="Axis"></a>Axis</h1><p>軸的基本組成，由一條直線標示軸 (&lt;path&gt;)，還有一組刻度 (&lt;line&gt;) 與標籤 (&lt;text&gt;)</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">path</span> <span class="attr">class</span>=<span class="string">&quot;domain&quot;</span> <span class="attr">d</span>=<span class="string">&quot;...&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">path</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">g</span> <span class="attr">class</span>=<span class="string">&quot;tick&quot;</span> <span class="attr">transform</span>=<span class="string">&quot;...&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">line</span> <span class="attr">...</span>&gt;</span><span class="tag">&lt;/<span class="name">line</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">text</span> <span class="attr">...</span>&gt;</span>1<span class="tag">&lt;/<span class="name">text</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">line</span> <span class="attr">...</span>&gt;</span><span class="tag">&lt;/<span class="name">line</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">text</span> <span class="attr">...</span>&gt;</span>2<span class="tag">&lt;/<span class="name">text</span>&gt;</span></span><br><span class="line">    ...</span><br><span class="line"><span class="tag">&lt;/<span class="name">g</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>軸的基本建構流程</p>
+<ol>
+<li>實體化一個 Scale 物件<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> sc = d3.scaleLinear();</span><br></pre></td></tr></table></figure></li>
+<li>實體化一個 axis 組件<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> axMkr = d3.axisBottom( sc );</span><br></pre></td></tr></table></figure></li>
+<li>提供一個合適的 &lt;g&gt; 元素並把它移到目標位置<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> g = d3.select( ... ).append( <span class="string">&quot;g&quot;</span> ).attr( <span class="string">&quot;transform&quot;</span>, ... );</span><br></pre></td></tr></table></figure></li>
+<li>以 &lt;g&gt; 元素作為參數傳給 axis 組件<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">axMkr( g );</span><br></pre></td></tr></table></figure>
+亦可以使用<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">d3.select( ... ).append( <span class="string">&quot;g&quot;</span> ).attr( <span class="string">&quot;transform&quot;</span>, ... ).call( axMkr );</span><br></pre></td></tr></table></figure>
+軸相關方法</li>
+</ol>
+<ul>
+<li>d3.axisTop(scale ) : 傳回一個軸的實例，預設刻度大小為 6，預設的空白填充是 3，刻度與標籤位於軸的上方．</li>
+<li>d3.axisBottom(scale ) : 傳回一個軸的實例，預設刻度大小為 6，預設的空白填充是 3，刻度與標籤位於軸的下方．</li>
+<li>d3.axisLeft(scale ) : 傳回一個軸的實例，預設刻度大小為 6，預設的空白填充是 3，刻度與標籤位於軸的左方．</li>
+<li>d3.axisRight(scale ) : 傳回一個軸的實例，預設刻度大小為 6，預設的空白填充是 3，刻度與標籤位於軸的右方．</li>
+<li>axMkr( selection ) : selection 必須為 &lt;svg&gt; 或 &lt;g&gt;，若 selection 包含多個節點，則每個節點都會建立一個軸</li>
+<li>axMkr.scale( scale ) : 設定 scale 物件</li>
+</ul>
+<h1 id="自訂刻度與標籤"><a href="#自訂刻度與標籤" class="headerlink" title="自訂刻度與標籤"></a>自訂刻度與標籤</h1><ul>
+<li>axMkr.ticks( t, fmt ) : </li>
+<li>axMkr.tickValues( [values] ) : 提供一組數值陣列，以取代掉 scale 所算出的，使用 null 可以清除之前的設定</li>
+<li>axMkr.tickFormat( format ) : 傳入一個 formatter 實例用於格式化刻度標籤</li>
+<li>axMkr.tickSize( size ) : 預設為 6，同時設定內部與外部刻度記號的數量</li>
+<li>axMkr.tickSizeInner( size ) : 預設為 6，同時設定內部刻度記號的數量</li>
+<li>axMkr.tickSizeOuter( size ) : 預設為 6，同時設定外部刻度記號的數量</li>
+<li>axMkr.tickPadding( size ) : 預設為 3，設定刻度記號和刻度標籤之間的填充距離<img src="/2022/02/01/frontend-d3-007-scale-axis/02.png" class="" title="02.png">
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> d3 <span class="keyword">from</span> <span class="string">&#x27;d3&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; useEffect &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">makeDemo07_2</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> sc = d3.scaleLinear().domain( [<span class="number">0</span>,<span class="number">10</span>] ).range( [<span class="number">0</span>,<span class="number">200</span>] );  <span class="comment">// 輸入區間為 0 ~ 10，輸出像素範圍為 0 ~ 200</span></span><br><span class="line"></span><br><span class="line">    d3.select( <span class="string">&quot;svg&quot;</span> ).append( <span class="string">&quot;g&quot;</span> )</span><br><span class="line">        .attr( <span class="string">&quot;transform&quot;</span>, <span class="string">&quot;translate( 50,50)&quot;</span> )</span><br><span class="line">        .call( d3.axisBottom(sc) );</span><br><span class="line">    </span><br><span class="line">    d3.select( <span class="string">&quot;svg&quot;</span> ).append( <span class="string">&quot;g&quot;</span> )</span><br><span class="line">        .attr( <span class="string">&quot;transform&quot;</span>, <span class="string">&quot;translate( 50,125)&quot;</span> )</span><br><span class="line">        .call( d3.axisBottom(sc).tickFormat( d3.format(<span class="string">&quot;.1f&quot;</span>) ) )  <span class="comment">// 刻度格式取小數點後一位</span></span><br><span class="line">        .selectAll( <span class="string">&quot;text&quot;</span> )</span><br><span class="line">        .filter( <span class="function">(<span class="params">d,i</span>)=&gt;</span>i%<span class="number">2</span>!=<span class="number">0</span> ).attr( <span class="string">&quot;visibility&quot;</span>, <span class="string">&quot;hidden&quot;</span> );  <span class="comment">// 偶數刻度才顯示</span></span><br><span class="line"></span><br><span class="line">    d3.select( <span class="string">&quot;svg&quot;</span> ).append( <span class="string">&quot;g&quot;</span> )</span><br><span class="line">        .attr( <span class="string">&quot;transform&quot;</span>, <span class="string">&quot;translate(350,50)&quot;</span> )</span><br><span class="line">        .call( d3.axisBottom(sc).tickFormat( <span class="function">()=&gt;</span><span class="string">&quot;&quot;</span> ) );  <span class="comment">// 消除刻度標籤</span></span><br><span class="line">    d3.select( <span class="string">&quot;svg&quot;</span> ).append( <span class="string">&quot;g&quot;</span> )</span><br><span class="line">        .attr( <span class="string">&quot;transform&quot;</span>, <span class="string">&quot;translate(350,50)&quot;</span> )</span><br><span class="line">        .call( d3.axisBottom( sc ).ticks(<span class="number">2</span>) )  <span class="comment">// 分隔成 2 等份</span></span><br><span class="line">        .append( <span class="string">&quot;text&quot;</span> ).text( <span class="string">&quot;Metric&quot;</span> )</span><br><span class="line">        .attr( <span class="string">&quot;x&quot;</span>, sc(<span class="number">5</span>) ).attr(<span class="string">&quot;y&quot;</span>, <span class="number">35</span> )</span><br><span class="line">        .attr( <span class="string">&quot;font-size&quot;</span>, <span class="number">12</span> ).attr( <span class="string">&quot;fill&quot;</span>, <span class="string">&quot;black&quot;</span> );</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">var</span> g = d3.select( <span class="string">&quot;svg&quot;</span> ).append( <span class="string">&quot;g&quot;</span> )</span><br><span class="line">        .attr( <span class="string">&quot;transform&quot;</span>, <span class="string">&quot;translate(350,125)&quot;</span> )</span><br><span class="line">        .call( d3.axisBottom(sc).tickPadding( <span class="number">5</span> ) );</span><br><span class="line">    g.select( <span class="string">&quot;.domain&quot;</span> ).attr( <span class="string">&quot;visibility&quot;</span>, <span class="string">&quot;hidden&quot;</span> );  <span class="comment">// 隱藏軸線</span></span><br><span class="line">    g.selectAll( <span class="string">&quot;.tick&quot;</span> ).select( <span class="string">&quot;line&quot;</span> )</span><br><span class="line">        .attr( <span class="string">&quot;stroke&quot;</span>, <span class="string">&quot;red&quot;</span> ).attr( <span class="string">&quot;stroke-width&quot;</span>, <span class="number">2</span> );  <span class="comment">// 改變刻度記號</span></span><br><span class="line">    g.selectAll( <span class="string">&quot;text&quot;</span> ).attr( <span class="string">&quot;font-size&quot;</span>, <span class="number">14</span> );  <span class="comment">// 改變刻度標籤</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Demo07_2</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    useEffect(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">        makeDemo07_2()</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        (<span class="xml"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">height</span>=<span class="string">&quot;200&quot;</span> <span class="attr">width</span>=<span class="string">&quot;600&quot;</span> <span class="attr">style</span>=<span class="string">&#123;&#123;</span>&quot;<span class="attr">background</span>&quot; <span class="attr">:</span> &#x27;<span class="attr">rgb</span>(<span class="attr">230</span>, <span class="attr">230</span>, <span class="attr">230</span>)&#x27;&#125;&#125;&gt;</span></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span>)</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> Demo07_2;</span><br></pre></td></tr></table></figure>
+參考代碼 : <a target="_blank" rel="noopener" href="https://github.com/janert/d3-for-the-impatient/blob/master/examples/scales.js">https://github.com/janert/d3-for-the-impatient/blob/master/examples/scales.js</a></li>
+</ul>
+<h1 id="範例-1"><a href="#範例-1" class="headerlink" title="範例 1"></a>範例 1</h1><p>參考代碼 : <a target="_blank" rel="noopener" href="https://github.com/janert/d3-for-the-impatient/blob/master/examples/scales.js">https://github.com/janert/d3-for-the-impatient/blob/master/examples/scales.js</a></p>
+<img src="/2022/02/01/frontend-d3-007-scale-axis/03.png" class="" title="03.png">
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> d3 <span class="keyword">from</span> <span class="string">&#x27;d3&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; useEffect &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">makeDemo07_3</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    d3.text( <span class="string">&quot;data/cost.csv&quot;</span> ).then( <span class="function"><span class="params">res</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">var</span> data = d3.csvParseRows( res, <span class="function"><span class="params">d</span> =&gt;</span> [ +d[<span class="number">0</span>], +d[<span class="number">1</span>] ] );  <span class="comment">// 讀取資料</span></span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">function</span> <span class="title">draw</span>(<span class="params"> sel, scX, scY, width, height </span>) </span>&#123; <span class="comment">// 繪製線圖函數</span></span><br><span class="line">            scX = scX.domain( d3.extent( data, <span class="function"><span class="params">d</span>=&gt;</span>d[<span class="number">0</span>] ) ).nice()  <span class="comment">// extent() 算出最大及最小值</span></span><br><span class="line">                .range( [ <span class="number">0</span>, width ] );</span><br><span class="line">            scY = scY.domain( d3.extent( data, <span class="function"><span class="params">d</span>=&gt;</span>d[<span class="number">1</span>] ) ).nice()</span><br><span class="line">                .range( [ height, <span class="number">0</span> ]);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">var</span> ds = data.map( <span class="function"><span class="params">d</span>=&gt;</span>[ scX(d[<span class="number">0</span>]), scY(d[<span class="number">1</span>]) ] );  <span class="comment">// 導入資料集</span></span><br><span class="line">            sel.append( <span class="string">&quot;path&quot;</span> ).classed( <span class="string">&quot;curve&quot;</span>, <span class="literal">true</span> )  <span class="comment">// 設定 &lt;path&gt; 的 calss name 為 curve</span></span><br><span class="line">                .attr( <span class="string">&quot;d&quot;</span>, d3.line()(ds) ).attr( <span class="string">&quot;fill&quot;</span>, <span class="string">&quot;none&quot;</span> )  <span class="comment">// 使用 line 產生器依據資料集 ds 繪製一條直線</span></span><br><span class="line"></span><br><span class="line">            sel.append( <span class="string">&quot;g&quot;</span> )</span><br><span class="line">                .call( d3.axisBottom( scX ).ticks(<span class="number">10</span>, <span class="string">&quot;d&quot;</span>) )  <span class="comment">// 分成 10 等份，而刻度標籤格式為整數</span></span><br><span class="line">                .attr( <span class="string">&quot;transform&quot;</span>, <span class="string">&quot;translate( 0,&quot;</span>+height+<span class="string">&quot;)&quot;</span> );</span><br><span class="line">            </span><br><span class="line">            sel.append( <span class="string">&quot;g&quot;</span> ).call( d3.axisLeft( scY ) );</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        d3.select( <span class="string">&quot;svg&quot;</span> ).append( <span class="string">&quot;g&quot;</span> )</span><br><span class="line">            .attr( <span class="string">&quot;transform&quot;</span>, <span class="string">&quot;translate( 50, 50 )&quot;</span> )</span><br><span class="line">            .call( draw,d3.scaleLinear(),d3.scaleLinear(),<span class="number">500</span>,<span class="number">500</span> )</span><br><span class="line">            .select( <span class="string">&quot;.curve&quot;</span> ).attr( <span class="string">&quot;stroke&quot;</span>, <span class="string">&quot;red&quot;</span> );</span><br><span class="line">           </span><br><span class="line">        d3.select( <span class="string">&quot;svg&quot;</span> ).append( <span class="string">&quot;g&quot;</span> )</span><br><span class="line">            .attr( <span class="string">&quot;transform&quot;</span>, <span class="string">&quot;translate( 200, 50 )&quot;</span> )</span><br><span class="line">            .call( draw,d3.scaleLinear(),d3.scaleLog(),<span class="number">350</span>,<span class="number">250</span> )</span><br><span class="line">            .select( <span class="string">&quot;.curve&quot;</span> ).attr( <span class="string">&quot;stroke&quot;</span>, <span class="string">&quot;blue&quot;</span> );</span><br><span class="line">    &#125; );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Demo07_3</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    useEffect(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">        makeDemo07_3()</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        (<span class="xml"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">height</span>=<span class="string">&quot;600&quot;</span> <span class="attr">width</span>=<span class="string">&quot;600&quot;</span> <span class="attr">style</span>=<span class="string">&#123;&#123;</span>&quot;<span class="attr">background</span>&quot; <span class="attr">:</span> &#x27;<span class="attr">rgb</span>(<span class="attr">230</span>, <span class="attr">230</span>, <span class="attr">230</span>)&#x27;&#125;&#125;&gt;</span></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span>)</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> Demo07_3;</span><br></pre></td></tr></table></figure>
+
+<h1 id="範例-2"><a href="#範例-2" class="headerlink" title="範例 2"></a>範例 2</h1><p>參考代碼 : <a target="_blank" rel="noopener" href="https://github.com/janert/d3-for-the-impatient/blob/master/examples/scales.js">https://github.com/janert/d3-for-the-impatient/blob/master/examples/scales.js</a></p>
+<img src="/2022/02/01/frontend-d3-007-scale-axis/04.png" class="" title="04.png">
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> d3 <span class="keyword">from</span> <span class="string">&#x27;d3&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; useEffect &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">makeDemo07_4</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    d3.text( <span class="string">&quot;data/load.csv&quot;</span> ).then( <span class="function"><span class="params">res</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="comment">// prepare data</span></span><br><span class="line">        <span class="keyword">var</span> parse = d3.utcParse( <span class="string">&quot;%H:%M:%S&quot;</span> );  <span class="comment">// 建立剖析時間戳的函數</span></span><br><span class="line">        <span class="keyword">var</span> format = d3.utcFormat( <span class="string">&quot;%H:%M&quot;</span> );  <span class="comment">// 建立格式化時間戳的函數</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">var</span> data = d3.csvParse( res, <span class="function"><span class="keyword">function</span>(<span class="params"> d </span>) </span>&#123;  <span class="comment">// 讀取資料</span></span><br><span class="line">            <span class="keyword">return</span> &#123; <span class="attr">ts</span>: parse(d.timestamp), <span class="attr">val</span>: +d.load &#125;</span><br><span class="line">        &#125; );</span><br><span class="line"></span><br><span class="line">        <span class="keyword">var</span> scT = d3.scaleUtc()</span><br><span class="line">            .domain( d3.extent( data, <span class="function"><span class="params">d</span>=&gt;</span>d.ts ) ).nice()</span><br><span class="line">            .range( [ <span class="number">50</span>, <span class="number">550</span> ] );</span><br><span class="line">        <span class="keyword">var</span> scY = d3.scaleLinear()</span><br><span class="line">            .domain( [<span class="number">0</span>, <span class="number">100</span>] ).range( [ <span class="number">250</span>, <span class="number">50</span> ] );</span><br><span class="line">        <span class="keyword">var</span> scC = d3.scaleThreshold()  <span class="comment">// 建立用臨界值方式建立 scale ( 小於 35: green, 35-75: orange, 大於 75 : red )</span></span><br><span class="line">            .domain( [<span class="number">35</span>, <span class="number">75</span>] ).range( [<span class="string">&quot;green&quot;</span>,<span class="string">&quot;orange&quot;</span>,<span class="string">&quot;red&quot;</span>] );</span><br><span class="line">        </span><br><span class="line">        data = d3.pairs( data, <span class="function">(<span class="params">a,b</span>) =&gt;</span> &#123; <span class="keyword">return</span> &#123; <span class="attr">src</span>: a, <span class="attr">dst</span>: b &#125; &#125; );  <span class="comment">// 將一點一點的陣列，轉成具有起點與終點的線段對</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">var</span> svg = d3.select( <span class="string">&quot;svg&quot;</span> ).attr( <span class="string">&quot;cursor&quot;</span>,<span class="string">&quot;crosshair&quot;</span> );</span><br><span class="line">        </span><br><span class="line">        svg.selectAll(<span class="string">&quot;line&quot;</span>).data(data).enter().append(<span class="string">&quot;line&quot;</span>)  <span class="comment">// 不同於之前使用 D3 的 line 產生器，此種曲線必須自己客製化</span></span><br><span class="line">            .attr( <span class="string">&quot;x1&quot;</span>, <span class="function"><span class="params">d</span> =&gt;</span> scT(d.src.ts) ) </span><br><span class="line">            .attr( <span class="string">&quot;x2&quot;</span>, <span class="function"><span class="params">d</span> =&gt;</span> scT(d.dst.ts) )</span><br><span class="line">            .attr( <span class="string">&quot;y1&quot;</span>, <span class="function"><span class="params">d</span> =&gt;</span> scY(d.src.val) )</span><br><span class="line">            .attr( <span class="string">&quot;y2&quot;</span>, <span class="function"><span class="params">d</span> =&gt;</span> scY(d.dst.val) )</span><br><span class="line">            .attr( <span class="string">&quot;stroke&quot;</span>, <span class="function"><span class="params">d</span>=&gt;</span>scC( (d.src.val + d.dst.val)/<span class="number">2</span> ) );</span><br><span class="line"></span><br><span class="line">        svg.append( <span class="string">&quot;g&quot;</span> ).attr( <span class="string">&quot;transform&quot;</span>, <span class="string">&quot;translate(50,0)&quot;</span> )</span><br><span class="line">            .call( d3.axisLeft(scY) );</span><br><span class="line">        svg.append( <span class="string">&quot;g&quot;</span> ).attr( <span class="string">&quot;transform&quot;</span>, <span class="string">&quot;translate(0,250)&quot;</span> )        </span><br><span class="line">            .call( d3.axisBottom(scT).tickFormat( format )</span><br><span class="line">                   .ticks( d3.utcMinute.every(<span class="number">10</span>) ) );  <span class="comment">// 以每 10 分鐘為一個刻度</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 製作滑動鼠標而顯示曲線數值</span></span><br><span class="line">        <span class="keyword">var</span> txt = svg.append(<span class="string">&quot;text&quot;</span>).attr(<span class="string">&quot;x&quot;</span>,<span class="number">100</span>).attr(<span class="string">&quot;y&quot;</span>,<span class="number">50</span>)   <span class="comment">// 定義數值顯示位置</span></span><br><span class="line">            .attr(<span class="string">&quot;font-family&quot;</span>,<span class="string">&quot;sans-serif&quot;</span>).attr(<span class="string">&quot;font-size&quot;</span>,<span class="number">14</span>);</span><br><span class="line">        svg.on( <span class="string">&quot;mousemove&quot;</span>, <span class="function"><span class="keyword">function</span>(<span class="params">event</span>) </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> pt = d3.pointer( event, svg.node() )</span><br><span class="line">            txt.text( format( scT.invert( pt[<span class="number">0</span>] ) ) + <span class="string">&quot; | &quot;</span> +     <span class="comment">// 依據滑鼠 x 座標反算 x 軸的數值</span></span><br><span class="line">                      d3.format( <span class="string">&quot;&gt;2d&quot;</span> )( scY.invert(pt[<span class="number">1</span>]) ) );  <span class="comment">// 依據滑鼠 y 座標反算 y 軸的數值</span></span><br><span class="line">        &#125; );    </span><br><span class="line">    &#125; );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Demo07_4</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    useEffect(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">        makeDemo07_4()</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        (<span class="xml"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">height</span>=<span class="string">&quot;300&quot;</span> <span class="attr">width</span>=<span class="string">&quot;600&quot;</span> <span class="attr">style</span>=<span class="string">&#123;&#123;</span>&quot;<span class="attr">background</span>&quot; <span class="attr">:</span> &#x27;<span class="attr">rgb</span>(<span class="attr">230</span>, <span class="attr">230</span>, <span class="attr">230</span>)&#x27;&#125;&#125;&gt;</span></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span>)</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> Demo07_4;</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Scale/" rel="tag"># Scale</a>
+              <a href="/tags/Axis/" rel="tag"># Axis</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/02/01/frontend-d3-006-data-io/" rel="prev" title="D3 - 006 讀取資料">
+      <i class="fa fa-chevron-left"></i> D3 - 006 讀取資料
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/02/02/frontend-d3-008-color/" rel="next" title="D3 - 008 Color">
+      D3 - 008 Color <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Scale"><span class="nav-number">1.</span> <span class="nav-text">Scale</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%A3%E7%BA%8C%E6%80%A7%E7%9A%84-Scale"><span class="nav-number">1.1.</span> <span class="nav-text">連續性的 Scale</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%87%AA%E8%A8%82-scale"><span class="nav-number">1.2.</span> <span class="nav-text">自訂 scale</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E7%AE%B1-Scale"><span class="nav-number">1.3.</span> <span class="nav-text">分箱 Scale</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9B%A2%E6%95%A3%E5%BC%8F-Scale"><span class="nav-number">1.4.</span> <span class="nav-text">離散式 Scale</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Axis"><span class="nav-number">2.</span> <span class="nav-text">Axis</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%87%AA%E8%A8%82%E5%88%BB%E5%BA%A6%E8%88%87%E6%A8%99%E7%B1%A4"><span class="nav-number">3.</span> <span class="nav-text">自訂刻度與標籤</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AF%84%E4%BE%8B-1"><span class="nav-number">4.</span> <span class="nav-text">範例 1</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AF%84%E4%BE%8B-2"><span class="nav-number">5.</span> <span class="nav-text">範例 2</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Steven Wu</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">112</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">112</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/pluto123" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;pluto123" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:yuh.chang.wu@gmail.com" title="E-Mail → mailto:yuh.chang.wu@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Steven Wu</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">473k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">7:10</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span><br></span>	
+
+<span class="post-meta-item-icon">
+    <i class="fa fa-users"></i>
+</span>
+<span>總訪客：&nbsp<span id="busuanzi_value_site_uv"><i class="fa fa-spinner fa-spin"></i></span>&nbsp人</span>
+    <span class="post-meta-divider">|</span>
+<span class="post-meta-item-icon">
+    <i class="fa fa-eye"></i>
+</span>
+<span>總訪問量：&nbsp<span id="busuanzi_value_site_pv"><i class="fa fa-spinner fa-spin"></i></span>&nbsp次</span>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '4930808f816a28eedad7',
+      clientSecret: '20b0570483dc737ad14b42abc3ab1866089ce63e',
+      repo        : 'pluto123.github.io',
+      owner       : 'pluto123',
+      admin       : ['pluto123'],
+      id          : 'dc2e3d49f4e70e64c485815d70b3a210',
+        language: 'zh-TW',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>

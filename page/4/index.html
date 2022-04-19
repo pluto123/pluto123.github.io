@@ -202,7 +202,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/26/frontend-react-set-state-detail/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/12/28/frontend-material-ui-tutorial-011-advanced-usestyles/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -216,7 +216,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/11/26/frontend-react-set-state-detail/" class="post-title-link" itemprop="url">前端 - React 學習 - setState() 進階說明</a>
+            <a href="/2021/12/28/frontend-material-ui-tutorial-011-advanced-usestyles/" class="post-title-link" itemprop="url">Material UI 教學 - 011 useStyles 進階用法</a>
         </h2>
 
         <div class="post-meta">
@@ -226,28 +226,15 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2021-11-26 21:48:25" itemprop="dateCreated datePublished" datetime="2021-11-26T21:48:25+08:00">2021-11-26</time>
+              <time title="Created: 2021-12-28 10:51:39" itemprop="dateCreated datePublished" datetime="2021-12-28T10:51:39+08:00">2021-12-28</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-12-03 13:12:41" itemprop="dateModified" datetime="2021-12-03T13:12:41+08:00">2021-12-03</time>
+                <time title="Modified: 2021-12-30 11:41:54" itemprop="dateModified" datetime="2021-12-30T11:41:54+08:00">2021-12-30</time>
               </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Frontend/" itemprop="url" rel="index"><span itemprop="name">Frontend</span></a>
-                </span>
-                  , 
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Frontend/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
-                </span>
-            </span>
 
           <br>
             <span class="post-meta-item" title="Symbols count in article">
@@ -255,7 +242,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>663</span>
+              <span>915</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
@@ -274,13 +261,11 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="setState-的兩種更新方式"><a href="#setState-的兩種更新方式" class="headerlink" title="setState() 的兩種更新方式"></a>setState() 的兩種更新方式</h1><ol>
-<li>使用對象<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">add = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123;count&#125; = <span class="built_in">this</span>.state</span><br><span class="line">    <span class="built_in">this</span>.setState(&#123;<span class="attr">count</span>:count+<span class="number">1</span>&#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-<li>使用函數<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">minus = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">this</span>.setState(<span class="function">(<span class="params">state, props</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> &#123;<span class="attr">count</span>:state.count-<span class="number">1</span>&#125;</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-使用時機 :<br>如果新狀態跟前次狀態無關，則使用對象方式<br>如果新狀態跟前次狀態有關，則使用函數方式
+          <ol>
+<li>傳入 theme<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> useStyles = <span class="function">(<span class="params">theme</span>) =&gt;</span> (&#123;</span><br><span class="line">    <span class="attr">page</span>: &#123;</span><br><span class="line">        <span class="attr">background</span>: <span class="string">&#x27;#F9F9F9&#x27;</span>,</span><br><span class="line">        <span class="attr">width</span>: <span class="string">&#x27;100%&#x27;</span>,</span><br><span class="line">        <span class="attr">padding</span>: theme.spacing(<span class="number">3</span>)</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">drawer</span>: &#123;</span><br><span class="line">        <span class="attr">width</span>: drawerWith</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">drawerPaper</span>: &#123;</span><br><span class="line">        <span class="attr">width</span>: drawerWith</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">root</span>: &#123;</span><br><span class="line">        <span class="attr">display</span>: <span class="string">&#x27;flex&#x27;</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">title</span>: &#123;</span><br><span class="line">        <span class="attr">padding</span>: theme.spacing(<span class="number">2</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2021/11/26/frontend-react-set-state-detail/#more" rel="contents">
+              <a class="btn" href="/2021/12/28/frontend-material-ui-tutorial-011-advanced-usestyles/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -304,7 +289,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/25/frontend-react-material-ui-library/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/12/26/frontend-material-ui-tutorial-010-list/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -318,7 +303,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/11/25/frontend-react-material-ui-library/" class="post-title-link" itemprop="url">前端 - React UI 庫 - 使用 Material</a>
+            <a href="/2021/12/26/frontend-material-ui-tutorial-010-list/" class="post-title-link" itemprop="url">Material UI 教學 - 010 List</a>
         </h2>
 
         <div class="post-meta">
@@ -328,14 +313,14 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2021-11-25 11:26:49" itemprop="dateCreated datePublished" datetime="2021-11-25T11:26:49+08:00">2021-11-25</time>
+              <time title="Created: 2021-12-26 13:13:10" itemprop="dateCreated datePublished" datetime="2021-12-26T13:13:10+08:00">2021-12-26</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-12-30 10:32:52" itemprop="dateModified" datetime="2021-12-30T10:32:52+08:00">2021-12-30</time>
+                <time title="Modified: 2021-12-30 11:47:49" itemprop="dateModified" datetime="2021-12-30T11:47:49+08:00">2021-12-30</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -343,11 +328,11 @@
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Frontend/" itemprop="url" rel="index"><span itemprop="name">Frontend</span></a>
+                  <a href="/categories/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
                 </span>
                   , 
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Frontend/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
+                  <a href="/categories/React/Material-UI/" itemprop="url" rel="index"><span itemprop="name">Material UI</span></a>
                 </span>
             </span>
 
@@ -357,597 +342,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>651</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>1 mins.</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="React-UI-library-Material-介紹"><a href="#React-UI-library-Material-介紹" class="headerlink" title="React UI library - Material 介紹"></a>React UI library - Material 介紹</h1><p><a target="_blank" rel="noopener" href="https://mui.com/">Material 官網</a><br>Live Demo 資源:<br><a target="_blank" rel="noopener" href="https://fonts.google.com/specimen/Roboto#standard-styles">Roboto font</a><br><a target="_blank" rel="noopener" href="https://fonts.google.com/icons">Font icons</a><br><a target="_blank" rel="noopener" href="https://mui.com/components/icons/">SVG icons</a></p>
-<ul>
-<li>安裝 v5.x<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> npm install @mui/material @emotion/react @emotion/styled</span></span><br></pre></td></tr></table></figure>
-or<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> npm install @mui/material @mui/styled-engine-sc styled-components</span></span><br></pre></td></tr></table></figure></li>
-<li>安裝 v4.x<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> npm install @material-ui/core@next @emotion/react @emotion/styled</span></span><br></pre></td></tr></table></figure>
-or<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> npm install @material-ui/core@next @material-ui/styled-engine-sc@next styled-components</span></span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/11/25/frontend-react-material-ui-library/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/24/frontend-react-041-react-redux-share-data/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Steven Wu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Steven 的學習筆記">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/11/24/frontend-react-041-react-redux-share-data/" class="post-title-link" itemprop="url">前端 - React 學習 - 041 react-redux 容器間共享數據</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-11-24 22:45:22" itemprop="dateCreated datePublished" datetime="2021-11-24T22:45:22+08:00">2021-11-24</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-12-02 09:42:06" itemprop="dateModified" datetime="2021-12-02T09:42:06+08:00">2021-12-02</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Frontend/" itemprop="url" rel="index"><span itemprop="name">Frontend</span></a>
-                </span>
-                  , 
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Frontend/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>9.3k</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>8 mins.</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="在容器組件之間共享數據"><a href="#在容器組件之間共享數據" class="headerlink" title="在容器組件之間共享數據"></a>在容器組件之間共享數據</h1><p>整個專案的目錄結構如下 :</p>
-<img src="/2021/11/24/frontend-react-041-react-redux-share-data/01.png" class="" title="01.png">
-<p>通常都是將 UI 組件的靜態頁面寫好，接著擴展動態操作，根據操作將 action、reducer 及 store 寫好，最後把 UI 組件透過 connect() 變成容器組件．</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/11/24/frontend-react-041-react-redux-share-data/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/23/linux-ubuntu-install-java-eclipse/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Steven Wu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Steven 的學習筆記">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/11/23/linux-ubuntu-install-java-eclipse/" class="post-title-link" itemprop="url">在 Ubuntu 下安裝 JDK 及 Eclipse</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2021-11-23 14:50:19 / Modified: 15:26:57" itemprop="dateCreated datePublished" datetime="2021-11-23T14:50:19+08:00">2021-11-23</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-                </span>
-                  , 
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/Ubuntu/" itemprop="url" rel="index"><span itemprop="name">Ubuntu</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>1.1k</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>1 mins.</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="安裝流程"><a href="#安裝流程" class="headerlink" title="安裝流程"></a>安裝流程</h1><ul>
-<li><p>新增一個 PPA</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo add-apt-repository ppa:webupd8team/java</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo apt-get update</span></span><br></pre></td></tr></table></figure></li>
-<li><p>依照自己需要的 Java 版本安裝<br>安裝 Oracle JDK 6</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo apt-get install oracle-java6-installer  <span class="comment"># 安裝 Oracle JDK 6</span></span></span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/11/23/linux-ubuntu-install-java-eclipse/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/23/linux-install-jdk/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Steven Wu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Steven 的學習筆記">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/11/23/linux-install-jdk/" class="post-title-link" itemprop="url">如何在 Linux 上安裝 JDK</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-11-23 14:12:28" itemprop="dateCreated datePublished" datetime="2021-11-23T14:12:28+08:00">2021-11-23</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-12-03 13:13:48" itemprop="dateModified" datetime="2021-12-03T13:13:48+08:00">2021-12-03</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>866</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>1 mins.</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="下載-JDK-並解壓縮"><a href="#下載-JDK-並解壓縮" class="headerlink" title="下載 JDK 並解壓縮"></a>下載 JDK 並解壓縮</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> /opt/</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> wget --no-cookies --no-check-certificate --header <span class="string">&quot;Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie&quot;</span> <span class="string">&quot;http://download.oracle.com/otn-pub/java/jdk/8u161-b12/2f38c3b165be4555a1fa6e98c45e0808/jdk-8u161-linux-x64.tar.gz&quot;</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> tar xzf jdk-8u161-linux-x64.tar.gz</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="使用-alternatives-進行安裝"><a href="#使用-alternatives-進行安裝" class="headerlink" title="使用 alternatives 進行安裝"></a>使用 alternatives 進行安裝</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> /opt/jdk1.8.0_161/</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> alternatives --install /usr/bin/java java /opt/jdk1.8.0_161/bin/java 2</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> alternatives --config java</span></span><br></pre></td></tr></table></figure>
-<img src="/2021/11/23/linux-install-jdk/01.png" class="" title="01.png">
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/11/23/linux-install-jdk/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/23/database-foreign-key-updated-rule/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Steven Wu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Steven 的學習筆記">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/11/23/database-foreign-key-updated-rule/" class="post-title-link" itemprop="url">外鍵更新規則</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2021-11-23 13:56:00 / Modified: 14:01:02" itemprop="dateCreated datePublished" datetime="2021-11-23T13:56:00+08:00">2021-11-23</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Database/" itemprop="url" rel="index"><span itemprop="name">Database</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>186</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>1 mins.</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>一般外鍵更新的規則有以下四種 :</p>
-<ol>
-<li>CASCADE<br>只要被參考的欄位被刪除或更新，則對應的外鍵欄位也要一併被刪除或更新。                                    </li>
-<li>RESTRICT<br>只要有被參考到，則禁止刪除或更新。</li>
-<li>NO ACTION<br>被參考的欄位被更新或刪除，當作外鍵的欄位不做任何動作，直到根據外鍵做參考時才會發現錯誤。</li>
-<li>SET NULL<br>被參考的欄位被更新或刪除，則被當作外鍵的欄位將被設定為NULL，而外鍵欄位必需要被允許為空。</li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/22/frontend-react-040-react-redux/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Steven Wu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Steven 的學習筆記">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/11/22/frontend-react-040-react-redux/" class="post-title-link" itemprop="url">前端 - React 學習 - 040 react-redux</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-11-22 22:17:37" itemprop="dateCreated datePublished" datetime="2021-11-22T22:17:37+08:00">2021-11-22</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-12-03 13:15:21" itemprop="dateModified" datetime="2021-12-03T13:15:21+08:00">2021-12-03</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Frontend/" itemprop="url" rel="index"><span itemprop="name">Frontend</span></a>
-                </span>
-                  , 
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Frontend/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>9.9k</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>9 mins.</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="redux-和-react-redux"><a href="#redux-和-react-redux" class="headerlink" title="redux 和 react-redux"></a>redux 和 react-redux</h1><p><a target="_blank" rel="noopener" href="https://react-redux.js.org/">react-redux</a> 是 react 開發的一個集中式狀態管理的庫．<br><a target="_blank" rel="noopener" href="https://redux.js.org/">redux</a> 為各種框架 (Vue、React …) 開發的．<br>兩者用法相似被並不一樣．<br>安裝 react-redux</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install react-redux</span><br></pre></td></tr></table></figure>
-<p>另外 redux-thunk 也是不可少的</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install redux-thunk</span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/11/22/frontend-react-040-react-redux/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/21/frontend-react-039-redux-advanced/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Steven Wu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Steven 的學習筆記">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/11/21/frontend-react-039-redux-advanced/" class="post-title-link" itemprop="url">前端 - React 學習 - 039 redux 進階使用</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-11-21 23:11:02" itemprop="dateCreated datePublished" datetime="2021-11-21T23:11:02+08:00">2021-11-21</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-11-23 14:04:26" itemprop="dateModified" datetime="2021-11-23T14:04:26+08:00">2021-11-23</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Frontend/" itemprop="url" rel="index"><span itemprop="name">Frontend</span></a>
-                </span>
-                  , 
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Frontend/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>1.7k</span>
+              <span>2.3k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
@@ -966,13 +361,15 @@ or<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>目標將原本的異步相加，改成用異步 action 方式．<br>修改 Count 組件，直接調用一個 [Action Creators] (createIncrementAsyncAction(data, time))</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">    incrementAsync = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">const</span> &#123;value&#125; = <span class="built_in">this</span>.selectNumber</span><br><span class="line"><span class="comment">//        setTimeout(()=&gt;&#123;</span></span><br><span class="line">            store.dispatch(createIncrementAsyncAction(value*<span class="number">1</span>, <span class="number">1000</span>))</span><br><span class="line"><span class="comment">//        &#125;, 1000)</span></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<p>在 count_action.js 中新增 createIncrementAsyncAction(data, time)</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> createIncrementAsyncAction = <span class="function">(<span class="params">data, time</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="function">()=&gt;</span>&#123;</span><br><span class="line">        <span class="built_in">setTimeout</span>(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">            store.dispatch(createIncrementAction(data))</span><br><span class="line">        &#125;, time)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <p><a target="_blank" rel="noopener" href="https://v4.mui.com/components/lists/">Lists</a></p>
+<p>引入 List 相關組件</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> List <span class="keyword">from</span> <span class="string">&#x27;@material-ui/core/List&#x27;</span></span><br><span class="line"><span class="keyword">import</span> ListItem <span class="keyword">from</span> <span class="string">&#x27;@material-ui/core/ListItem&#x27;</span></span><br><span class="line"><span class="keyword">import</span> ListItemIcon <span class="keyword">from</span> <span class="string">&#x27;@material-ui/core/ListItemIcon&#x27;</span></span><br><span class="line"><span class="keyword">import</span> ListItemText <span class="keyword">from</span> <span class="string">&#x27;@material-ui/core/ListItemText&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>建立 List</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;List&gt;</span><br><span class="line">    <span class="xml"><span class="tag">&lt;<span class="name">ListItem</span>&gt;</span></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;<span class="name">ListItemText</span> <span class="attr">primary</span>=<span class="string">&quot;item1&quot;</span> /&gt;</span></span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;/<span class="name">ListItem</span>&gt;</span></span></span><br><span class="line">    <span class="xml"><span class="tag">&lt;<span class="name">ListItem</span>&gt;</span></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;<span class="name">ListItemText</span> <span class="attr">primary</span>=<span class="string">&quot;item2&quot;</span> /&gt;</span></span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;/<span class="name">ListItem</span>&gt;</span></span></span><br><span class="line">    <span class="xml"><span class="tag">&lt;<span class="name">ListItem</span>&gt;</span></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;<span class="name">ListItemText</span> <span class="attr">primary</span>=<span class="string">&quot;item2&quot;</span> /&gt;</span></span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;/<span class="name">ListItem</span>&gt;</span></span></span><br><span class="line">&lt;/List&gt;</span><br></pre></td></tr></table></figure>
+<img src="/2021/12/26/frontend-material-ui-tutorial-010-list/01.png" class="" title="01.png">
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2021/11/21/frontend-react-039-redux-advanced/#more" rel="contents">
+              <a class="btn" href="/2021/12/26/frontend-material-ui-tutorial-010-list/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -996,7 +393,7 @@ or<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/21/frontend-react-038-redux-basic/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/12/26/frontend-material-ui-tutorial-009-drawer/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -1010,7 +407,7 @@ or<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/11/21/frontend-react-038-redux-basic/" class="post-title-link" itemprop="url">前端 - React 學習 - 038 redux 基本使用</a>
+            <a href="/2021/12/26/frontend-material-ui-tutorial-009-drawer/" class="post-title-link" itemprop="url">Material UI 教學 - 009 Drawer</a>
         </h2>
 
         <div class="post-meta">
@@ -1020,14 +417,14 @@ or<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2021-11-21 15:34:40" itemprop="dateCreated datePublished" datetime="2021-11-21T15:34:40+08:00">2021-11-21</time>
+              <time title="Created: 2021-12-26 09:40:58" itemprop="dateCreated datePublished" datetime="2021-12-26T09:40:58+08:00">2021-12-26</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-11-23 10:56:26" itemprop="dateModified" datetime="2021-11-23T10:56:26+08:00">2021-11-23</time>
+                <time title="Modified: 2021-12-30 11:45:21" itemprop="dateModified" datetime="2021-12-30T11:45:21+08:00">2021-12-30</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1035,11 +432,11 @@ or<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Frontend/" itemprop="url" rel="index"><span itemprop="name">Frontend</span></a>
+                  <a href="/categories/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
                 </span>
                   , 
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Frontend/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
+                  <a href="/categories/React/Material-UI/" itemprop="url" rel="index"><span itemprop="name">Material UI</span></a>
                 </span>
             </span>
 
@@ -1049,7 +446,7 @@ or<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>6k</span>
+              <span>5.1k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
@@ -1068,11 +465,11 @@ or<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class
     <div class="post-body" itemprop="articleBody">
 
       
-          <img src="/2021/11/21/frontend-react-038-redux-basic/01.png" class="" title="01.png">
-<p>[React Components] 發送一個事件請求給 [Action Creators]，[Action Creators] 就該事件請求包裝成一個 action，內有類型 (type) 和 資料 (data)，然後透過 dispatch(action) 轉發給 [Store]，而 [Store] 就將前次狀態 (previosState) 和 action 交給適當的 [Reducers] 進行處理，並將處理結果 (newState) 返回給 [Store]，而有需要的組件則透過 getState() 取得資訊．</p>
+          <p>新建一個 Layout 組件讓我們可以把 Drawer 與 Create/Note 組件放在一起，先把原先在 App.jsx 中切換 Create/Note 組件的程式碼移到 Layout 組件中<br>src/App.jsx</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> <span class="title">App</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="title">render</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      <span class="xml"><span class="tag">&lt;<span class="name">ThemeProvider</span> <span class="attr">theme</span>=<span class="string">&#123;theme&#125;</span>&gt;</span></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;<span class="name">Layout</span> /&gt;</span></span></span><br><span class="line"><span class="xml">      <span class="tag">&lt;/<span class="name">ThemeProvider</span>&gt;</span></span></span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2021/11/21/frontend-react-038-redux-basic/#more" rel="contents">
+              <a class="btn" href="/2021/12/26/frontend-material-ui-tutorial-009-drawer/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -1096,7 +493,7 @@ or<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/21/frontend-react-037-react-ui/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/12/24/frontend-material-ui-tutorial-008-card-component/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -1110,7 +507,7 @@ or<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/11/21/frontend-react-037-react-ui/" class="post-title-link" itemprop="url">前端 - React 學習 - 037 react ui 庫 - Ant-Design</a>
+            <a href="/2021/12/24/frontend-material-ui-tutorial-008-card-component/" class="post-title-link" itemprop="url">Material UI 教學 - 008 Card Component</a>
         </h2>
 
         <div class="post-meta">
@@ -1120,14 +517,14 @@ or<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2021-11-21 10:56:45" itemprop="dateCreated datePublished" datetime="2021-11-21T10:56:45+08:00">2021-11-21</time>
+              <time title="Created: 2021-12-24 19:48:43" itemprop="dateCreated datePublished" datetime="2021-12-24T19:48:43+08:00">2021-12-24</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-11-23 10:56:26" itemprop="dateModified" datetime="2021-11-23T10:56:26+08:00">2021-11-23</time>
+                <time title="Modified: 2021-12-30 11:33:32" itemprop="dateModified" datetime="2021-12-30T11:33:32+08:00">2021-12-30</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1135,11 +532,11 @@ or<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Frontend/" itemprop="url" rel="index"><span itemprop="name">Frontend</span></a>
+                  <a href="/categories/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
                 </span>
                   , 
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Frontend/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
+                  <a href="/categories/React/Material-UI/" itemprop="url" rel="index"><span itemprop="name">Material UI</span></a>
                 </span>
             </span>
 
@@ -1149,7 +546,7 @@ or<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>3.4k</span>
+              <span>3.3k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
@@ -1168,11 +565,616 @@ or<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="三個較有名的-UI-庫"><a href="#三個較有名的-UI-庫" class="headerlink" title="三個較有名的 UI 庫"></a>三個較有名的 UI 庫</h1><ol>
-<li>MUI : <a target="_blank" rel="noopener" href="https://mui.com/zh/">https://mui.com/zh/</a><img src="/2021/11/21/frontend-react-037-react-ui/01.png" class="" title="01.png">
+          <p><a target="_blank" rel="noopener" href="https://v4.mui.com/components/cards/">Card</a></p>
+<p>建立一個 NoteCard 組件，用來呈現 Note 資訊．我們使用 Material-UI 的 Care 組件，其呈現的效果如下 :</p>
+<img src="/2021/12/24/frontend-material-ui-tutorial-008-card-component/01.png" class="" title="01.png">
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2021/11/21/frontend-react-037-react-ui/#more" rel="contents">
+              <a class="btn" href="/2021/12/24/frontend-material-ui-tutorial-008-card-component/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/12/22/frontend-material-ui-tutorial-007-grid-system/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Steven Wu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Steven 的學習筆記">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/22/frontend-material-ui-tutorial-007-grid-system/" class="post-title-link" itemprop="url">Material UI 教學 - 007 Grid System</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-12-22 21:15:16" itemprop="dateCreated datePublished" datetime="2021-12-22T21:15:16+08:00">2021-12-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-12-30 11:29:15" itemprop="dateModified" datetime="2021-12-30T11:29:15+08:00">2021-12-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/React/Material-UI/" itemprop="url" rel="index"><span itemprop="name">Material UI</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>1.6k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>1 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="網格系統-Grid"><a href="#網格系統-Grid" class="headerlink" title="網格系統 (Grid)"></a><a target="_blank" rel="noopener" href="https://v4.mui.com/components/grid/">網格系統 (Grid)</a></h1><p>  引入 Paper 和 Grid 組件<br>  <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="keyword">import</span> Grid <span class="keyword">from</span> <span class="string">&#x27;@material-ui/core/Grid&#x27;</span></span><br><span class="line"><span class="keyword">import</span> Paper <span class="keyword">from</span> <span class="string">&#x27;@material-ui/core/Paper&#x27;</span></span><br><span class="line">...</span><br></pre></td></tr></table></figure><br>  建立一個 Grid 容器<br>  <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;Grid container&gt;</span><br><span class="line">&lt;/Grid&gt;</span><br></pre></td></tr></table></figure></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/12/22/frontend-material-ui-tutorial-007-grid-system/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/12/20/frontend-material-ui-tutorial-006-fetch-data-from-jason-server/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Steven Wu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Steven 的學習筆記">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/20/frontend-material-ui-tutorial-006-fetch-data-from-jason-server/" class="post-title-link" itemprop="url">Material UI 教學 - 006 Fetch data from Json server</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-12-20 21:35:36" itemprop="dateCreated datePublished" datetime="2021-12-20T21:35:36+08:00">2021-12-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-12-30 11:20:45" itemprop="dateModified" datetime="2021-12-30T11:20:45+08:00">2021-12-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/React/Material-UI/" itemprop="url" rel="index"><span itemprop="name">Material UI</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>3k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>3 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="事前準備"><a href="#事前準備" class="headerlink" title="事前準備"></a>事前準備</h1><ol>
+<li>install json-server<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> npm install -g json-server</span></span><br></pre></td></tr></table></figure></li>
+<li>install isomorphic-fetch<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> npm install isomorphic-fetch --save</span></span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/12/20/frontend-material-ui-tutorial-006-fetch-data-from-jason-server/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/12/19/frontend-material-ui-tutorial-005-radio/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Steven Wu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Steven 的學習筆記">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/19/frontend-material-ui-tutorial-005-radio/" class="post-title-link" itemprop="url">Material UI 教學 - 005 Radio</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-12-19 14:08:09" itemprop="dateCreated datePublished" datetime="2021-12-19T14:08:09+08:00">2021-12-19</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-12-30 11:15:30" itemprop="dateModified" datetime="2021-12-30T11:15:30+08:00">2021-12-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/React/Material-UI/" itemprop="url" rel="index"><span itemprop="name">Material UI</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>1.6k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>1 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p><a target="_blank" rel="noopener" href="https://v4.mui.com/components/radio-buttons/">Radio</a><br>引入組件</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Radio <span class="keyword">from</span> <span class="string">&#x27;@material-ui/core/Radio&#x27;</span></span><br><span class="line"><span class="keyword">import</span> RadioGroup <span class="keyword">from</span> <span class="string">&#x27;@material-ui/core/RadioGroup&#x27;</span></span><br><span class="line"><span class="keyword">import</span> FormControlLabel <span class="keyword">from</span> <span class="string">&#x27;@material-ui/core/FormControlLabel&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>添加組件</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;RadioGroup&gt;</span><br><span class="line">    <span class="xml"><span class="tag">&lt;<span class="name">FormControlLabel</span> <span class="attr">value</span>=<span class="string">&quot;money&quot;</span> <span class="attr">control</span>=<span class="string">&#123;</span>&lt;<span class="attr">Radio</span> /&gt;</span>&#125; label=&quot;Money&quot; /&gt;</span></span><br><span class="line">    <span class="xml"><span class="tag">&lt;<span class="name">FormControlLabel</span> <span class="attr">value</span>=<span class="string">&quot;todos&quot;</span> <span class="attr">control</span>=<span class="string">&#123;</span>&lt;<span class="attr">Radio</span> /&gt;</span>&#125; label=&quot;Todos&quot; /&gt;</span></span><br><span class="line">    <span class="xml"><span class="tag">&lt;<span class="name">FormControlLabel</span> <span class="attr">value</span>=<span class="string">&quot;reminders&quot;</span> <span class="attr">control</span>=<span class="string">&#123;</span>&lt;<span class="attr">Radio</span> /&gt;</span>&#125; label=&quot;Reminders&quot; /&gt;</span></span><br><span class="line">    <span class="xml"><span class="tag">&lt;<span class="name">FormControlLabel</span> <span class="attr">value</span>=<span class="string">&quot;work&quot;</span> <span class="attr">control</span>=<span class="string">&#123;</span>&lt;<span class="attr">Radio</span> /&gt;</span>&#125; label=&quot;Work&quot; /&gt;</span></span><br><span class="line">&lt;/RadioGroup&gt;</span><br></pre></td></tr></table></figure>
+<img src="/2021/12/19/frontend-material-ui-tutorial-005-radio/01.png" class="" title="01.png">
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/12/19/frontend-material-ui-tutorial-005-radio/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/12/18/frontend-material-ui-tutorial-004-text-field/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Steven Wu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Steven 的學習筆記">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/18/frontend-material-ui-tutorial-004-text-field/" class="post-title-link" itemprop="url">Material UI 教學 - 004 Text Field</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-12-18 22:59:20" itemprop="dateCreated datePublished" datetime="2021-12-18T22:59:20+08:00">2021-12-18</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-12-30 11:13:14" itemprop="dateModified" datetime="2021-12-30T11:13:14+08:00">2021-12-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/React/Material-UI/" itemprop="url" rel="index"><span itemprop="name">Material UI</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>5.4k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>5 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p><a target="_blank" rel="noopener" href="https://v4.mui.com/components/text-fields/">Text Field</a></p>
+<img src="/2021/12/18/frontend-material-ui-tutorial-004-text-field/01.png" class="" title="01.png">
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/12/18/frontend-material-ui-tutorial-004-text-field/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/12/18/frontend-material-ui-tutorial-003-custom-theme/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Steven Wu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Steven 的學習筆記">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/18/frontend-material-ui-tutorial-003-custom-theme/" class="post-title-link" itemprop="url">Material UI 教學 - 003 使用自定義 Theme</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-12-18 08:12:36" itemprop="dateCreated datePublished" datetime="2021-12-18T08:12:36+08:00">2021-12-18</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-12-30 11:09:16" itemprop="dateModified" datetime="2021-12-30T11:09:16+08:00">2021-12-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/React/Material-UI/" itemprop="url" rel="index"><span itemprop="name">Material UI</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>3.1k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>3 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h1><ol>
+<li>查詢要覆寫值<br><a target="_blank" rel="noopener" href="https://v4.mui.com/customization/default-theme/#default-theme">Material UI Theme 提供的屬性與預設值</a><br>可以利用以上連結查詢出我們想要覆寫的屬性值，比如說我們想改變 primary 的顏色值<img src="/2021/12/18/frontend-material-ui-tutorial-003-custom-theme/01.png" class="" title="01.png">
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/12/18/frontend-material-ui-tutorial-003-custom-theme/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/12/17/frontend-material-ui-tutorial-002-custom-css/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Steven Wu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Steven 的學習筆記">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/17/frontend-material-ui-tutorial-002-custom-css/" class="post-title-link" itemprop="url">Material UI 教學 - 002 使用自定義 CSS</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-12-17 22:59:06" itemprop="dateCreated datePublished" datetime="2021-12-17T22:59:06+08:00">2021-12-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-12-30 11:00:22" itemprop="dateModified" datetime="2021-12-30T11:00:22+08:00">2021-12-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/React/Material-UI/" itemprop="url" rel="index"><span itemprop="name">Material UI</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>2.1k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>2 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="類別組件使用自定義-css"><a href="#類別組件使用自定義-css" class="headerlink" title="類別組件使用自定義 css"></a>類別組件使用自定義 css</h1><ol>
+<li>引入<br>在代碼中引入<code>import &#123; withStyles &#125; from &quot;@material-ui/core/styles&quot;</code></li>
+<li>創建樣式<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> useStyles = <span class="function">() =&gt;</span> (&#123;</span><br><span class="line">    <span class="attr">btn</span>: &#123;</span><br><span class="line">        <span class="attr">fontSize</span>: <span class="number">60</span>,</span><br><span class="line">        <span class="attr">backgroundColor</span>: <span class="string">&#x27;violet&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;&amp;:hover&#x27;</span>: &#123;</span><br><span class="line">            <span class="attr">backgroundColor</span>: <span class="string">&#x27;blue&#x27;</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">title</span>: &#123;</span><br><span class="line">        <span class="attr">textDecoration</span>: <span class="string">&#x27;underline&#x27;</span>,</span><br><span class="line">        <span class="attr">marginBottom</span>: <span class="number">20</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/12/17/frontend-material-ui-tutorial-002-custom-css/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -1195,7 +1197,7 @@ or<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -1261,20 +1263,20 @@ or<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">86</span>
+          <span class="site-state-item-count">112</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-count">20</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">75</span>
+        <span class="site-state-item-count">112</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -1309,7 +1311,7 @@ or<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2021</span>
+  <span itemprop="copyrightYear">2022</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
@@ -1319,13 +1321,13 @@ or<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">231k</span>
+    <span title="Symbols count total">473k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
-    <span title="Reading time total">3:30</span>
+    <span title="Reading time total">7:10</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
   </div>

@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5G1RK23V7S"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-5G1RK23V7S');
+</script>
+  <meta name="description" content="設定事件回調函數並取得事件相關資訊D3 中一些重要的事件  click : 點擊滑鼠 mousemove : 滑鼠滑過元素 mousedown、mouseup : 按下&#x2F;釋放滑鼠鍵 mouseenter、mouseleave : 滑鼠移進&#x2F;移出 mouseover、mouseout : 滑鼠移進&#x2F;移出 keydown、keyup : 按鍵按下&#x2F;釋放  設定某事件處理的回調函數 1sel.on( t">
+<meta property="og:type" content="article">
+<meta property="og:title" content="D3 - 004 事件與動畫">
+<meta property="og:url" content="http://example.com/2022/01/29/frontend-d3-004-event/index.html">
+<meta property="og:site_name" content="Steven 的學習筆記">
+<meta property="og:description" content="設定事件回調函數並取得事件相關資訊D3 中一些重要的事件  click : 點擊滑鼠 mousemove : 滑鼠滑過元素 mousedown、mouseup : 按下&#x2F;釋放滑鼠鍵 mouseenter、mouseleave : 滑鼠移進&#x2F;移出 mouseover、mouseout : 滑鼠移進&#x2F;移出 keydown、keyup : 按鍵按下&#x2F;釋放  設定某事件處理的回調函數 1sel.on( t">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2022/01/29/frontend-d3-004-event/01.png">
+<meta property="og:image" content="http://example.com/2022/01/29/frontend-d3-004-event/02.png">
+<meta property="og:image" content="http://example.com/2022/01/29/frontend-d3-004-event/03.png">
+<meta property="og:image" content="http://example.com/2022/01/29/frontend-d3-004-event/04.png">
+<meta property="og:image" content="http://example.com/2022/01/29/frontend-d3-004-event/05.png">
+<meta property="og:image" content="http://example.com/2022/01/29/frontend-d3-004-event/06.png">
+<meta property="og:image" content="http://example.com/2022/01/29/frontend-d3-004-event/07.png">
+<meta property="og:image" content="http://example.com/2022/01/29/frontend-d3-004-event/08.png">
+<meta property="article:published_time" content="2022-01-29T11:51:43.000Z">
+<meta property="article:modified_time" content="2022-02-08T08:17:14.018Z">
+<meta property="article:author" content="Steven Wu">
+<meta property="article:tag" content="Event">
+<meta property="article:tag" content="Animation">
+<meta property="article:tag" content="Darg and Drop">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2022/01/29/frontend-d3-004-event/01.png">
+
+<link rel="canonical" href="http://example.com/2022/01/29/frontend-d3-004-event/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>D3 - 004 事件與動畫 | Steven 的學習筆記</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5G1RK23V7S"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-5G1RK23V7S');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Steven 的學習筆記</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">沒有解決不了的問題<br>只有未找到解決方法</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/29/frontend-d3-004-event/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Steven Wu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Steven 的學習筆記">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          D3 - 004 事件與動畫
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-01-29 19:51:43" itemprop="dateCreated datePublished" datetime="2022-01-29T19:51:43+08:00">2022-01-29</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-02-08 16:17:14" itemprop="dateModified" datetime="2022-02-08T16:17:14+08:00">2022-02-08</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/D3/" itemprop="url" rel="index"><span itemprop="name">D3</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>19k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>17 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="設定事件回調函數並取得事件相關資訊"><a href="#設定事件回調函數並取得事件相關資訊" class="headerlink" title="設定事件回調函數並取得事件相關資訊"></a>設定事件回調函數並取得事件相關資訊</h1><p>D3 中一些重要的事件</p>
+<ul>
+<li>click : 點擊滑鼠</li>
+<li>mousemove : 滑鼠滑過元素</li>
+<li>mousedown、mouseup : 按下/釋放滑鼠鍵</li>
+<li>mouseenter、mouseleave : 滑鼠移進/移出</li>
+<li>mouseover、mouseout : 滑鼠移進/移出</li>
+<li>keydown、keyup : 按鍵按下/釋放</li>
+</ul>
+<p>設定某事件處理的回調函數</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sel.on( type, callback )</span><br></pre></td></tr></table></figure>
+<p>若要移除回調函數，則使用</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sel.on( type, <span class="literal">null</span> )</span><br></pre></td></tr></table></figure>
+<p>如果對同一個事件註冊兩次回調函數，則後者會把前者給覆蓋掉，若要對相同事件註冊多個回調函數，則必須在該事件名稱之後加上逗點 (.) 並取一個任意字串，如 ：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sel.on( <span class="string">&quot;click.event1&quot;</span>, callback1)</span><br><span class="line">...</span><br><span class="line">sel.on( <span class="string">&quot;click_event2&quot;</span>, callback2)</span><br></pre></td></tr></table></figure>
+<p>取得滑鼠座標並顯示，注意 D3 v6 以上的版本取得事件相關資訊方式有變，</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> d3 <span class="keyword">from</span> <span class="string">&#x27;d3&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; useEffect &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">makeDemo04_1</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> txt = d3.select( <span class="string">&quot;svg&quot;</span> ).append( <span class="string">&quot;text&quot;</span> );</span><br><span class="line">    <span class="keyword">var</span> svg = d3.select( <span class="string">&quot;svg&quot;</span> ).attr( <span class="string">&quot;cursor&quot;</span>, <span class="string">&quot;crosshair&quot;</span> )  <span class="comment">// 把鼠標設為十字</span></span><br><span class="line">        .on( <span class="string">&quot;mousemove&quot;</span>, <span class="function"><span class="keyword">function</span>(<span class="params">event</span>) </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> pt = d3.pointer( event, svg.node() );  <span class="comment">// D3 v6 以上的版本是使用 pointer() 取得事件相關資訊</span></span><br><span class="line">            txt.attr( <span class="string">&quot;x&quot;</span>, <span class="number">18</span>+pt[<span class="number">0</span>] ).attr( <span class="string">&quot;y&quot;</span>, <span class="number">6</span>+pt[<span class="number">1</span>] )</span><br><span class="line">                .text( <span class="string">&quot;&quot;</span> + pt[<span class="number">0</span>] + <span class="string">&quot;,&quot;</span> + pt[<span class="number">1</span>] );</span><br><span class="line">        &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Demo04_1</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    useEffect(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">        d3.select(<span class="string">&#x27;.Demo04_1&#x27;</span>)</span><br><span class="line">          .append(<span class="string">&#x27;svg&#x27;</span>)</span><br><span class="line">          .attr(<span class="string">&#x27;height&#x27;</span>, <span class="number">300</span>)</span><br><span class="line">          .attr(<span class="string">&#x27;width&#x27;</span>, <span class="number">300</span>)</span><br><span class="line">          .style(<span class="string">&#x27;background&#x27;</span>, <span class="string">&#x27;lightgrey&#x27;</span>);</span><br><span class="line">    </span><br><span class="line">          makeDemo04_1()</span><br><span class="line">      &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        (<span class="xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;Demo04_1&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span>)</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> Demo04_1;</span><br></pre></td></tr></table></figure>
+<img src="/2022/01/29/frontend-d3-004-event/01.png" class="" title="01.png">
+
+<h1 id="案例-同步標記"><a href="#案例-同步標記" class="headerlink" title="案例 - 同步標記"></a>案例 - 同步標記</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> d3 <span class="keyword">from</span> <span class="string">&#x27;d3&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; useEffect &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">makeDemo04_2</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    d3.csv( <span class="string">&quot;data/dense.csv&quot;</span> ).then( <span class="function"><span class="keyword">function</span>(<span class="params"> data </span>) </span>&#123;</span><br><span class="line">        <span class="keyword">var</span> svg1 = d3.select( <span class="string">&quot;#svg1&quot;</span> );</span><br><span class="line">        <span class="keyword">var</span> svg2 = d3.select( <span class="string">&quot;#svg2&quot;</span> );</span><br><span class="line"></span><br><span class="line">        <span class="keyword">var</span> sc1=d3.scaleLinear().domain([<span class="number">0</span>,<span class="number">10</span>,<span class="number">50</span>])  <span class="comment">// 在顏色之間填入差值，產生一個顏色梯度</span></span><br><span class="line">            .range([<span class="string">&quot;lime&quot;</span>,<span class="string">&quot;yellow&quot;</span>,<span class="string">&quot;red&quot;</span>]);</span><br><span class="line">        <span class="keyword">var</span> sc2=d3.scaleLinear().domain([<span class="number">0</span>,<span class="number">10</span>,<span class="number">50</span>])</span><br><span class="line">            .range([<span class="string">&quot;lime&quot;</span>,<span class="string">&quot;yellow&quot;</span>,<span class="string">&quot;blue&quot;</span>]);</span><br><span class="line">    </span><br><span class="line">        <span class="keyword">var</span> cs1 = drawCircles(svg1,data,<span class="function"><span class="params">d</span>=&gt;</span>d[<span class="string">&quot;A&quot;</span>],<span class="function"><span class="params">d</span>=&gt;</span>d[<span class="string">&quot;B&quot;</span>],sc1);  <span class="comment">// 建立左側 svg 的圓點</span></span><br><span class="line">        <span class="keyword">var</span> cs2 = drawCircles(svg2,data,<span class="function"><span class="params">d</span>=&gt;</span>d[<span class="string">&quot;A&quot;</span>],<span class="function"><span class="params">d</span>=&gt;</span>d[<span class="string">&quot;C&quot;</span>],sc2);  <span class="comment">// 建立右側 svg 的圓點</span></span><br><span class="line">    </span><br><span class="line">        svg1.call( installHandlers, data, cs1, cs2, sc1, sc2 );  <span class="comment">// 使用 call() 呼叫 installHanders(data, cs1, cs2, sc1, sc2)</span></span><br><span class="line">    &#125; );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">drawCircles</span>(<span class="params"> svg, data, accX, accY, sc </span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> color = sc(<span class="literal">Infinity</span>);  <span class="comment">// 設定初始的顏色值，皆採用顏色梯度做大值 (red / blue)</span></span><br><span class="line">    <span class="keyword">return</span> svg.selectAll( <span class="string">&quot;circle&quot;</span> ).data( data ).enter()</span><br><span class="line">        .append( <span class="string">&quot;circle&quot;</span> )</span><br><span class="line">        .attr( <span class="string">&quot;r&quot;</span>, <span class="number">5</span> ).attr( <span class="string">&quot;cx&quot;</span>, accX ).attr( <span class="string">&quot;cy&quot;</span>, accY )</span><br><span class="line">        .attr( <span class="string">&quot;fill&quot;</span>, color ).attr( <span class="string">&quot;fill-opacity&quot;</span>, <span class="number">0.4</span> );  <span class="comment">// 設定透明度</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">installHandlers</span>(<span class="params"> svg, data, cs1, cs2, sc1, sc2 </span>) </span>&#123;</span><br><span class="line">    svg.attr( <span class="string">&quot;cursor&quot;</span>, <span class="string">&quot;crosshair&quot;</span> )</span><br><span class="line">        .on( <span class="string">&quot;mousemove&quot;</span>, <span class="function"><span class="keyword">function</span>(<span class="params">event</span>) </span>&#123;  <span class="comment">// 當滑鼠移入左側 (sgv1) 時</span></span><br><span class="line">            <span class="keyword">var</span> pt = d3.pointer( event, svg.node() );</span><br><span class="line">            </span><br><span class="line">            cs1.attr( <span class="string">&quot;fill&quot;</span>, <span class="function"><span class="keyword">function</span>(<span class="params"> d, i </span>) </span>&#123;  <span class="comment">// 傳入 csv 內的 data</span></span><br><span class="line">                <span class="keyword">var</span> dx = pt[<span class="number">0</span>] - d3.select( <span class="built_in">this</span> ).attr( <span class="string">&quot;cx&quot;</span> );  <span class="comment">// 算出 data 的所有資料與滑鼠座標間的距離</span></span><br><span class="line">                <span class="keyword">var</span> dy = pt[<span class="number">1</span>] - d3.select( <span class="built_in">this</span> ).attr( <span class="string">&quot;cy&quot;</span> );</span><br><span class="line">                <span class="keyword">var</span> r = <span class="built_in">Math</span>.hypot( dx, dy );  <span class="comment">// hypot 為算出  ((dx * dx) + (dy * dy)) 開根號</span></span><br><span class="line">                </span><br><span class="line">                data[i][<span class="string">&quot;r&quot;</span>] = r;  <span class="comment">// 把 r 值在 data 中另開一個欄位 r 儲存</span></span><br><span class="line">                <span class="keyword">return</span> sc1(r); &#125; );  <span class="comment">// 根據 r 值取出對應顏色梯度的顏色值</span></span><br><span class="line">            </span><br><span class="line">            cs2.attr( <span class="string">&quot;fill&quot;</span>, <span class="function">(<span class="params">d,i</span>) =&gt;</span> sc2( data[i][<span class="string">&quot;r&quot;</span>] ) ); &#125; )  <span class="comment">// 右側圖片的所有 data 也根據剛剛算出的 r 取出對應的顏色梯度值</span></span><br><span class="line">    </span><br><span class="line">        .on( <span class="string">&quot;mouseleave&quot;</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">            cs1.attr( <span class="string">&quot;fill&quot;</span>, sc1(<span class="literal">Infinity</span>) );  <span class="comment">// 滑鼠離開圖表時，恢復原本顏色</span></span><br><span class="line">            cs2.attr( <span class="string">&quot;fill&quot;</span>, sc2(<span class="literal">Infinity</span>) ); &#125; );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Demo04_2</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    useEffect(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">        <span class="keyword">var</span> ds1 = [<span class="string">&quot;svg1&quot;</span>, <span class="string">&quot;svg2&quot;</span>];</span><br><span class="line"></span><br><span class="line">        d3.select(<span class="string">&#x27;.Demo04_2&#x27;</span>)</span><br><span class="line">            .selectAll(<span class="string">&quot;svg&quot;</span>)</span><br><span class="line">            .data(ds1).enter()</span><br><span class="line">            .append(<span class="string">&#x27;svg&#x27;</span>).attr(<span class="string">&quot;id&quot;</span>, <span class="function"><span class="params">d</span>=&gt;</span>d)</span><br><span class="line">            .attr(<span class="string">&#x27;height&#x27;</span>, <span class="number">300</span>)</span><br><span class="line">            .attr(<span class="string">&#x27;width&#x27;</span>, <span class="number">300</span>)</span><br><span class="line">            .style(<span class="string">&#x27;background&#x27;</span>, <span class="string">&#x27;lightgrey&#x27;</span>)</span><br><span class="line">            .style(<span class="string">&quot;margin&quot;</span>, <span class="number">20</span>);</span><br><span class="line">          makeDemo04_2()</span><br><span class="line">      &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        (<span class="xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;Demo04_2&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span>)</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> Demo04_2;</span><br></pre></td></tr></table></figure>
+<p>進入前</p>
+<img src="/2022/01/29/frontend-d3-004-event/02.png" class="" title="02.png">
+<p>進入後</p>
+<img src="/2022/01/29/frontend-d3-004-event/03.png" class="" title="03.png">
+
+<h1 id="改良同步標記"><a href="#改良同步標記" class="headerlink" title="改良同步標記"></a>改良同步標記</h1><p>設定自製鼠標，設定熱區，當鼠標一進到該區中，則隱藏系統鼠標，顯示自製鼠標</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> d3 <span class="keyword">from</span> <span class="string">&#x27;d3&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; useEffect &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">makeDemo04_3</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    d3.csv( <span class="string">&quot;data/dense.csv&quot;</span> ).then( <span class="function"><span class="keyword">function</span>(<span class="params"> data </span>) </span>&#123;</span><br><span class="line">        <span class="keyword">var</span> svg1 = d3.select( <span class="string">&quot;#svg1&quot;</span> );</span><br><span class="line">        <span class="keyword">var</span> svg2 = d3.select( <span class="string">&quot;#svg2&quot;</span> );</span><br><span class="line"></span><br><span class="line">        <span class="keyword">var</span> sc1=d3.scaleLinear().domain([<span class="number">0</span>,<span class="number">10</span>,<span class="number">50</span>])  <span class="comment">// 在顏色之間填入差值，產生一個顏色梯度</span></span><br><span class="line">            .range([<span class="string">&quot;lime&quot;</span>,<span class="string">&quot;yellow&quot;</span>,<span class="string">&quot;red&quot;</span>]);</span><br><span class="line">        <span class="keyword">var</span> sc2=d3.scaleLinear().domain([<span class="number">0</span>,<span class="number">10</span>,<span class="number">50</span>])</span><br><span class="line">            .range([<span class="string">&quot;lime&quot;</span>,<span class="string">&quot;yellow&quot;</span>,<span class="string">&quot;blue&quot;</span>]);</span><br><span class="line">    </span><br><span class="line">        <span class="keyword">var</span> cs1 = drawCircles(svg1,data,<span class="function"><span class="params">d</span>=&gt;</span><span class="built_in">parseInt</span>(d[<span class="string">&quot;A&quot;</span>])+<span class="number">50</span>,<span class="function"><span class="params">d</span>=&gt;</span><span class="built_in">parseInt</span>(d[<span class="string">&quot;B&quot;</span>])+<span class="number">50</span>,sc1);  <span class="comment">// 建立左側 svg 的圓點</span></span><br><span class="line">        <span class="keyword">var</span> cs2 = drawCircles(svg2,data,<span class="function"><span class="params">d</span>=&gt;</span><span class="built_in">parseInt</span>(d[<span class="string">&quot;A&quot;</span>])+<span class="number">50</span>,<span class="function"><span class="params">d</span>=&gt;</span><span class="built_in">parseInt</span>(d[<span class="string">&quot;C&quot;</span>])+<span class="number">50</span>,sc2);  <span class="comment">// 建立右側 svg 的圓點</span></span><br><span class="line">    </span><br><span class="line">        svg1.call( installHandlers, data, cs1, cs2, sc1, sc2 );  <span class="comment">// 使用 call() 呼叫 installHanders(data, cs1, cs2, sc1, sc2)</span></span><br><span class="line">    &#125; );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">drawCircles</span>(<span class="params"> svg, data, accX, accY, sc </span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> color = sc(<span class="literal">Infinity</span>);  <span class="comment">// 設定初始的顏色值，皆採用顏色梯度做大值 (red / blue)</span></span><br><span class="line">    <span class="keyword">return</span> svg.selectAll( <span class="string">&quot;circle&quot;</span> ).data( data ).enter()</span><br><span class="line">        .append( <span class="string">&quot;circle&quot;</span> )</span><br><span class="line">        .attr( <span class="string">&quot;r&quot;</span>, <span class="number">5</span> ).attr( <span class="string">&quot;cx&quot;</span>, accX ).attr( <span class="string">&quot;cy&quot;</span>, accY )</span><br><span class="line">        .attr( <span class="string">&quot;fill&quot;</span>, color ).attr( <span class="string">&quot;fill-opacity&quot;</span>, <span class="number">0.4</span> );  <span class="comment">// 設定透明度</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">installHandlers</span>(<span class="params"> svg, data, cs1, cs2, sc1, sc2 </span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> cursor = svg.append( <span class="string">&quot;circle&quot;</span> ).attr( <span class="string">&quot;r&quot;</span>, <span class="number">50</span> )  <span class="comment">// 建立一個不透明的圓環</span></span><br><span class="line">        .attr( <span class="string">&quot;fill&quot;</span>, <span class="string">&quot;none&quot;</span> ).attr( <span class="string">&quot;stroke&quot;</span>, <span class="string">&quot;black&quot;</span> )</span><br><span class="line">        .attr( <span class="string">&quot;stroke-width&quot;</span>, <span class="number">10</span> ).attr( <span class="string">&quot;stroke-opacity&quot;</span>, <span class="number">0.1</span> )</span><br><span class="line">        .attr( <span class="string">&quot;visibility&quot;</span>, <span class="string">&quot;hidden&quot;</span> );  <span class="comment">// 一開始為隱藏的，等到鼠標進入到 hotzone 時才顯示，被當作鼠標功能使用</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">var</span> hotzone = svg.append( <span class="string">&quot;rect&quot;</span> ).attr( <span class="string">&quot;cursor&quot;</span>, <span class="string">&quot;none&quot;</span> )  <span class="comment">// 設定進入此元素時，沒有鼠標顯示</span></span><br><span class="line">        .attr( <span class="string">&quot;x&quot;</span>, <span class="number">50</span> ).attr( <span class="string">&quot;y&quot;</span>, <span class="number">50</span> )</span><br><span class="line">        .attr( <span class="string">&quot;width&quot;</span>, <span class="number">300</span> ).attr( <span class="string">&quot;height&quot;</span>, <span class="number">300</span> )</span><br><span class="line">        .attr( <span class="string">&quot;visibility&quot;</span>, <span class="string">&quot;hidden&quot;</span> )  <span class="comment">// 設定為隱藏的</span></span><br><span class="line">        .attr( <span class="string">&quot;pointer-events&quot;</span>, <span class="string">&quot;all&quot;</span> )   <span class="comment">// 因為 visibility 設定為 hidden，所以預設是不接收事件的，所以需要靠此設定打開接收事件</span></span><br><span class="line">    </span><br><span class="line">        .on( <span class="string">&quot;mouseenter&quot;</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">            cursor.attr( <span class="string">&quot;visibility&quot;</span>, <span class="string">&quot;visible&quot;</span> ); &#125; )  <span class="comment">// 當滑鼠進入時，將 curser 顯示，當作鼠標使用</span></span><br><span class="line">        </span><br><span class="line">        .on( <span class="string">&quot;mousemove&quot;</span>, <span class="function"><span class="keyword">function</span>(<span class="params">event</span>) </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> pt = d3.pointer( event, svg.node() );</span><br><span class="line">            cursor.attr( <span class="string">&quot;cx&quot;</span>, pt[<span class="number">0</span>] ).attr( <span class="string">&quot;cy&quot;</span>, pt[<span class="number">1</span>] );  <span class="comment">// 當滑鼠移動時，自製鼠標也跟著移動</span></span><br><span class="line"></span><br><span class="line">            cs1.attr( <span class="string">&quot;fill&quot;</span>, <span class="function"><span class="keyword">function</span>(<span class="params"> d, i </span>) </span>&#123;  <span class="comment">// </span></span><br><span class="line">                <span class="keyword">var</span> dx = pt[<span class="number">0</span>] - d3.select( <span class="built_in">this</span> ).attr( <span class="string">&quot;cx&quot;</span> );</span><br><span class="line">                <span class="keyword">var</span> dy = pt[<span class="number">1</span>] - d3.select( <span class="built_in">this</span> ).attr( <span class="string">&quot;cy&quot;</span> );</span><br><span class="line">                <span class="keyword">var</span> r = <span class="built_in">Math</span>.hypot( dx, dy );</span><br><span class="line"></span><br><span class="line">                data[i][<span class="string">&quot;r&quot;</span>] = r;</span><br><span class="line">                <span class="keyword">return</span> sc1(r); &#125; );</span><br><span class="line">            </span><br><span class="line">            cs2.attr( <span class="string">&quot;fill&quot;</span>, <span class="function">(<span class="params">d,i</span>) =&gt;</span> sc2( data[i][<span class="string">&quot;r&quot;</span>] ) ); &#125; )</span><br><span class="line"></span><br><span class="line">        .on( <span class="string">&quot;mouseleave&quot;</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;                                 </span><br><span class="line">            cursor.attr( <span class="string">&quot;visibility&quot;</span>, <span class="string">&quot;hidden&quot;</span> );  <span class="comment">// 當滑鼠移出時也隱藏自製鼠標</span></span><br><span class="line">            cs1.attr( <span class="string">&quot;fill&quot;</span>, sc1(<span class="literal">Infinity</span>) );</span><br><span class="line">            cs2.attr( <span class="string">&quot;fill&quot;</span>, sc2(<span class="literal">Infinity</span>) ); &#125; )</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Demo04_3</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    useEffect(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">        <span class="keyword">var</span> ds1 = [<span class="string">&quot;svg1&quot;</span>, <span class="string">&quot;svg2&quot;</span>];</span><br><span class="line"></span><br><span class="line">        d3.select(<span class="string">&#x27;.Demo04_3&#x27;</span>)</span><br><span class="line">            .selectAll(<span class="string">&quot;svg&quot;</span>)</span><br><span class="line">            .data(ds1).enter()</span><br><span class="line">            .append(<span class="string">&#x27;svg&#x27;</span>).attr(<span class="string">&quot;id&quot;</span>, <span class="function"><span class="params">d</span>=&gt;</span>d)</span><br><span class="line">            .attr(<span class="string">&#x27;height&#x27;</span>, <span class="number">400</span>)</span><br><span class="line">            .attr(<span class="string">&#x27;width&#x27;</span>, <span class="number">400</span>)</span><br><span class="line">            .style(<span class="string">&#x27;background&#x27;</span>, <span class="string">&#x27;lightgrey&#x27;</span>)</span><br><span class="line">            .style(<span class="string">&quot;margin&quot;</span>, <span class="number">20</span>);</span><br><span class="line">          makeDemo04_3()</span><br><span class="line">      &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        (<span class="xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;Demo04_3&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span>)</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> Demo04_3;</span><br></pre></td></tr></table></figure>
+<p>進入前</p>
+<img src="/2022/01/29/frontend-d3-004-event/04.png" class="" title="04.png">
+<p>進入後</p>
+<img src="/2022/01/29/frontend-d3-004-event/05.png" class="" title="05.png">
+
+<h1 id="拖曳"><a href="#拖曳" class="headerlink" title="拖曳"></a>拖曳</h1><p>要在 D3 使用滑鼠來改變 SVG 元件並不困難，而為了讓拖曳操作更容易，D3 提供了一個行為元件 (darg())</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> d3 <span class="keyword">from</span> <span class="string">&#x27;d3&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; useEffect &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">makeDemo04_4</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> widget = <span class="literal">undefined</span>, color = <span class="literal">undefined</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> drag = d3.drag()  <span class="comment">// 使用此工廠函數建立一個 drag 函數物件</span></span><br><span class="line">        .on( <span class="string">&quot;start&quot;</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;  <span class="comment">// 模擬 mousedown 時的動作，取得元件</span></span><br><span class="line">            color = d3.select( <span class="built_in">this</span> ).attr( <span class="string">&quot;fill&quot;</span> );  <span class="comment">// 儲存該元件的顏色，以便在 mouseup 時設回</span></span><br><span class="line">            widget = d3.select( <span class="built_in">this</span> ).attr( <span class="string">&quot;fill&quot;</span>, <span class="string">&quot;lime&quot;</span> );  <span class="comment">// 改變該元件的顏色</span></span><br><span class="line">        &#125; )</span><br><span class="line">        .on( <span class="string">&quot;drag&quot;</span>, <span class="function"><span class="keyword">function</span>(<span class="params">event</span>) </span>&#123; <span class="comment">// 模擬 mousemove</span></span><br><span class="line">            <span class="keyword">var</span> pt = d3.pointer( event, d3.select( <span class="built_in">this</span> ).node() );  <span class="comment">// 取得滑鼠座標</span></span><br><span class="line">            widget.attr( <span class="string">&quot;cx&quot;</span>, pt[<span class="number">0</span>] ).attr( <span class="string">&quot;cy&quot;</span>, pt[<span class="number">1</span>] );  <span class="comment">// 改變元件位置</span></span><br><span class="line">        &#125; )</span><br><span class="line">        .on( <span class="string">&quot;end&quot;</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;  <span class="comment">// 模擬 mouseup</span></span><br><span class="line">            widget.attr( <span class="string">&quot;fill&quot;</span>, color );  <span class="comment">// 設回原來顏色</span></span><br><span class="line">            widget = <span class="literal">undefined</span>;</span><br><span class="line">        &#125; );</span><br><span class="line"></span><br><span class="line">    drag( d3.select( <span class="string">&quot;svg&quot;</span> ).selectAll( <span class="string">&quot;circle&quot;</span> ) );  <span class="comment">// 設定哪些元件的 drag 行為的回調函數</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Demo04_4</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    useEffect(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">        <span class="keyword">var</span> ds1 = [[<span class="number">100</span>, <span class="number">100</span>, <span class="string">&quot;red&quot;</span>], [<span class="number">300</span>, <span class="number">100</span>, <span class="string">&quot;green&quot;</span>], [<span class="number">500</span>, <span class="number">100</span>, <span class="string">&quot;blue&quot;</span>]];</span><br><span class="line"></span><br><span class="line">        d3.select(<span class="string">&#x27;.Demo04_4&#x27;</span>)</span><br><span class="line">            .append(<span class="string">&#x27;svg&#x27;</span>)</span><br><span class="line">            .attr(<span class="string">&#x27;height&#x27;</span>, <span class="number">200</span>)</span><br><span class="line">            .attr(<span class="string">&#x27;width&#x27;</span>, <span class="number">600</span>)</span><br><span class="line">            .style(<span class="string">&#x27;background&#x27;</span>, <span class="string">&#x27;lightgrey&#x27;</span>)</span><br><span class="line">            .selectAll(<span class="string">&quot;circle&quot;</span>)</span><br><span class="line">            .data(ds1).enter()</span><br><span class="line">            .append(<span class="string">&quot;circle&quot;</span>)</span><br><span class="line">            .attr( <span class="string">&quot;fill&quot;</span>, <span class="function"><span class="params">d</span>=&gt;</span>d[<span class="number">2</span>])</span><br><span class="line">            .attr( <span class="string">&quot;cx&quot;</span>, <span class="function"><span class="params">d</span>=&gt;</span>d[<span class="number">0</span>])</span><br><span class="line">            .attr( <span class="string">&quot;cy&quot;</span>, <span class="function"><span class="params">d</span>=&gt;</span>d[<span class="number">1</span>])</span><br><span class="line">            .attr( <span class="string">&quot;r&quot;</span>, <span class="number">20</span>);</span><br><span class="line">          makeDemo04_4()</span><br><span class="line">      &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        (<span class="xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;Demo04_4&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span>)</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> Demo04_4;</span><br></pre></td></tr></table></figure>
+<p>初始</p>
+<img src="/2022/01/29/frontend-d3-004-event/06.png" class="" title="06.png">
+<p>mousedown</p>
+<img src="/2022/01/29/frontend-d3-004-event/07.png" class="" title="07.png">
+<p>mouseup</p>
+<img src="/2022/01/29/frontend-d3-004-event/08.png" class="" title="08.png">
+<p>另一種更常見的寫法是直接選好元件並使用 call() 方式設定並實作 :</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> d3 <span class="keyword">from</span> <span class="string">&#x27;d3&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; useEffect &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">makeDemo04_4</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> widget = <span class="literal">undefined</span>, color = <span class="literal">undefined</span>;</span><br><span class="line"></span><br><span class="line">    d3.select( <span class="string">&quot;svg&quot;</span> ).selectAll( <span class="string">&quot;circle&quot;</span> )</span><br><span class="line">        .call( d3.drag()  <span class="comment">// 使用此工廠函數建立一個 drag 函數物件</span></span><br><span class="line">        .on( <span class="string">&quot;start&quot;</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;  <span class="comment">// 模擬 mousedown 時的動作，取得元件</span></span><br><span class="line">            color = d3.select( <span class="built_in">this</span> ).attr( <span class="string">&quot;fill&quot;</span> );  <span class="comment">// 儲存該元件的顏色，以便在 mouseup 時設回</span></span><br><span class="line">            widget = d3.select( <span class="built_in">this</span> ).attr( <span class="string">&quot;fill&quot;</span>, <span class="string">&quot;lime&quot;</span> );  <span class="comment">// 改變該元件的顏色</span></span><br><span class="line">        &#125; )</span><br><span class="line">        .on( <span class="string">&quot;drag&quot;</span>, <span class="function"><span class="keyword">function</span>(<span class="params">event</span>) </span>&#123; <span class="comment">// 模擬 mousemove</span></span><br><span class="line">            <span class="keyword">var</span> pt = d3.pointer( event, d3.select( <span class="built_in">this</span> ).node() );  <span class="comment">// 取得滑鼠座標</span></span><br><span class="line">            widget.attr( <span class="string">&quot;cx&quot;</span>, pt[<span class="number">0</span>] ).attr( <span class="string">&quot;cy&quot;</span>, pt[<span class="number">1</span>] );  <span class="comment">// 改變元件位置</span></span><br><span class="line">        &#125; )</span><br><span class="line">        .on( <span class="string">&quot;end&quot;</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;  <span class="comment">// 模擬 mouseup</span></span><br><span class="line">            widget.attr( <span class="string">&quot;fill&quot;</span>, color );  <span class="comment">// 設回原來顏色</span></span><br><span class="line">            widget = <span class="literal">undefined</span>;</span><br><span class="line">        &#125; ));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Demo04_4</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    useEffect(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">        <span class="keyword">var</span> ds1 = [[<span class="number">100</span>, <span class="number">100</span>, <span class="string">&quot;red&quot;</span>], [<span class="number">300</span>, <span class="number">100</span>, <span class="string">&quot;green&quot;</span>], [<span class="number">500</span>, <span class="number">100</span>, <span class="string">&quot;blue&quot;</span>]];</span><br><span class="line"></span><br><span class="line">        d3.select(<span class="string">&#x27;.Demo04_4&#x27;</span>)</span><br><span class="line">            .append(<span class="string">&#x27;svg&#x27;</span>)</span><br><span class="line">            .attr(<span class="string">&#x27;height&#x27;</span>, <span class="number">200</span>)</span><br><span class="line">            .attr(<span class="string">&#x27;width&#x27;</span>, <span class="number">600</span>)</span><br><span class="line">            .style(<span class="string">&#x27;background&#x27;</span>, <span class="string">&#x27;lightgrey&#x27;</span>)</span><br><span class="line">            .selectAll(<span class="string">&quot;circle&quot;</span>)</span><br><span class="line">            .data(ds1).enter()</span><br><span class="line">            .append(<span class="string">&quot;circle&quot;</span>)</span><br><span class="line">            .attr( <span class="string">&quot;fill&quot;</span>, <span class="function"><span class="params">d</span>=&gt;</span>d[<span class="number">2</span>])</span><br><span class="line">            .attr( <span class="string">&quot;cx&quot;</span>, <span class="function"><span class="params">d</span>=&gt;</span>d[<span class="number">0</span>])</span><br><span class="line">            .attr( <span class="string">&quot;cy&quot;</span>, <span class="function"><span class="params">d</span>=&gt;</span>d[<span class="number">1</span>])</span><br><span class="line">            .attr( <span class="string">&quot;r&quot;</span>, <span class="number">20</span>);</span><br><span class="line">          makeDemo04_4()</span><br><span class="line">      &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        (<span class="xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;Demo04_4&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span>)</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> Demo04_4;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>一些注意事項</li>
+</ul>
+<ol>
+<li>在一個 selection 實例上的重複對同一種事件使用 on()，後者會蓋掉前者的定義，可用類似 click.event1、click.event2 … 唯一的標籤防止．</li>
+<li>如果想在回調函數中使用 this，則必須使用關鍵字 function 的方式宣告函數，不可用箭頭函數 <code>=&gt;</code></li>
+<li>瀏覽器的行為可能會干擾你的程式，可以使用 d3.event.preventDefault()</li>
+<li>只有看得見以及上了顏色的元素才會接收到滑鼠指標事件，即 visibility = hidden 或 fill 和 stroke 皆被設為 none 時．是不可以接收滑鼠事件，可使用 attr( “pointer-events”, “all” ) 方式接收</li>
+<li>同理 &lt;g&gt; 元素也是不可見的，所以也可以用 attr( “pointer-events”, “all” ) 方式</li>
+</ol>
+<h1 id="Transition"><a href="#Transition" class="headerlink" title="Transition"></a>Transition</h1><p>建立及結束 Transition</p>
+<ul>
+<li>sel.transition( tag) : 傳回一個帶有標籤 tag 的 Transition 物件</li>
+<li>sel.interrupt( tag ) : 停止帶有標籤 tag 的 Transition 物件</li>
+<li>trans.transition() : 當前一個 transition 結束後就開始新的 transition</li>
+<li>trans.selection() : 傳回 transition 作用的 selection</li>
+</ul>
+<p>對 transition 方式的設定</p>
+<ul>
+<li>trans.delay( value ) : value 可以為常數或是函數，可設定延遲多久後才進行 transition</li>
+<li>trans.duration (value ) : value 可以為常數或是函數，可設定 transition 開始到完成的時間</li>
+<li>trans.ease( function ) : 此 function 傳回值必須介於 0 ~ 1 之間，預設函數為 d3.easeCubic，改變 transition 的速率，做到類似快進慢出、慢進快出… 等效果</li>
+<li>trans.on( type, handler ) : type 必須為 start、end 或 interrupt，讓 transition 在其生命週期上呼叫對應的 handler</li>
+</ul>
+<p>Transition 可用於 ：</p>
+<ul>
+<li>select()、selectAll()、filter()</li>
+<li>attr()、style()、text()、each()</li>
+<li>merge()、remove()、call()</li>
+</ul>
+<p>動態長條圖表轉換</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> d3 <span class="keyword">from</span> <span class="string">&#x27;d3&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; useEffect &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">makeDemo04_5</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> ds1 = [ <span class="number">2</span>, <span class="number">1</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">9</span>, <span class="number">9</span>, <span class="number">8</span>, <span class="number">7</span>, <span class="number">5</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">2</span> ];</span><br><span class="line">    <span class="keyword">var</span> ds2 = [ <span class="number">8</span>, <span class="number">9</span>, <span class="number">8</span>, <span class="number">7</span>, <span class="number">5</span>, <span class="number">3</span>, <span class="number">2</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">8</span> ];</span><br><span class="line">    <span class="keyword">var</span> n = ds1.length, mx = d3.max( d3.merge( [ds1, ds2] ) );</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">var</span> svg = d3.select( <span class="string">&quot;svg&quot;</span> );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> scX = d3.scaleLinear().domain( [<span class="number">0</span>,n] ).range( [<span class="number">50</span>,<span class="number">540</span>] );</span><br><span class="line">    <span class="keyword">var</span> scY = d3.scaleLinear().domain( [<span class="number">0</span>,mx] ).range( [<span class="number">250</span>,<span class="number">50</span>] );</span><br><span class="line"></span><br><span class="line">    svg.selectAll( <span class="string">&quot;line&quot;</span> ).data( ds1 ).enter().append( <span class="string">&quot;line&quot;</span> )</span><br><span class="line">        .attr( <span class="string">&quot;stroke&quot;</span>, <span class="string">&quot;red&quot;</span> ).attr( <span class="string">&quot;stroke-width&quot;</span>, <span class="number">20</span> )</span><br><span class="line">        .attr( <span class="string">&quot;x1&quot;</span>, <span class="function">(<span class="params">d,i</span>)=&gt;</span>scX(i) ).attr( <span class="string">&quot;y1&quot;</span>, scY(<span class="number">0</span>) )</span><br><span class="line">        .attr( <span class="string">&quot;x2&quot;</span>, <span class="function">(<span class="params">d,i</span>)=&gt;</span>scX(i) ).attr( <span class="string">&quot;y2&quot;</span>, <span class="function"><span class="params">d</span>=&gt;</span>scY(d) );</span><br><span class="line"></span><br><span class="line">    svg.on( <span class="string">&quot;click&quot;</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        [ ds1, ds2 ] = [ ds2, ds1 ];</span><br><span class="line">        </span><br><span class="line">        svg.selectAll( <span class="string">&quot;line&quot;</span> ).data( ds1 )</span><br><span class="line">            .transition().duration( <span class="number">1000</span> ).delay( <span class="function">(<span class="params">d,i</span>)=&gt;</span><span class="number">200</span>*i )  <span class="comment">// 設定漸變的方式</span></span><br><span class="line">            .attr( <span class="string">&quot;y2&quot;</span>, <span class="function"><span class="params">d</span>=&gt;</span>scY(d) );  <span class="comment">// 漸變效果的最終狀態</span></span><br><span class="line">    &#125; );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Demo04_5</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    useEffect(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">        d3.select(<span class="string">&#x27;.Demo04_5&#x27;</span>)</span><br><span class="line">            .append(<span class="string">&#x27;svg&#x27;</span>)</span><br><span class="line">            .attr(<span class="string">&#x27;height&#x27;</span>, <span class="number">300</span>)</span><br><span class="line">            .attr(<span class="string">&#x27;width&#x27;</span>, <span class="number">600</span>)</span><br><span class="line">            .style(<span class="string">&#x27;background&#x27;</span>, <span class="string">&#x27;lightgrey&#x27;</span>);</span><br><span class="line">          makeDemo04_5()</span><br><span class="line">      &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        (<span class="xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;Demo04_5&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span>)</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> Demo04_5;</span><br></pre></td></tr></table></figure>
+
+<h1 id="Transition-技巧"><a href="#Transition-技巧" class="headerlink" title="Transition 技巧"></a>Transition 技巧</h1><h2 id="字串切換"><a href="#字串切換" class="headerlink" title="字串切換"></a>字串切換</h2><p>想要在相同位置上切換兩字串，最好的方式就是漸變 fill-opacity 屬性</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> d3 <span class="keyword">from</span> <span class="string">&#x27;d3&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; useEffect &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">makeDemo04_7</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    d3.select(<span class="string">&quot;#t1&quot;</span>).transition().duration(<span class="number">2000</span>).attr( <span class="string">&quot;fill-opacity&quot;</span>, <span class="number">0</span>);</span><br><span class="line">    d3.select(<span class="string">&quot;#t2&quot;</span>).transition().duration(<span class="number">2000</span>).attr( <span class="string">&quot;fill-opacity&quot;</span>, <span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Demo04_7</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    useEffect(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">          makeDemo04_7()</span><br><span class="line">      &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        (<span class="xml"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">height</span>=<span class="string">&quot;300&quot;</span> <span class="attr">width</span>=<span class="string">&quot;600&quot;</span> <span class="attr">style</span>=<span class="string">&#123;&#123;</span>&quot;<span class="attr">background</span>&quot; <span class="attr">:</span> &#x27;<span class="attr">lightgrey</span>&#x27;&#125;&#125;&gt;</span></span></span><br><span class="line"><span class="xml">            <span class="tag">&lt;<span class="name">text</span> <span class="attr">id</span>=<span class="string">&quot;t1&quot;</span> <span class="attr">x</span>=<span class="string">&quot;100&quot;</span> <span class="attr">y</span> = <span class="string">&quot;100&quot;</span> <span class="attr">fill-opacity</span>=<span class="string">&quot;1&quot;</span>&gt;</span>Hello<span class="tag">&lt;/<span class="name">text</span>&gt;</span></span></span><br><span class="line"><span class="xml">            <span class="tag">&lt;<span class="name">text</span> <span class="attr">id</span>=<span class="string">&quot;t2&quot;</span> <span class="attr">x</span>=<span class="string">&quot;100&quot;</span> <span class="attr">y</span> = <span class="string">&quot;100&quot;</span> <span class="attr">fill-opacity</span>=<span class="string">&quot;0&quot;</span>&gt;</span>Steven<span class="tag">&lt;/<span class="name">text</span>&gt;</span></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span>)</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> Demo04_7;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Transition-Chain"><a href="#Transition-Chain" class="headerlink" title="Transition Chain"></a>Transition Chain</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> d3 <span class="keyword">from</span> <span class="string">&#x27;d3&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; useEffect &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">makeDemo04_8</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    d3.select(<span class="string">&quot;circle&quot;</span>).on(<span class="string">&quot;click&quot;</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        d3.select(<span class="string">&quot;circle&quot;</span>)</span><br><span class="line">            .transition().duration(<span class="number">1500</span>).attr( <span class="string">&quot;fill&quot;</span>, <span class="string">&quot;red&quot;</span>)</span><br><span class="line">            .transition().duration(<span class="number">1500</span>).attr( <span class="string">&quot;fill&quot;</span>, <span class="string">&quot;blue&quot;</span>);</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Demo04_8</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    useEffect(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">          makeDemo04_8()</span><br><span class="line">      &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        (<span class="xml"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">height</span>=<span class="string">&quot;200&quot;</span> <span class="attr">width</span>=<span class="string">&quot;200&quot;</span> <span class="attr">style</span>=<span class="string">&#123;&#123;</span>&quot;<span class="attr">background</span>&quot; <span class="attr">:</span> &#x27;<span class="attr">lightgrey</span>&#x27;&#125;&#125;&gt;</span></span></span><br><span class="line"><span class="xml">           <span class="tag">&lt;<span class="name">circle</span> <span class="attr">r</span>=<span class="string">&quot;50&quot;</span> <span class="attr">cx</span>=<span class="string">&quot;100&quot;</span> <span class="attr">cy</span>=<span class="string">&quot;100&quot;</span> <span class="attr">fill</span>=<span class="string">&quot;green&quot;</span> /&gt;</span></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span>)</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> Demo04_8;</span><br></pre></td></tr></table></figure>
+
+<h2 id="明確配置初始值"><a href="#明確配置初始值" class="headerlink" title="明確配置初始值"></a>明確配置初始值</h2><p>要漸變目標的初始值必須是明確的<font color="#FF000">不可以使用預設值</font>，否則預設的插補器會有問題．</p>
+<h2 id="自訂插補器"><a href="#自訂插補器" class="headerlink" title="自訂插補器"></a>自訂插補器</h2><p>使用 ease() 製作自訂補插器<br>設定自訂補插器的方法</p>
+<ul>
+<li>trans.attrTween( name, factory ) : 自訂屬性名稱為 name 的插補器，factory 為傳回插補器函數的方法</li>
+<li>trans.styleTween( name, factory ) : 自訂樣式名稱為 name 的插補器，factory 為傳回插補器函數的方法</li>
+<li>trans.tween( tag, factory ) : 自訂標籤名稱為 tag 的插補器，factory 為傳回插補器函數的方法<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> d3 <span class="keyword">from</span> <span class="string">&#x27;d3&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; useEffect &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">makeDemo04_9</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    d3.select(<span class="string">&quot;svg&quot;</span>).on(<span class="string">&quot;click&quot;</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        d3.select(<span class="string">&quot;circle&quot;</span>)</span><br><span class="line">            .transition().duration(<span class="number">2000</span>).ease( <span class="function"><span class="params">t</span>=&gt;</span>t )</span><br><span class="line">            .attrTween( <span class="string">&quot;fill&quot;</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="function"><span class="params">t</span>=&gt;</span><span class="string">&quot;hsl(&quot;</span>+<span class="number">360</span>*t+<span class="string">&quot;, 100%, 50%)&quot;</span></span><br><span class="line">            &#125;);</span><br><span class="line">        d3.select(<span class="string">&quot;rect&quot;</span>)</span><br><span class="line">            .transition().duration(<span class="number">2000</span>).ease( <span class="function"><span class="params">t</span>=&gt;</span>t )</span><br><span class="line">            .attrTween( <span class="string">&quot;transform&quot;</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="function"><span class="params">t</span>=&gt;</span><span class="string">&quot;rotate(&quot;</span>+<span class="number">360</span>*t+<span class="string">&quot;,200,200)&quot;</span></span><br><span class="line">            &#125;)</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Demo04_9</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    useEffect(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">          makeDemo04_9()</span><br><span class="line">      &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        (<span class="xml"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">height</span>=<span class="string">&quot;400&quot;</span> <span class="attr">width</span>=<span class="string">&quot;400&quot;</span> <span class="attr">style</span>=<span class="string">&#123;&#123;</span>&quot;<span class="attr">background</span>&quot; <span class="attr">:</span> &#x27;<span class="attr">lightgrey</span>&#x27;&#125;&#125;&gt;</span></span></span><br><span class="line"><span class="xml">           <span class="tag">&lt;<span class="name">circle</span> <span class="attr">r</span>=<span class="string">&quot;50&quot;</span> <span class="attr">cx</span>=<span class="string">&quot;200&quot;</span> <span class="attr">cy</span>=<span class="string">&quot;200&quot;</span> <span class="attr">fill</span>=<span class="string">&quot;white&quot;</span> /&gt;</span></span></span><br><span class="line"><span class="xml">           <span class="tag">&lt;<span class="name">rect</span> <span class="attr">x</span>=<span class="string">&quot;280&quot;</span> <span class="attr">y</span>=<span class="string">&quot;280&quot;</span> <span class="attr">width</span>=<span class="string">&quot;40&quot;</span> <span class="attr">height</span>=<span class="string">&quot;40&quot;</span> <span class="attr">fill</span>=<span class="string">&quot;black&quot;</span> /&gt;</span></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span>)</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> Demo04_9;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="Transition-事件"><a href="#Transition-事件" class="headerlink" title="Transition 事件"></a>Transition 事件</h2><p>透過 trans.on( type, handler ) : type 必須為 start、end 或 interrupt，讓 transition 在其生命週期上呼叫對應的 handler</p>
+<h2 id="不要過度使用-transition"><a href="#不要過度使用-transition" class="headerlink" title="不要過度使用 transition"></a>不要過度使用 transition</h2><p>當 transition 用來讓使用者追蹤轉變過程是可被接受的，如果只是為了展現效果，久了就會被使用者厭煩．</p>
+<h1 id="使用計時器建立動畫效果"><a href="#使用計時器建立動畫效果" class="headerlink" title="使用計時器建立動畫效果"></a>使用計時器建立動畫效果</h1><p>計時器相關的函數</p>
+<ul>
+<li><p>d3.timer( callback, after, start ) : 傳回一個新的計時器，會在每個動畫框中呼叫一次 callback，呼叫 callback 時會將計時器啟動到現在經過的時間傳入，此經過時間在視窗或分頁處於背景時是不計時的，start 為開始計時時間，after 為觸發計時後延遲多久呼叫 callback</p>
+</li>
+<li><p>d3.timeout( callback, after, start ) : 類似 timer，只是會被呼叫一次</p>
+</li>
+<li><p>d3.interval( callback, interval, start ) : 類似 timer，只是會間隔 interval 便呼叫一次</p>
+</li>
+<li><p>t.stop() : 停止 timer</p>
+</li>
+<li><p>d3.now() : 傳回目前時間</p>
+</li>
+<li><p>Lissajous Curve<br>範例出處 : <a target="_blank" rel="noopener" href="https://github.com/janert/d3-for-the-impatient/blob/master/examples/events.js">https://github.com/janert/d3-for-the-impatient/blob/master/examples/events.js</a></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> d3 <span class="keyword">from</span> <span class="string">&#x27;d3&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; useEffect &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">makeDemo04_10</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> svg = d3.select( <span class="string">&quot;svg&quot;</span> );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> a = <span class="number">3.2</span>, b = <span class="number">5.9</span>;                 <span class="comment">// Lissajous frequencies</span></span><br><span class="line">    <span class="keyword">var</span> phi, omega = <span class="number">2</span>*<span class="built_in">Math</span>.PI/<span class="number">10000</span>;     <span class="comment">// 10 seconds per period</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> crrX = <span class="number">150</span>+<span class="number">100</span>, crrY = <span class="number">150</span>+<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">var</span> prvX = crrX, prvY = crrY;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> timer = d3.timer( <span class="function"><span class="keyword">function</span>(<span class="params">t</span>) </span>&#123;</span><br><span class="line">        phi = omega*t;</span><br><span class="line"></span><br><span class="line">        crrX = <span class="number">150</span>+<span class="number">100</span>*<span class="built_in">Math</span>.cos(a*phi);</span><br><span class="line">        crrY = <span class="number">150</span>+<span class="number">100</span>*<span class="built_in">Math</span>.sin(b*phi);</span><br><span class="line"></span><br><span class="line">        svg.selectAll( <span class="string">&quot;line&quot;</span> )</span><br><span class="line">            .each( <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123; <span class="built_in">this</span>.bogus_opacity *= <span class="number">.99</span> &#125; )</span><br><span class="line">            .attr( <span class="string">&quot;stroke-opacity&quot;</span>,</span><br><span class="line">                   <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123; <span class="keyword">return</span> <span class="built_in">this</span>.bogus_opacity &#125; )</span><br><span class="line">            .filter( <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123; <span class="keyword">return</span> <span class="built_in">this</span>.bogus_opacity&lt;<span class="number">0.05</span> &#125; )</span><br><span class="line">            .remove(); </span><br><span class="line">        </span><br><span class="line">        svg.append( <span class="string">&quot;line&quot;</span> )</span><br><span class="line">            .each( <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123; <span class="built_in">this</span>.bogus_opacity = <span class="number">1.0</span> &#125; )</span><br><span class="line">            .attr( <span class="string">&quot;x1&quot;</span>, prvX ).attr( <span class="string">&quot;y1&quot;</span>, prvY ) </span><br><span class="line">            .attr( <span class="string">&quot;x2&quot;</span>, crrX ).attr( <span class="string">&quot;y2&quot;</span>, crrY )</span><br><span class="line">            .attr( <span class="string">&quot;stroke&quot;</span>, <span class="string">&quot;green&quot;</span> ).attr( <span class="string">&quot;stroke-width&quot;</span>, <span class="number">2</span> );</span><br><span class="line"></span><br><span class="line">        prvX = crrX;</span><br><span class="line">        prvY = crrY;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>( t &gt; <span class="number">120e3</span> ) &#123; timer.stop(); &#125; <span class="comment">// after 120 seconds</span></span><br><span class="line">    &#125; );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Demo04_10</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    useEffect(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">          makeDemo04_10()</span><br><span class="line">      &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        (<span class="xml"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">height</span>=<span class="string">&quot;400&quot;</span> <span class="attr">width</span>=<span class="string">&quot;400&quot;</span> <span class="attr">style</span>=<span class="string">&#123;&#123;</span>&quot;<span class="attr">background</span>&quot; <span class="attr">:</span> &#x27;<span class="attr">lightgrey</span>&#x27;&#125;&#125;&gt;</span></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span>)</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> Demo04_10;</span><br></pre></td></tr></table></figure></li>
+<li><p>Voter model<br>因為一般來說資料都需要透過網路與遠端伺服器連線取得，所以需要做一些非同步的處理，而且變化資料時加入 transition 和 duration，讓資料更新可以平順地，以提高使用者體驗<br>範例出處 : <a target="_blank" rel="noopener" href="https://github.com/janert/d3-for-the-impatient/blob/master/examples/events.js">https://github.com/janert/d3-for-the-impatient/blob/master/examples/events.js</a><br>```js<br>import * as d3 from ‘d3’<br>import { useEffect } from ‘react’;</p>
+</li>
+</ul>
+<p>function makeDemo04_11() {<br>    var n = 50, w=300/n, dt = 3000, svg = d3.select( “svg” );</p>
+<pre><code>var data = d3.range(n*n)                                      //&lt;1&gt;
+    .map( d =&gt; &#123; return &#123; x: d%n, y: d/n|0,
+                          val: Math.random() &#125; &#125; ); 
+
+var sc = d3.scaleQuantize()                                   //&lt;2&gt;
+    .range( [ &quot;white&quot;, &quot;red&quot;, &quot;black&quot; ] );  
+
+svg.selectAll( &quot;rect&quot; ).data( data ).enter().append( &quot;rect&quot; ) //&lt;3&gt;
+    .attr( &quot;x&quot;, d=&gt;w*d.x ).attr( &quot;y&quot;, d=&gt;w*d.y )
+    .attr( &quot;width&quot;, w-1 ).attr( &quot;height&quot;, w-1 )
+    .attr( &quot;fill&quot;, d =&gt; sc(d.val) );
+
+function update() &#123;                                           //&lt;4&gt;
+    var nbs = [ [0,1], [0,-1], [ 1,0], [-1, 0],
+                [1,1], [1,-1], [-1,1], [-1,-1] ];
+    return d3.shuffle( d3.range( n*n ) ).map( i =&gt; &#123;
+        var nb = nbs[ nbs.length*Math.random() | 0 ];
+        var x = (data[i].x + nb[0] + n)%n;
+        var y = (data[i].y + nb[1] + n)%n;
+        data[i].val = data[ y*n + x ].val;
+    &#125; );
+&#125;
+
+d3.interval( function() &#123;                                     //&lt;5&gt;
+    update();
+    svg.selectAll( &quot;rect&quot; ).data( data )
+        .transition().duration(dt).delay((d,i)=&gt;i*0.25*dt/(n*n))
+        .attr( &quot;fill&quot;, d =&gt; sc(d.val) ) &#125;, dt );
+</code></pre>
+<p>}</p>
+<p>function Demo04_11() {<br>    useEffect(()=&gt;{<br>          makeDemo04_11()<br>      })</p>
+<pre><code>return (
+    (&lt;svg height=&quot;300&quot; width=&quot;300&quot; style=&#123;&#123;"background" : 'lightgrey'&#125;&#125;&gt;
+    &lt;/svg&gt;)
+);
+</code></pre>
+<p>}</p>
+<p>export default Demo04_11;<br>``</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Event/" rel="tag"># Event</a>
+              <a href="/tags/Animation/" rel="tag"># Animation</a>
+              <a href="/tags/Darg-and-Drop/" rel="tag"># Darg and Drop</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/01/27/frontend-d3-003-selection-and-binding/" rel="prev" title="D3 - 003 選擇元素與繫結資料">
+      <i class="fa fa-chevron-left"></i> D3 - 003 選擇元素與繫結資料
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/01/30/frontend-d3-005-draw-shape/" rel="next" title="D3 - 005 圖形與組件">
+      D3 - 005 圖形與組件 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A8%AD%E5%AE%9A%E4%BA%8B%E4%BB%B6%E5%9B%9E%E8%AA%BF%E5%87%BD%E6%95%B8%E4%B8%A6%E5%8F%96%E5%BE%97%E4%BA%8B%E4%BB%B6%E7%9B%B8%E9%97%9C%E8%B3%87%E8%A8%8A"><span class="nav-number">1.</span> <span class="nav-text">設定事件回調函數並取得事件相關資訊</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A1%88%E4%BE%8B-%E5%90%8C%E6%AD%A5%E6%A8%99%E8%A8%98"><span class="nav-number">2.</span> <span class="nav-text">案例 - 同步標記</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%94%B9%E8%89%AF%E5%90%8C%E6%AD%A5%E6%A8%99%E8%A8%98"><span class="nav-number">3.</span> <span class="nav-text">改良同步標記</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8B%96%E6%9B%B3"><span class="nav-number">4.</span> <span class="nav-text">拖曳</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Transition"><span class="nav-number">5.</span> <span class="nav-text">Transition</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Transition-%E6%8A%80%E5%B7%A7"><span class="nav-number">6.</span> <span class="nav-text">Transition 技巧</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%97%E4%B8%B2%E5%88%87%E6%8F%9B"><span class="nav-number">6.1.</span> <span class="nav-text">字串切換</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Transition-Chain"><span class="nav-number">6.2.</span> <span class="nav-text">Transition Chain</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%98%8E%E7%A2%BA%E9%85%8D%E7%BD%AE%E5%88%9D%E5%A7%8B%E5%80%BC"><span class="nav-number">6.3.</span> <span class="nav-text">明確配置初始值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%87%AA%E8%A8%82%E6%8F%92%E8%A3%9C%E5%99%A8"><span class="nav-number">6.4.</span> <span class="nav-text">自訂插補器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Transition-%E4%BA%8B%E4%BB%B6"><span class="nav-number">6.5.</span> <span class="nav-text">Transition 事件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8D%E8%A6%81%E9%81%8E%E5%BA%A6%E4%BD%BF%E7%94%A8-transition"><span class="nav-number">6.6.</span> <span class="nav-text">不要過度使用 transition</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E8%A8%88%E6%99%82%E5%99%A8%E5%BB%BA%E7%AB%8B%E5%8B%95%E7%95%AB%E6%95%88%E6%9E%9C"><span class="nav-number">7.</span> <span class="nav-text">使用計時器建立動畫效果</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Steven Wu</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">112</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">112</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/pluto123" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;pluto123" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:yuh.chang.wu@gmail.com" title="E-Mail → mailto:yuh.chang.wu@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Steven Wu</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">473k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">7:10</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span><br></span>	
+
+<span class="post-meta-item-icon">
+    <i class="fa fa-users"></i>
+</span>
+<span>總訪客：&nbsp<span id="busuanzi_value_site_uv"><i class="fa fa-spinner fa-spin"></i></span>&nbsp人</span>
+    <span class="post-meta-divider">|</span>
+<span class="post-meta-item-icon">
+    <i class="fa fa-eye"></i>
+</span>
+<span>總訪問量：&nbsp<span id="busuanzi_value_site_pv"><i class="fa fa-spinner fa-spin"></i></span>&nbsp次</span>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '4930808f816a28eedad7',
+      clientSecret: '20b0570483dc737ad14b42abc3ab1866089ce63e',
+      repo        : 'pluto123.github.io',
+      owner       : 'pluto123',
+      admin       : ['pluto123'],
+      id          : 'abcc3eb8ceacb91f5ed4ed4e13e779ff',
+        language: 'zh-TW',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>

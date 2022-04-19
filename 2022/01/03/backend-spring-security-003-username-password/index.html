@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5G1RK23V7S"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-5G1RK23V7S');
+</script>
+  <meta name="description" content="透過檢驗用戶與密碼是否正確，是一種最常見的身分驗證方式。 Reading the Username &amp; PasswordSpring Security 提供了幾個內建機制由 HttpServletRequest 讀取使用者名稱與密碼。 Form Login  由 html 的 form 表單提交使用者名稱與密碼。假設使用者未經過驗證就想要取用被保護的資源，則 Spring Security">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring Security 文件筆記 - 003 Username&#x2F;Password Authentication">
+<meta property="og:url" content="http://example.com/2022/01/03/backend-spring-security-003-username-password/index.html">
+<meta property="og:site_name" content="Steven 的學習筆記">
+<meta property="og:description" content="透過檢驗用戶與密碼是否正確，是一種最常見的身分驗證方式。 Reading the Username &amp; PasswordSpring Security 提供了幾個內建機制由 HttpServletRequest 讀取使用者名稱與密碼。 Form Login  由 html 的 form 表單提交使用者名稱與密碼。假設使用者未經過驗證就想要取用被保護的資源，則 Spring Security">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2022/01/03/backend-spring-security-003-username-password/loginurlauthenticationentrypoint.png">
+<meta property="og:image" content="http://example.com/2022/01/03/backend-spring-security-003-username-password/usernamepasswordauthenticationfilter.png">
+<meta property="og:image" content="http://example.com/2022/01/03/backend-spring-security-003-username-password/default_login_form.png">
+<meta property="og:image" content="http://example.com/2022/01/03/backend-spring-security-003-username-password/basicauthenticationentrypoint.png">
+<meta property="og:image" content="http://example.com/2022/01/03/backend-spring-security-003-username-password/basicauthenticationfilter.png">
+<meta property="article:published_time" content="2022-01-03T02:53:26.000Z">
+<meta property="article:modified_time" content="2022-01-03T09:21:49.153Z">
+<meta property="article:author" content="Steven Wu">
+<meta property="article:tag" content="Official Document">
+<meta property="article:tag" content="Username&#x2F;Password Authentication">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2022/01/03/backend-spring-security-003-username-password/loginurlauthenticationentrypoint.png">
+
+<link rel="canonical" href="http://example.com/2022/01/03/backend-spring-security-003-username-password/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Spring Security 文件筆記 - 003 Username/Password Authentication | Steven 的學習筆記</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5G1RK23V7S"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-5G1RK23V7S');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Steven 的學習筆記</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">沒有解決不了的問題<br>只有未找到解決方法</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/03/backend-spring-security-003-username-password/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Steven Wu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Steven 的學習筆記">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Spring Security 文件筆記 - 003 Username/Password Authentication
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-01-03 10:53:26 / Modified: 17:21:49" itemprop="dateCreated datePublished" datetime="2022-01-03T10:53:26+08:00">2022-01-03</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Spring-Security/" itemprop="url" rel="index"><span itemprop="name">Spring Security</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>6.1k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>6 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>透過檢驗用戶與密碼是否正確，是一種最常見的身分驗證方式。</p>
+<h1 id="Reading-the-Username-amp-Password"><a href="#Reading-the-Username-amp-Password" class="headerlink" title="Reading the Username &amp; Password"></a><a target="_blank" rel="noopener" href="https://docs.spring.io/spring-security/reference/servlet/authentication/passwords/input.html">Reading the Username &amp; Password</a></h1><p>Spring Security 提供了幾個內建機制由 HttpServletRequest 讀取使用者名稱與密碼。</p>
+<h2 id="Form-Login"><a href="#Form-Login" class="headerlink" title="Form Login"></a><a target="_blank" rel="noopener" href="https://docs.spring.io/spring-security/reference/servlet/authentication/passwords/form.html">Form Login</a></h2><p>  由 html 的 form 表單提交使用者名稱與密碼。假設使用者未經過驗證就想要取用被保護的資源，則 Spring Security 將會重導到登入頁面。<br>  下圖是一個 SecurityFilterChain 中的流程說明<br>  <img src="/2022/01/03/backend-spring-security-003-username-password/loginurlauthenticationentrypoint.png" class="" title="loginurlauthenticationentrypoint.png"></p>
+<span id="more"></span>
+<ol>
+<li>使用者發出一個未驗證過的請求，試圖存取一個受保護的資源 /private</li>
+<li>Spring Security 的 FilterSecurityInterceptor 透過丟出 AccessDeniedException 異常來指出該未經驗證的請求是被禁止的。</li>
+<li>由於使用者未被驗證，因此 ExceptionTranslationFilter 啟動身份驗證並由 AuthenticationEntryPoint 發送重定向。一般 AuthenticationEntryPoint 是一個 LoginUrlAuthenticationEntryPoint 的實例。</li>
+<li>然後瀏覽器會向伺服器請求 /login 資料</li>
+<li>瀏覽器取得 login.html 後進行渲染讓使用者看到登入頁面</li>
+</ol>
+<p>  當使用者名稱與密碼被提交，則會由一個繼承 <a target="_blank" rel="noopener" href="https://docs.spring.io/spring-security/site/docs/5.6.0/api/org/springframework/security/web/authentication/AbstractAuthenticationProcessingFilter.html">AbstractAuthenticationProcessingFilter</a> 類別的子類別 <a target="_blank" rel="noopener" href="https://docs.spring.io/spring-security/site/docs/5.6.0/api/org/springframework/security/web/authentication/UsernamePasswordAuthenticationFilter.html">UsernamePasswordAuthenticationFilter</a> 處理。<br>  <img src="/2022/01/03/backend-spring-security-003-username-password/usernamepasswordauthenticationfilter.png" class="" title="usernamepasswordauthenticationfilter.png"></p>
+<ol>
+<li>當使用者提交用戶名與密碼時，UsernamePasswordAuthenticationFilter 會抽取 HttpServletRequest 建立一個具有 Authentication 類型的 UsernamePasswordAuthenticationToken。</li>
+<li>接著 UsernamePasswordAuthenticationToken 會被傳入 AuthenticationManager 中做身分驗證。詳細的 AuthenticationManager 動作會取決於如何儲存使用者資訊。</li>
+<li>如果驗證失敗則會<ul>
+<li>清除 SecurityContextHolder</li>
+<li>調用 RememberMeServices.loginFail，如果 remember me 沒有設定，則此步驟將會沒作用</li>
+<li>調用 AuthenticationFailureHandler</li>
+</ul>
+</li>
+<li>如果驗證成功則會<ul>
+<li>SessionAuthenticationStrategy 將會收到一個新登入通知</li>
+<li>Authentication 將會被設置到 SecurityContextHolder。</li>
+<li>調用 RememberMeServices.loginSuccess，如果有設定的話。</li>
+<li>ApplicationEventPublisher 發佈一個 InteractiveAuthenticationSuccessEvent。</li>
+<li>調用 AuthenticationSuccessHandler。未驗證過的請求會被 ExceptionTranslationFilter 儲存並且重定向到登入頁面，等到登入驗證成功後，通常 AuthenticationSuccessHandler 的實作類 SimpleUrlAuthenticationSuccessHandler 將會把使用者導向原本未被認證的請求 (如 : /private)</li>
+</ul>
+</li>
+</ol>
+<p>  預設 Spring Security 登入表單是開啟的，底下是一個最簡的例子 :<br>  <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">protected <span class="keyword">void</span> <span class="function"><span class="title">configure</span>(<span class="params">HttpSecurity http</span>)</span> &#123;</span><br><span class="line">    http</span><br><span class="line">      <span class="comment">// ...</span></span><br><span class="line">      .formLogin(withDefaults());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>  <img src="/2022/01/03/backend-spring-security-003-username-password/default_login_form.png" class="" title="default_login_form.png"><br>  上面這段程式碼會渲染一個預設的登入頁面，而一般應用產品都會有自己客製化的登入頁面。<br>  底下是一個定義客製化頁面的例子 :<br>  <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">protected <span class="keyword">void</span> configure(HttpSecurity http) throws Exception &#123;</span><br><span class="line">    http</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">        .formLogin(form -&gt; form</span><br><span class="line">            .loginPage(<span class="string">&quot;/login&quot;</span>)</span><br><span class="line">            .permitAll()</span><br><span class="line">        );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>  上面設定了登入頁面的 url，接著就要自定義頁面，以 Thymeleaf 為例，在底下位置中定義頁面，則會對應到 /login<br>  src/main/resources/templates/login.html<br>  <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.w3.org/1999/xhtml&quot;</span> <span class="attr">xmlns:th</span>=<span class="string">&quot;https://www.thymeleaf.org&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">title</span>&gt;</span>Please Log In<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">h1</span>&gt;</span>Please Log In<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">th:if</span>=<span class="string">&quot;$&#123;param.error&#125;&quot;</span>&gt;</span></span><br><span class="line">            Invalid username and password.<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">th:if</span>=<span class="string">&quot;$&#123;param.logout&#125;&quot;</span>&gt;</span></span><br><span class="line">            You have been logged out.<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">form</span> <span class="attr">th:action</span>=<span class="string">&quot;@&#123;/login&#125;&quot;</span> <span class="attr">method</span>=<span class="string">&quot;post&quot;</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">name</span>=<span class="string">&quot;username&quot;</span> <span class="attr">placeholder</span>=<span class="string">&quot;Username&quot;</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;password&quot;</span> <span class="attr">name</span>=<span class="string">&quot;password&quot;</span> <span class="attr">placeholder</span>=<span class="string">&quot;Password&quot;</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">value</span>=<span class="string">&quot;Log in&quot;</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure><br>  關於以上的 Html 文件有幾個重點 :</p>
+<ul>
+<li>表單必須使用 POST 方式提交到 /login</li>
+<li>表單將會需要包含 CSRF Token，這部分會由 Thymeleaf 自動完成。</li>
+<li>表單必須將使用者輸入的用戶名，放在參數名稱為 username 中。</li>
+<li>表單必須將使用者輸入的密碼，放在參數名為 password 中。</li>
+<li>如果使用者提供有效的用戶名或密碼時，則會顯示 “Invalid username and password.”。</li>
+<li>如果參數被設定，則會顯示 “You have been logged out.”。</li>
+</ul>
+<p>  如果是使用 Spring MVC，則還需要實作一個 controller，用來處理 GET /login 並返回自定義登入頁面。最簡的例子 LoginController 如下所示 :<br>  <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">@Controller</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LoginController</span> </span>&#123;</span><br><span class="line">    @GetMapping(<span class="string">&quot;/login&quot;</span>)</span><br><span class="line">    <span class="built_in">String</span> <span class="function"><span class="title">login</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;login&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="Basic-Authentication"><a href="#Basic-Authentication" class="headerlink" title="Basic Authentication"></a><a target="_blank" rel="noopener" href="https://docs.spring.io/spring-security/reference/servlet/authentication/passwords/basic.html">Basic Authentication</a></h2><p>  Spring Security 也提供 <a target="_blank" rel="noopener" href="https://tools.ietf.org/html/rfc7617">Basic HTTP Authentication</a> 的驗證方式。<br>  在此種模式下 Spring Security 會針對未驗證過的請求，回送 <a target="_blank" rel="noopener" href="https://tools.ietf.org/html/rfc7235#section-4.1">WWW-Authenticate</a> header 給客戶端。<br>  <img src="/2022/01/03/backend-spring-security-003-username-password/basicauthenticationentrypoint.png" class="" title="basicauthenticationentrypoint.png"></p>
+<ol>
+<li>使用者發出一個未驗證過的請求，試圖存取一個受保護的資源 /private</li>
+<li>Spring Security 的 FilterSecurityInterceptor 透過丟出 AccessDeniedException 異常來指出該未經驗證的請求是被禁止的。</li>
+<li>由於使用者未被驗證，因此 ExceptionTranslationFilter 啟動身份驗證並由 AuthenticationEntryPoint 發送重定向。一般 AuthenticationEntryPoint 是一個 BasicAuthenticationEntryPoint 的實例，它會送出具有 WWW-Authenticate header 的回應。而 RequestCache 通常是一個 NullRequestCache，不像 Login Form 模式會儲存未驗證的請求，等到登入成功後就會自動取出該請求跳轉到使用者想要去的地方，在此模式下並不會記錄未驗證的請求，因為客戶端在驗證過後，會重新發起請求。</li>
+</ol>
+<p>  當客戶端收到 WWW-Authenticate header 時，它應該試著使用用戶名與密碼進行驗證。<br>  <img src="/2022/01/03/backend-spring-security-003-username-password/basicauthenticationfilter.png" class="" title="basicauthenticationfilter.png"></p>
+<ol>
+<li>當使用者提交用戶名與密碼時，BasicAuthenticationFilter 會抽取 HttpServletRequest 建立一個具有 Authentication 類型的 UsernamePasswordAuthenticationToken。</li>
+<li>接著 UsernamePasswordAuthenticationToken 會被傳入 AuthenticationManager 中做身分驗證。詳細的 AuthenticationManager 動作會取決於如何儲存使用者資訊。</li>
+<li>如果驗證失敗則會<ul>
+<li>清除 SecurityContextHolder。</li>
+<li>調用 RememberMeServices.loginFail，如果 remember me 沒有設定，則此步驟將會沒作用。</li>
+<li>調用 AuthenticationEntryPoint 再次發送具有 WWW-Authenticate header 的回應。</li>
+</ul>
+</li>
+<li>如果驗證成功則會<ul>
+<li>Authentication 將會被設置到 SecurityContextHolder。</li>
+<li>調用 RememberMeServices.loginSuccess，如果有設定的話。</li>
+<li>BasicAuthenticationFilter 會調用 FilterChain.doFilter(request,response) 繼續後續的應用程序。</li>
+</ul>
+</li>
+</ol>
+<p>  Spring Security 也提供預設的 HTTP Basic Authentication<br>  <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">protected <span class="keyword">void</span> <span class="function"><span class="title">configure</span>(<span class="params">HttpSecurity http</span>)</span> &#123;</span><br><span class="line">    http</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">        .httpBasic(withDefaults());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="Digest-Authentication-不建議使用"><a href="#Digest-Authentication-不建議使用" class="headerlink" title="Digest Authentication (不建議使用)"></a><a target="_blank" rel="noopener" href="https://docs.spring.io/spring-security/reference/servlet/authentication/passwords/digest.html">Digest Authentication</a><font color="#FF0000"> (不建議使用)</font></h2><p><font color="#FF0000">Warning</font><br>You should not use Digest Authentication in modern applications because it is not considered secure. The most obvious problem is that you must store your passwords in plaintext, encrypted, or an MD5 format. All of these storage formats are considered insecure. Instead, you should store credentials using a one way adaptive password hash (i.e. bCrypt, PBKDF2, SCrypt, etc) which is not supported by Digest Authentication.<br>摘要式身份驗證嘗試解決基本身份驗證的許多弱點，特別是通過確保永遠不會以明文形式通過網絡發送憑據。許多瀏覽器都支持摘要式身份驗證。<br>管理 HTTP 摘要身份驗證的標準由 <a target="_blank" rel="noopener" href="https://tools.ietf.org/html/rfc2617">RFC 2617</a> 定義，它更新了 <a target="_blank" rel="noopener" href="https://tools.ietf.org/html/rfc2069">RFC 2069</a> 規定的摘要身份驗證標準的早期版本。大多數用戶代理實現 RFC 2617。Spring Security 的 Digest Authentication 支持與qopRFC 2617 規定的“auth”保護質量（）兼容，它還提供與 RFC 2069 的向後兼容性。如果您需要，Digest Authentication 被視為更具吸引力的選項使用未加密的 HTTP（即沒有 TLS/HTTPS）並希望最大限度地提高身份驗證過程的安全性。但是，<font color="#FF0000">每個人都應該使用HTTPS</font>。</p>
+<p>摘要式身份驗證的核心是“隨機數”。這是服務器生成的值。Spring Security 的 nonce 採用以下格式：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">base64(expirationTime + &quot;:&quot; + md5Hex(expirationTime + &quot;:&quot; + key))</span><br><span class="line">expirationTime:   The date and time when the nonce expires, expressed in milliseconds</span><br><span class="line">key:              A private key to prevent modification of the nonce token</span><br></pre></td></tr></table></figure>
+<p>你需要確保你配置不安全的明文密碼存儲使用NoOpPasswordEncoder。以下提供了使用 Java 配置配置摘要式身份驗證的示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Autowired</span></span><br><span class="line">UserDetailsService userDetailsService;</span><br><span class="line"></span><br><span class="line"><span class="function">DigestAuthenticationEntryPoint <span class="title">entryPoint</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	DigestAuthenticationEntryPoint result = <span class="keyword">new</span> DigestAuthenticationEntryPoint();</span><br><span class="line">	result.setRealmName(<span class="string">&quot;My App Relam&quot;</span>);</span><br><span class="line">	result.setKey(<span class="string">&quot;3028472b-da34-4501-bfd8-a355c42bdf92&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">DigestAuthenticationFilter <span class="title">digestAuthenticationFilter</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	DigestAuthenticationFilter result = <span class="keyword">new</span> DigestAuthenticationFilter();</span><br><span class="line">	result.setUserDetailsService(userDetailsService);</span><br><span class="line">	result.setAuthenticationEntryPoint(entryPoint());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">configure</span><span class="params">(HttpSecurity http)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">	http</span><br><span class="line">		<span class="comment">// ...</span></span><br><span class="line">		.exceptionHandling(e -&gt; e.authenticationEntryPoint(authenticationEntryPoint()))</span><br><span class="line">		.addFilterBefore(digestFilter());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Official-Document/" rel="tag"># Official Document</a>
+              <a href="/tags/Username-Password-Authentication/" rel="tag"># Username/Password Authentication</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/01/03/frontend-material-ui-tutorial-014-masonry/" rel="prev" title="Material UI 教學 - 014 masonry">
+      <i class="fa fa-chevron-left"></i> Material UI 教學 - 014 masonry
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/01/16/frontend-d3-001-basic/" rel="next" title="D3 - 001 SVG 簡介">
+      D3 - 001 SVG 簡介 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Reading-the-Username-amp-Password"><span class="nav-number">1.</span> <span class="nav-text">Reading the Username &amp; Password</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Form-Login"><span class="nav-number">1.1.</span> <span class="nav-text">Form Login</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Basic-Authentication"><span class="nav-number">1.2.</span> <span class="nav-text">Basic Authentication</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Digest-Authentication-%E4%B8%8D%E5%BB%BA%E8%AD%B0%E4%BD%BF%E7%94%A8"><span class="nav-number">1.3.</span> <span class="nav-text">Digest Authentication (不建議使用)</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Steven Wu</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">112</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">112</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/pluto123" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;pluto123" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:yuh.chang.wu@gmail.com" title="E-Mail → mailto:yuh.chang.wu@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Steven Wu</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">473k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">7:10</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span><br></span>	
+
+<span class="post-meta-item-icon">
+    <i class="fa fa-users"></i>
+</span>
+<span>總訪客：&nbsp<span id="busuanzi_value_site_uv"><i class="fa fa-spinner fa-spin"></i></span>&nbsp人</span>
+    <span class="post-meta-divider">|</span>
+<span class="post-meta-item-icon">
+    <i class="fa fa-eye"></i>
+</span>
+<span>總訪問量：&nbsp<span id="busuanzi_value_site_pv"><i class="fa fa-spinner fa-spin"></i></span>&nbsp次</span>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '4930808f816a28eedad7',
+      clientSecret: '20b0570483dc737ad14b42abc3ab1866089ce63e',
+      repo        : 'pluto123.github.io',
+      owner       : 'pluto123',
+      admin       : ['pluto123'],
+      id          : 'a52cd528badd369372ada4e8fb9d9b33',
+        language: 'zh-TW',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>

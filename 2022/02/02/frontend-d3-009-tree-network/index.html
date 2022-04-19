@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5G1RK23V7S"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-5G1RK23V7S');
+</script>
+  <meta name="description" content="代碼參考 : https:&#x2F;&#x2F;github.com&#x2F;janert&#x2F;d3-for-the-impatient&#x2F;blob&#x2F;master&#x2F;examples&#x2F;trees.jsD3 階層式 Layout 需要把資料表示成 D3 Node 實例樹 (適合的資料結構)，如果資料是階層式格式，則可以用 d3.hierarchy() 轉換，如果資料是以提供在父節點和子節點之間的連結集合，則 d3.stratify(">
+<meta property="og:type" content="article">
+<meta property="og:title" content="D3 - 009 樹與網路">
+<meta property="og:url" content="http://example.com/2022/02/02/frontend-d3-009-tree-network/index.html">
+<meta property="og:site_name" content="Steven 的學習筆記">
+<meta property="og:description" content="代碼參考 : https:&#x2F;&#x2F;github.com&#x2F;janert&#x2F;d3-for-the-impatient&#x2F;blob&#x2F;master&#x2F;examples&#x2F;trees.jsD3 階層式 Layout 需要把資料表示成 D3 Node 實例樹 (適合的資料結構)，如果資料是階層式格式，則可以用 d3.hierarchy() 轉換，如果資料是以提供在父節點和子節點之間的連結集合，則 d3.stratify(">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2022/02/02/frontend-d3-009-tree-network/01.png">
+<meta property="og:image" content="http://example.com/2022/02/02/frontend-d3-009-tree-network/02.png">
+<meta property="og:image" content="http://example.com/2022/02/02/frontend-d3-009-tree-network/03.png">
+<meta property="og:image" content="http://example.com/2022/02/02/frontend-d3-009-tree-network/04.png">
+<meta property="og:image" content="http://example.com/2022/02/02/frontend-d3-009-tree-network/05.png">
+<meta property="og:image" content="http://example.com/2022/02/02/frontend-d3-009-tree-network/06.png">
+<meta property="og:image" content="http://example.com/2022/02/02/frontend-d3-009-tree-network/07.png">
+<meta property="og:image" content="http://example.com/2022/02/02/frontend-d3-009-tree-network/08.png">
+<meta property="og:image" content="http://example.com/2022/02/02/frontend-d3-009-tree-network/09.png">
+<meta property="og:image" content="http://example.com/2022/02/02/frontend-d3-009-tree-network/10.png">
+<meta property="article:published_time" content="2022-02-02T15:37:40.000Z">
+<meta property="article:modified_time" content="2022-02-08T08:17:14.070Z">
+<meta property="article:author" content="Steven Wu">
+<meta property="article:tag" content="Tree">
+<meta property="article:tag" content="Network">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2022/02/02/frontend-d3-009-tree-network/01.png">
+
+<link rel="canonical" href="http://example.com/2022/02/02/frontend-d3-009-tree-network/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>D3 - 009 樹與網路 | Steven 的學習筆記</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5G1RK23V7S"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-5G1RK23V7S');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Steven 的學習筆記</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">沒有解決不了的問題<br>只有未找到解決方法</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/02/02/frontend-d3-009-tree-network/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Steven Wu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Steven 的學習筆記">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          D3 - 009 樹與網路
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-02-02 23:37:40" itemprop="dateCreated datePublished" datetime="2022-02-02T23:37:40+08:00">2022-02-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-02-08 16:17:14" itemprop="dateModified" datetime="2022-02-08T16:17:14+08:00">2022-02-08</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/D3/" itemprop="url" rel="index"><span itemprop="name">D3</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>16k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>14 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>代碼參考 : <a target="_blank" rel="noopener" href="https://github.com/janert/d3-for-the-impatient/blob/master/examples/trees.js">https://github.com/janert/d3-for-the-impatient/blob/master/examples/trees.js</a><br>D3 階層式 Layout 需要把資料表示成 D3 Node 實例樹 (適合的資料結構)，如果資料是階層式格式，則可以用 d3.hierarchy() 轉換，如果資料是以提供在父節點和子節點之間的連結集合，則 d3.stratify() 可以用來建構所需的 Node 實例樹．<a target="_blank" rel="noopener" href="https://observablehq.com/@d3/d3-stratify">d3.stratify() Examples</a></p>
+<ul>
+<li>d3.hierarchy( data, accessor ) : 從 data 中建立一個 Node 實例樹，傳回 root node．accessor 預設為 d =&gt; d.children，傳回一個子節點陣列．</li>
+<li>node.ancestors() : 傳回祖先節點陣列</li>
+<li>node.descendants() : 傳回後代節點陣列</li>
+<li>node.leaves() : 傳回葉節點陣列</li>
+<li>node.path( target ) : 傳回一條從目前節點到目的節點的最短路徑</li>
+<li>node.links() : 傳回連結關係陣列，每個陣列元素是一個物件，具有 source 和 target 屬性．</li>
+<li>node.count() : 計算所屬子樹下的葉數目，結果會被紀錄在節點上的 value 屬性上，葉節點的 value 屬性會被記錄為 1</li>
+<li>node.sum( accessor ) : 以 post-order traversal 的方式加總每個節點的資料並設定到 value 屬性中</li>
+<li>node.sort( comparator ) : 以 preorder traversal 方式排序</li>
+<li>node.each( function ) : 在目前以及每個後代節點上呼叫提供的 function</li>
+<li>node.copy() : 傳回子樹的複本</li>
+</ul>
+<p>D3 Node 實例的屬性</p>
+<ul>
+<li>node.data : 原始資料集</li>
+<li>node.depth : 與根節點的距離</li>
+<li>node.height : 到最深的葉節點距離，葉節點的高度為 0</li>
+<li>node.parent : 父節點．根節點的父節點為 null</li>
+<li>node.children : 子節點陣列．葉節點的子節點為 undefined</li>
+<li>node.value : 放置由 count() 或 sum() 所計算的值</li>
+</ul>
+<p>d3.tree 及 d3.cluster 的方法</p>
+<ul>
+<li>d3.tree() : 傳回一個 tree layout 實例，具有相同深度的節點，將會放在距離 root 節點相同像素的位置</li>
+<li>d3.cluster() : 傳回一個 tree layout 實例，所有葉節點，將會放在距離 root 節點相同像素的位置</li>
+<li>t( node ) : 輸入一個 D3 Node 物件樹的根節點</li>
+<li>t.size( [x, y] ) : 結果圖形的大小</li>
+<li>t.nodeSize( [x, y] ) : 單一個節點的大小<br>節點原始資料<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">&#123; <span class="attr">&quot;name&quot;</span>: <span class="string">&quot;root&quot;</span>, <span class="attr">&quot;size&quot;</span>: <span class="number">0</span>, <span class="attr">&quot;kids&quot;</span>: [</span><br><span class="line">    &#123; <span class="attr">&quot;name&quot;</span>: <span class="string">&quot;bin&quot;</span>, <span class="attr">&quot;size&quot;</span>: <span class="number">3</span>, <span class="attr">&quot;kids&quot;</span>: [] &#125;,</span><br><span class="line">    &#123; <span class="attr">&quot;name&quot;</span>: <span class="string">&quot;boot&quot;</span>, <span class="attr">&quot;size&quot;</span>: <span class="number">1</span>, <span class="attr">&quot;kids&quot;</span>: [] &#125;,</span><br><span class="line">    &#123; <span class="attr">&quot;name&quot;</span>: <span class="string">&quot;dev&quot;</span>, <span class="attr">&quot;size&quot;</span>: <span class="number">1</span>, <span class="attr">&quot;kids&quot;</span>: [] &#125;,</span><br><span class="line">    &#123; <span class="attr">&quot;name&quot;</span>: <span class="string">&quot;home&quot;</span>, <span class="attr">&quot;size&quot;</span>: <span class="number">0</span>, <span class="attr">&quot;kids&quot;</span>: [</span><br><span class="line">        &#123; <span class="attr">&quot;name&quot;</span>: <span class="string">&quot;alice&quot;</span>, <span class="attr">&quot;size&quot;</span>: <span class="number">5</span>, <span class="attr">&quot;kids&quot;</span>: [</span><br><span class="line">            &#123; <span class="attr">&quot;name&quot;</span>: <span class="string">&quot;mail&quot;</span>, <span class="attr">&quot;size&quot;</span>: <span class="number">3</span>, <span class="attr">&quot;kids&quot;</span>: [] &#125;,</span><br><span class="line">            &#123; <span class="attr">&quot;name&quot;</span>: <span class="string">&quot;img&quot;</span>, <span class="attr">&quot;size&quot;</span>: <span class="number">1</span>, <span class="attr">&quot;kids&quot;</span>: [</span><br><span class="line">                &#123; <span class="attr">&quot;name&quot;</span>: <span class="string">&quot;color&quot;</span>, <span class="attr">&quot;size&quot;</span>: <span class="number">8</span>, <span class="attr">&quot;kids&quot;</span>: [] &#125;,</span><br><span class="line">                &#123; <span class="attr">&quot;name&quot;</span>: <span class="string">&quot;bw&quot;</span>, <span class="attr">&quot;size&quot;</span>: <span class="number">3</span>, <span class="attr">&quot;kids&quot;</span>: [] &#125;</span><br><span class="line">            ] &#125;,</span><br><span class="line">            &#123; <span class="attr">&quot;name&quot;</span>: <span class="string">&quot;files&quot;</span>, <span class="attr">&quot;size&quot;</span>: <span class="number">4</span>, <span class="attr">&quot;kids&quot;</span>: [] &#125;</span><br><span class="line">        ] &#125;,</span><br><span class="line">        &#123; <span class="attr">&quot;name&quot;</span>: <span class="string">&quot;eve&quot;</span>, <span class="attr">&quot;size&quot;</span>: <span class="number">1</span>, <span class="attr">&quot;kids&quot;</span>: [</span><br><span class="line">            &#123; <span class="attr">&quot;name&quot;</span>: <span class="string">&quot;spy&quot;</span>, <span class="attr">&quot;size&quot;</span>: <span class="number">2</span>, <span class="attr">&quot;kids&quot;</span>: [] &#125;</span><br><span class="line">        ] &#125;,	</span><br><span class="line">        &#123; <span class="attr">&quot;name&quot;</span>: <span class="string">&quot;bob&quot;</span>, <span class="attr">&quot;size&quot;</span>: <span class="number">3</span>, <span class="attr">&quot;kids&quot;</span>: [</span><br><span class="line">            &#123; <span class="attr">&quot;name&quot;</span>: <span class="string">&quot;mail&quot;</span>, <span class="attr">&quot;size&quot;</span>: <span class="number">4</span>, <span class="attr">&quot;kids&quot;</span>: [] &#125;,</span><br><span class="line">            &#123; <span class="attr">&quot;name&quot;</span>: <span class="string">&quot;docs&quot;</span>, <span class="attr">&quot;size&quot;</span>: <span class="number">7</span>, <span class="attr">&quot;kids&quot;</span>: [] &#125;,</span><br><span class="line">            &#123; <span class="attr">&quot;name&quot;</span>: <span class="string">&quot;src&quot;</span>, <span class="attr">&quot;size&quot;</span>: <span class="number">5</span>, <span class="attr">&quot;kids&quot;</span>: [] &#125;</span><br><span class="line">        ] &#125;</span><br><span class="line">    ] &#125;,</span><br><span class="line">    &#123; <span class="attr">&quot;name&quot;</span>: <span class="string">&quot;lib&quot;</span>, <span class="attr">&quot;size&quot;</span>: <span class="number">9</span>, <span class="attr">&quot;kids&quot;</span>: [] &#125;,</span><br><span class="line">    &#123; <span class="attr">&quot;name&quot;</span>: <span class="string">&quot;usr&quot;</span>, <span class="attr">&quot;size&quot;</span>: <span class="number">0</span>, <span class="attr">&quot;kids&quot;</span>: [</span><br><span class="line">        &#123; <span class="attr">&quot;name&quot;</span>: <span class="string">&quot;bin&quot;</span>, <span class="attr">&quot;size&quot;</span>: <span class="number">3</span>, <span class="attr">&quot;kids&quot;</span>: [] &#125;,</span><br><span class="line">        &#123; <span class="attr">&quot;name&quot;</span>: <span class="string">&quot;include&quot;</span>, <span class="attr">&quot;size&quot;</span>: <span class="number">6</span>, <span class="attr">&quot;kids&quot;</span>: [] &#125;,</span><br><span class="line">        &#123; <span class="attr">&quot;name&quot;</span>: <span class="string">&quot;lib&quot;</span>, <span class="attr">&quot;size&quot;</span>: <span class="number">9</span>, <span class="attr">&quot;kids&quot;</span>: [] &#125;,</span><br><span class="line">        &#123; <span class="attr">&quot;name&quot;</span>: <span class="string">&quot;local&quot;</span>, <span class="attr">&quot;size&quot;</span>: <span class="number">7</span>, <span class="attr">&quot;kids&quot;</span>: [</span><br><span class="line">            &#123; <span class="attr">&quot;name&quot;</span>: <span class="string">&quot;bin&quot;</span>, <span class="attr">&quot;size&quot;</span>: <span class="number">2</span>, <span class="attr">&quot;kids&quot;</span>: [] &#125;,</span><br><span class="line">            &#123; <span class="attr">&quot;name&quot;</span>: <span class="string">&quot;lib&quot;</span>, <span class="attr">&quot;size&quot;</span>: <span class="number">3</span>, <span class="attr">&quot;kids&quot;</span>: [] &#125;,</span><br><span class="line">            &#123; <span class="attr">&quot;name&quot;</span>: <span class="string">&quot;share&quot;</span>, <span class="attr">&quot;size&quot;</span>: <span class="number">3</span>, <span class="attr">&quot;kids&quot;</span>: [] &#125;</span><br><span class="line">        ] &#125;,</span><br><span class="line">        &#123; <span class="attr">&quot;name&quot;</span>: <span class="string">&quot;share&quot;</span>, <span class="attr">&quot;size&quot;</span>: <span class="number">4</span>, <span class="attr">&quot;kids&quot;</span>: [] &#125;</span><br><span class="line">    ] &#125;</span><br><span class="line">] &#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> d3 <span class="keyword">from</span> <span class="string">&#x27;d3&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; useEffect &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">makeDemo09_1</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    d3.json( <span class="string">&quot;data/filesys.json&quot;</span> ).then( <span class="function"><span class="keyword">function</span>(<span class="params">json</span>) </span>&#123;    </span><br><span class="line">        <span class="keyword">var</span> nodes = d3.hierarchy(json, <span class="function"><span class="params">d</span>=&gt;</span>d.kids);  <span class="comment">// 建構 D3 Node 物件樹，其子節點是被儲存在 kids 中</span></span><br><span class="line">        d3.tree().size( [<span class="number">250</span>,<span class="number">225</span>] )( nodes );  <span class="comment">// 設定完整圖形的像素尺寸</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">var</span> g = d3.select( <span class="string">&quot;svg&quot;</span> ).append( <span class="string">&quot;g&quot;</span> )</span><br><span class="line">            .attr( <span class="string">&quot;transform&quot;</span>, <span class="string">&quot;translate(25, 25)&quot;</span> );</span><br><span class="line">    </span><br><span class="line">        <span class="keyword">var</span> lnkMkr = d3.linkVertical().x( <span class="function"><span class="params">d</span>=&gt;</span>d.x ).y( <span class="function"><span class="params">d</span>=&gt;</span>d.y );  <span class="comment">// 節點間的連結線產生器</span></span><br><span class="line">        g.selectAll( <span class="string">&quot;path&quot;</span> ).data( nodes.links() ).enter()  <span class="comment">// 產生連結線</span></span><br><span class="line">            .append( <span class="string">&quot;path&quot;</span> ).attr( <span class="string">&quot;d&quot;</span>, <span class="function"><span class="params">d</span>=&gt;</span>lnkMkr(d) )</span><br><span class="line">            .attr( <span class="string">&quot;stroke&quot;</span>, <span class="string">&quot;red&quot;</span> ).attr( <span class="string">&quot;fill&quot;</span>, <span class="string">&quot;none&quot;</span> );</span><br><span class="line">        </span><br><span class="line">        g.selectAll(<span class="string">&quot;circle&quot;</span>).data( nodes.descendants() ).enter()  <span class="comment">// 傳回後代陣列畫點</span></span><br><span class="line">            .append(<span class="string">&quot;circle&quot;</span>).attr( <span class="string">&quot;r&quot;</span>, <span class="number">5</span> )</span><br><span class="line">            .attr( <span class="string">&quot;cx&quot;</span>, <span class="function"><span class="params">d</span>=&gt;</span>d.x ).attr( <span class="string">&quot;cy&quot;</span>, <span class="function"><span class="params">d</span>=&gt;</span>d.y );</span><br><span class="line">    &#125; );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Demo09_1</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    useEffect(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">        makeDemo09_1()</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        (<span class="xml"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">height</span>=<span class="string">&quot;275&quot;</span> <span class="attr">width</span>=<span class="string">&quot;300&quot;</span> <span class="attr">style</span>=<span class="string">&#123;&#123;</span>&quot;<span class="attr">background</span>&quot; <span class="attr">:</span> &#x27;<span class="attr">rgb</span>(<span class="attr">230</span>, <span class="attr">230</span>, <span class="attr">230</span>)&#x27;&#125;&#125;&gt;</span></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span>)</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> Demo09_1;</span><br></pre></td></tr></table></figure>
+<img src="/2022/02/02/frontend-d3-009-tree-network/01.png" class="" title="01.png">
+<p>d3.tree() 是依據輸入順序繪製，而要使用 d3.cluster() 之前必須依據高度重新排列後，在輸入給 d3.cluster()</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> d3 <span class="keyword">from</span> <span class="string">&#x27;d3&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; useEffect &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">makeDemo09_2</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    d3.json( <span class="string">&quot;data/filesys.json&quot;</span> ).then( <span class="function"><span class="keyword">function</span>(<span class="params">json</span>) </span>&#123;    </span><br><span class="line">        <span class="keyword">var</span> nodes = d3.hierarchy(json, <span class="function"><span class="params">d</span>=&gt;</span>d.kids);  <span class="comment">// 建構 D3 Node 物件樹，其子節點是被儲存在 kids 中</span></span><br><span class="line">        nodes = nodes.sort( <span class="function">(<span class="params">a, b</span>) =&gt;</span> b.height - a.height );  <span class="comment">// 依據高度排列</span></span><br><span class="line">        d3.cluster().size( [<span class="number">250</span>,<span class="number">225</span>] )( nodes );  <span class="comment">// 設定完整圖形的像素尺寸</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">var</span> g = d3.select( <span class="string">&quot;svg&quot;</span> ).append( <span class="string">&quot;g&quot;</span> )</span><br><span class="line">            .attr( <span class="string">&quot;transform&quot;</span>, <span class="string">&quot;translate(25, 25)&quot;</span> );</span><br><span class="line">    </span><br><span class="line">        <span class="keyword">var</span> lnkMkr = d3.linkVertical().x( <span class="function"><span class="params">d</span>=&gt;</span>d.x ).y( <span class="function"><span class="params">d</span>=&gt;</span>d.y );  <span class="comment">// 節點間的連結線產生器</span></span><br><span class="line">        g.selectAll( <span class="string">&quot;path&quot;</span> ).data( nodes.links() ).enter()  <span class="comment">// 產生連結線</span></span><br><span class="line">            .append( <span class="string">&quot;path&quot;</span> ).attr( <span class="string">&quot;d&quot;</span>, <span class="function"><span class="params">d</span>=&gt;</span>lnkMkr(d) )</span><br><span class="line">            .attr( <span class="string">&quot;stroke&quot;</span>, <span class="string">&quot;red&quot;</span> ).attr( <span class="string">&quot;fill&quot;</span>, <span class="string">&quot;none&quot;</span> );</span><br><span class="line">        </span><br><span class="line">        g.selectAll(<span class="string">&quot;circle&quot;</span>).data( nodes.descendants() ).enter()  <span class="comment">// 傳回後代陣列畫點</span></span><br><span class="line">            .append(<span class="string">&quot;circle&quot;</span>).attr( <span class="string">&quot;r&quot;</span>, <span class="number">5</span> )</span><br><span class="line">            .attr( <span class="string">&quot;cx&quot;</span>, <span class="function"><span class="params">d</span>=&gt;</span>d.x ).attr( <span class="string">&quot;cy&quot;</span>, <span class="function"><span class="params">d</span>=&gt;</span>d.y );</span><br><span class="line">    &#125; );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Demo09_2</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    useEffect(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">        makeDemo09_2()</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        (<span class="xml"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">height</span>=<span class="string">&quot;275&quot;</span> <span class="attr">width</span>=<span class="string">&quot;300&quot;</span> <span class="attr">style</span>=<span class="string">&#123;&#123;</span>&quot;<span class="attr">background</span>&quot; <span class="attr">:</span> &#x27;<span class="attr">rgb</span>(<span class="attr">230</span>, <span class="attr">230</span>, <span class="attr">230</span>)&#x27;&#125;&#125;&gt;</span></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span>)</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> Demo09_2;</span><br></pre></td></tr></table></figure>
+<img src="/2022/02/02/frontend-d3-009-tree-network/02.png" class="" title="02.png">
+<p>以水平方式繪製 tree</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> d3 <span class="keyword">from</span> <span class="string">&#x27;d3&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; useEffect &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">makeDemo09_3</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    d3.json( <span class="string">&quot;data/filesys.json&quot;</span> ).then( <span class="function"><span class="keyword">function</span>(<span class="params">json</span>) </span>&#123;    </span><br><span class="line">        <span class="keyword">var</span> nodes = d3.hierarchy(json, <span class="function"><span class="params">d</span>=&gt;</span>d.kids);</span><br><span class="line">        d3.tree().size( [<span class="number">250</span>,<span class="number">225</span>] )( nodes );</span><br><span class="line">        </span><br><span class="line"></span><br><span class="line">        <span class="keyword">var</span> g = d3.select( <span class="string">&quot;svg&quot;</span> ).append( <span class="string">&quot;g&quot;</span> )</span><br><span class="line">            .attr( <span class="string">&quot;transform&quot;</span>, <span class="string">&quot;translate(25, 25)&quot;</span> );</span><br><span class="line">    </span><br><span class="line">        <span class="keyword">var</span> lnkMkr = d3.linkHorizontal().x( <span class="function"><span class="params">d</span>=&gt;</span>d.y ).y( <span class="function"><span class="params">d</span>=&gt;</span>d.x );  <span class="comment">// 以水平方式繪製節點間的連結</span></span><br><span class="line">        g.selectAll( <span class="string">&quot;path&quot;</span> ).data( nodes.links() ).enter()</span><br><span class="line">            .append( <span class="string">&quot;path&quot;</span> ).attr( <span class="string">&quot;d&quot;</span>, <span class="function"><span class="params">d</span>=&gt;</span>lnkMkr(d) )</span><br><span class="line">            .attr( <span class="string">&quot;stroke&quot;</span>, <span class="string">&quot;red&quot;</span> ).attr( <span class="string">&quot;fill&quot;</span>, <span class="string">&quot;none&quot;</span> );</span><br><span class="line">        </span><br><span class="line">        g.selectAll(<span class="string">&quot;circle&quot;</span>).data( nodes.descendants() ).enter()</span><br><span class="line">            .append(<span class="string">&quot;circle&quot;</span>).attr( <span class="string">&quot;r&quot;</span>, <span class="number">5</span> )</span><br><span class="line">            .attr( <span class="string">&quot;cx&quot;</span>, <span class="function"><span class="params">d</span>=&gt;</span>d.y ).attr( <span class="string">&quot;cy&quot;</span>, <span class="function"><span class="params">d</span>=&gt;</span>d.x );  <span class="comment">// 因為是水平繪製，所以此處 x 和 y 要對調</span></span><br><span class="line">    &#125; );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Demo09_3</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    useEffect(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">        makeDemo09_3()</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        (<span class="xml"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">height</span>=<span class="string">&quot;300&quot;</span> <span class="attr">width</span>=<span class="string">&quot;275&quot;</span> <span class="attr">style</span>=<span class="string">&#123;&#123;</span>&quot;<span class="attr">background</span>&quot; <span class="attr">:</span> &#x27;<span class="attr">rgb</span>(<span class="attr">230</span>, <span class="attr">230</span>, <span class="attr">230</span>)&#x27;&#125;&#125;&gt;</span></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span>)</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> Demo09_3;</span><br></pre></td></tr></table></figure>
+<img src="/2022/02/02/frontend-d3-009-tree-network/03.png" class="" title="03.png">
+
+<p>使用極坐標</p>
+<img src="/2022/02/02/frontend-d3-009-tree-network/04.png" class="" title="04.png">
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> d3 <span class="keyword">from</span> <span class="string">&#x27;d3&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; useEffect &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">makeDemo09_4</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    d3.json( <span class="string">&quot;data/filesys.json&quot;</span> ).then( <span class="function"><span class="keyword">function</span>(<span class="params">json</span>) </span>&#123;    </span><br><span class="line">        <span class="keyword">var</span> nodes = d3.cluster().size( [<span class="number">2</span>*<span class="built_in">Math</span>.PI, <span class="number">125</span>] )(  <span class="comment">// 使用 radial 方式繪製的話，需要用極座標</span></span><br><span class="line">            d3.hierarchy( json, <span class="function"><span class="params">d</span>=&gt;</span>d.kids )</span><br><span class="line">                .sort( <span class="function">(<span class="params">a,b</span>)=&gt;</span>b.height-a.height )</span><br><span class="line">        );</span><br><span class="line"></span><br><span class="line">        <span class="keyword">var</span> g = d3.select( <span class="string">&quot;svg&quot;</span> ).append( <span class="string">&quot;g&quot;</span> )</span><br><span class="line">            .attr( <span class="string">&quot;transform&quot;</span>, <span class="string">&quot;translate(150, 150)&quot;</span> );</span><br><span class="line"></span><br><span class="line">        <span class="keyword">var</span> h = <span class="function"><span class="keyword">function</span>(<span class="params"> r, phi </span>) </span>&#123; <span class="keyword">return</span>  r*<span class="built_in">Math</span>.sin(phi) &#125;  <span class="comment">// 定義座標轉換公式</span></span><br><span class="line">        <span class="keyword">var</span> v = <span class="function"><span class="keyword">function</span>(<span class="params"> r, phi </span>) </span>&#123; <span class="keyword">return</span> -r*<span class="built_in">Math</span>.cos(phi) &#125;  </span><br><span class="line">        </span><br><span class="line">        g.selectAll( <span class="string">&quot;line&quot;</span> ).data( nodes.links() ).enter()</span><br><span class="line">            .append( <span class="string">&quot;line&quot;</span> ).attr( <span class="string">&quot;stroke&quot;</span>, <span class="string">&quot;red&quot;</span> )</span><br><span class="line">            .attr( <span class="string">&quot;x1&quot;</span>, <span class="function"><span class="params">d</span>=&gt;</span>h(d.source.y, d.source.x) )  <span class="comment">// 座標轉換</span></span><br><span class="line">            .attr( <span class="string">&quot;y1&quot;</span>, <span class="function"><span class="params">d</span>=&gt;</span>v(d.source.y, d.source.x) )</span><br><span class="line">            .attr( <span class="string">&quot;x2&quot;</span>, <span class="function"><span class="params">d</span>=&gt;</span>h(d.target.y, d.target.x) )</span><br><span class="line">            .attr( <span class="string">&quot;y2&quot;</span>, <span class="function"><span class="params">d</span>=&gt;</span>v(d.target.y, d.target.x) );</span><br><span class="line"></span><br><span class="line">        g.selectAll( <span class="string">&quot;circle&quot;</span> ).data( nodes.descendants() ).enter()</span><br><span class="line">            .append( <span class="string">&quot;circle&quot;</span> ).attr( <span class="string">&quot;r&quot;</span>, <span class="number">5</span> )</span><br><span class="line">            .attr( <span class="string">&quot;cx&quot;</span>, <span class="function"><span class="params">d</span>=&gt;</span>h(d.y, d.x) )</span><br><span class="line">            .attr( <span class="string">&quot;cy&quot;</span>, <span class="function"><span class="params">d</span>=&gt;</span>v(d.y, d.x) );</span><br><span class="line">    &#125; )</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Demo09_4</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    useEffect(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">        makeDemo09_4()</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        (<span class="xml"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">height</span>=<span class="string">&quot;300&quot;</span> <span class="attr">width</span>=<span class="string">&quot;300&quot;</span> <span class="attr">style</span>=<span class="string">&#123;&#123;</span>&quot;<span class="attr">background</span>&quot; <span class="attr">:</span> &#x27;<span class="attr">rgb</span>(<span class="attr">230</span>, <span class="attr">230</span>, <span class="attr">230</span>)&#x27;&#125;&#125;&gt;</span></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span>)</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> Demo09_4;</span><br></pre></td></tr></table></figure>
+<img src="/2022/02/02/frontend-d3-009-tree-network/05.png" class="" title="05.png">
+
+<p>以極座標方式繪製樹</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> d3 <span class="keyword">from</span> <span class="string">&#x27;d3&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; useEffect &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">makeDemo09_4</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    d3.json( <span class="string">&quot;data/filesys.json&quot;</span> ).then( <span class="function"><span class="keyword">function</span>(<span class="params">json</span>) </span>&#123;    </span><br><span class="line">        <span class="keyword">var</span> nodes = d3.cluster().size( [<span class="number">2</span>*<span class="built_in">Math</span>.PI, <span class="number">125</span>] )(  <span class="comment">// 使用 radial 方式繪製的話，需要用極座標</span></span><br><span class="line">            d3.hierarchy( json, <span class="function"><span class="params">d</span>=&gt;</span>d.kids )</span><br><span class="line">                .sort( <span class="function">(<span class="params">a,b</span>)=&gt;</span>b.height-a.height )</span><br><span class="line">        );</span><br><span class="line"></span><br><span class="line">        <span class="keyword">var</span> g = d3.select( <span class="string">&quot;svg&quot;</span> ).append( <span class="string">&quot;g&quot;</span> )</span><br><span class="line">            .attr( <span class="string">&quot;transform&quot;</span>, <span class="string">&quot;translate(150, 150)&quot;</span> );</span><br><span class="line"></span><br><span class="line">        <span class="keyword">var</span> h = <span class="function"><span class="keyword">function</span>(<span class="params"> r, phi </span>) </span>&#123; <span class="keyword">return</span>  r*<span class="built_in">Math</span>.sin(phi) &#125;  <span class="comment">// 定義座標轉換公式</span></span><br><span class="line">        <span class="keyword">var</span> v = <span class="function"><span class="keyword">function</span>(<span class="params"> r, phi </span>) </span>&#123; <span class="keyword">return</span> -r*<span class="built_in">Math</span>.cos(phi) &#125;  </span><br><span class="line">        </span><br><span class="line">        g.selectAll( <span class="string">&quot;line&quot;</span> ).data( nodes.links() ).enter()</span><br><span class="line">            .append( <span class="string">&quot;line&quot;</span> ).attr( <span class="string">&quot;stroke&quot;</span>, <span class="string">&quot;red&quot;</span> )</span><br><span class="line">            .attr( <span class="string">&quot;x1&quot;</span>, <span class="function"><span class="params">d</span>=&gt;</span>h(d.source.y, d.source.x) )  <span class="comment">// 座標轉換</span></span><br><span class="line">            .attr( <span class="string">&quot;y1&quot;</span>, <span class="function"><span class="params">d</span>=&gt;</span>v(d.source.y, d.source.x) )</span><br><span class="line">            .attr( <span class="string">&quot;x2&quot;</span>, <span class="function"><span class="params">d</span>=&gt;</span>h(d.target.y, d.target.x) )</span><br><span class="line">            .attr( <span class="string">&quot;y2&quot;</span>, <span class="function"><span class="params">d</span>=&gt;</span>v(d.target.y, d.target.x) );</span><br><span class="line"></span><br><span class="line">        g.selectAll( <span class="string">&quot;circle&quot;</span> ).data( nodes.descendants() ).enter()</span><br><span class="line">            .append( <span class="string">&quot;circle&quot;</span> ).attr( <span class="string">&quot;r&quot;</span>, <span class="number">5</span> )</span><br><span class="line">            .attr( <span class="string">&quot;cx&quot;</span>, <span class="function"><span class="params">d</span>=&gt;</span>h(d.y, d.x) )</span><br><span class="line">            .attr( <span class="string">&quot;cy&quot;</span>, <span class="function"><span class="params">d</span>=&gt;</span>v(d.y, d.x) );</span><br><span class="line">    &#125; )</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Demo09_4</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    useEffect(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">        makeDemo09_4()</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        (<span class="xml"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">height</span>=<span class="string">&quot;300&quot;</span> <span class="attr">width</span>=<span class="string">&quot;300&quot;</span> <span class="attr">style</span>=<span class="string">&#123;&#123;</span>&quot;<span class="attr">background</span>&quot; <span class="attr">:</span> &#x27;<span class="attr">rgb</span>(<span class="attr">230</span>, <span class="attr">230</span>, <span class="attr">230</span>)&#x27;&#125;&#125;&gt;</span></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span>)</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> Demo09_4;</span><br></pre></td></tr></table></figure>
+<img src="/2022/02/02/frontend-d3-009-tree-network/06.png" class="" title="06.png">
+
+<p>以 radial 連結產生器取代直線</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> d3 <span class="keyword">from</span> <span class="string">&#x27;d3&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; useEffect &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">makeDemo09_5</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    d3.json( <span class="string">&quot;data/filesys.json&quot;</span> ).then( <span class="function"><span class="keyword">function</span>(<span class="params">json</span>) </span>&#123;    </span><br><span class="line">        <span class="keyword">var</span> nodes = d3.cluster().size( [<span class="number">2</span>*<span class="built_in">Math</span>.PI, <span class="number">125</span>] )(  <span class="comment">// 使用 radial 方式繪製的話，需要用極座標</span></span><br><span class="line">            d3.hierarchy( json, <span class="function"><span class="params">d</span>=&gt;</span>d.kids )</span><br><span class="line">                .sort( <span class="function">(<span class="params">a,b</span>)=&gt;</span>b.height-a.height )</span><br><span class="line">        );</span><br><span class="line"></span><br><span class="line">        <span class="keyword">var</span> g = d3.select( <span class="string">&quot;svg&quot;</span> ).append( <span class="string">&quot;g&quot;</span> )</span><br><span class="line">            .attr( <span class="string">&quot;transform&quot;</span>, <span class="string">&quot;translate(150, 150)&quot;</span> );</span><br><span class="line"></span><br><span class="line">        <span class="keyword">var</span> h = <span class="function"><span class="keyword">function</span>(<span class="params"> r, phi </span>) </span>&#123; <span class="keyword">return</span>  r*<span class="built_in">Math</span>.sin(phi) &#125;  <span class="comment">// 定義座標轉換公式</span></span><br><span class="line">        <span class="keyword">var</span> v = <span class="function"><span class="keyword">function</span>(<span class="params"> r, phi </span>) </span>&#123; <span class="keyword">return</span> -r*<span class="built_in">Math</span>.cos(phi) &#125;  </span><br><span class="line">        </span><br><span class="line"></span><br><span class="line">        g.selectAll(<span class="string">&quot;path&quot;</span>).data( nodes.links() ).enter().append(<span class="string">&quot;path&quot;</span>)</span><br><span class="line">            .attr( <span class="string">&quot;d&quot;</span>, d3.linkRadial().angle( <span class="function"><span class="params">d</span>=&gt;</span>d.x ).radius( <span class="function"><span class="params">d</span>=&gt;</span>d.y ))  <span class="comment">// 以 radial 方式產生連結線</span></span><br><span class="line">            .attr( <span class="string">&quot;stroke&quot;</span>, <span class="string">&quot;red&quot;</span> ).attr( <span class="string">&quot;fill&quot;</span>, <span class="string">&quot;none&quot;</span> );</span><br><span class="line"></span><br><span class="line">        g.selectAll( <span class="string">&quot;circle&quot;</span> ).data( nodes.descendants() ).enter()</span><br><span class="line">            .append( <span class="string">&quot;circle&quot;</span> ).attr( <span class="string">&quot;r&quot;</span>, <span class="number">5</span> )</span><br><span class="line">            .attr( <span class="string">&quot;cx&quot;</span>, <span class="function"><span class="params">d</span>=&gt;</span>h(d.y, d.x) )</span><br><span class="line">            .attr( <span class="string">&quot;cy&quot;</span>, <span class="function"><span class="params">d</span>=&gt;</span>v(d.y, d.x) );</span><br><span class="line">    &#125; )</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Demo09_5</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    useEffect(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">        makeDemo09_5()</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        (<span class="xml"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">height</span>=<span class="string">&quot;300&quot;</span> <span class="attr">width</span>=<span class="string">&quot;300&quot;</span> <span class="attr">style</span>=<span class="string">&#123;&#123;</span>&quot;<span class="attr">background</span>&quot; <span class="attr">:</span> &#x27;<span class="attr">rgb</span>(<span class="attr">230</span>, <span class="attr">230</span>, <span class="attr">230</span>)&#x27;&#125;&#125;&gt;</span></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span>)</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> Demo09_5;</span><br></pre></td></tr></table></figure>
+<img src="/2022/02/02/frontend-d3-009-tree-network/07.png" class="" title="07.png">
+
+<p>之前的 tree / cluster 只是表示出父子階層關係，除了要表示出父子關係外，也要可表現出節點的大小與其子節點大小的話，則可以用 treemap / partition 方式</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> d3 <span class="keyword">from</span> <span class="string">&#x27;d3&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; useEffect &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">makeDemo09_6</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    d3.json( <span class="string">&quot;data/filesys.json&quot;</span> ).then( <span class="function"><span class="keyword">function</span>(<span class="params">json</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">var</span> sc = d3.scaleOrdinal( d3.schemeReds[<span class="number">8</span>] );</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">var</span> nodes = d3.hierarchy(json, <span class="function"><span class="params">d</span>=&gt;</span>d.kids).sum(<span class="function"><span class="params">d</span>=&gt;</span>d.size)  <span class="comment">// 計算出其後代 size 加總</span></span><br><span class="line">            .sort(<span class="function">(<span class="params">a,b</span>) =&gt;</span> b.height-a.height || b.value-a.value); <span class="comment">// 按高度降冪及數值降冪排序</span></span><br><span class="line">        </span><br><span class="line">        d3.treemap().size( [<span class="number">300</span>,<span class="number">300</span>] ).padding(<span class="number">5</span>)(nodes);</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">var</span> g = d3.select( <span class="string">&quot;svg&quot;</span> ).append( <span class="string">&quot;g&quot;</span> ).attr( <span class="string">&quot;transform&quot;</span>, <span class="string">&quot;translate(5, 5)&quot;</span>);</span><br><span class="line">        </span><br><span class="line">        g.selectAll( <span class="string">&quot;rect&quot;</span> ).data( nodes.descendants() ).enter()</span><br><span class="line">            .append( <span class="string">&quot;rect&quot;</span> )</span><br><span class="line">            .attr( <span class="string">&quot;x&quot;</span>, <span class="function"><span class="params">d</span>=&gt;</span>d.x0 ).attr( <span class="string">&quot;y&quot;</span>, <span class="function"><span class="params">d</span>=&gt;</span>d.y0 )</span><br><span class="line">            .attr( <span class="string">&quot;width&quot;</span>, <span class="function"><span class="params">d</span>=&gt;</span>d.x1-d.x0 )  <span class="comment">// treemap layout 提供了兩個對角的 (x0, y0) (x1, y1) </span></span><br><span class="line">            .attr( <span class="string">&quot;height&quot;</span>, <span class="function"><span class="params">d</span>=&gt;</span>d.y1-d.y0 )</span><br><span class="line">            .attr( <span class="string">&quot;fill&quot;</span>, <span class="function"><span class="params">d</span>=&gt;</span>sc(d.depth) ).attr( <span class="string">&quot;stroke&quot;</span>, <span class="string">&quot;red&quot;</span> );</span><br><span class="line"></span><br><span class="line">        g.selectAll( <span class="string">&quot;text&quot;</span> ).data( nodes.leaves() ).enter()  <span class="comment">// 只為每個葉節點顯示文字</span></span><br><span class="line">            .append( <span class="string">&quot;text&quot;</span> )</span><br><span class="line">            .attr( <span class="string">&quot;text-anchor&quot;</span>, <span class="string">&quot;middle&quot;</span> ).attr( <span class="string">&quot;font-size&quot;</span>, <span class="number">10</span> )</span><br><span class="line">            .attr( <span class="string">&quot;x&quot;</span>, <span class="function"><span class="params">d</span>=&gt;</span>(d.x0+d.x1)/<span class="number">2</span> )</span><br><span class="line">            .attr( <span class="string">&quot;y&quot;</span>, <span class="function"><span class="params">d</span>=&gt;</span>(d.y0+d.y1)/<span class="number">2</span>+<span class="number">2</span> )</span><br><span class="line">            .text( <span class="function"><span class="params">d</span>=&gt;</span>d.data.name );    </span><br><span class="line">    &#125; );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Demo09_6</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    useEffect(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">        makeDemo09_6()</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        (<span class="xml"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">height</span>=<span class="string">&quot;310&quot;</span> <span class="attr">width</span>=<span class="string">&quot;310&quot;</span> <span class="attr">style</span>=<span class="string">&#123;&#123;</span>&quot;<span class="attr">background</span>&quot; <span class="attr">:</span> &#x27;<span class="attr">rgb</span>(<span class="attr">230</span>, <span class="attr">230</span>, <span class="attr">230</span>)&#x27;&#125;&#125;&gt;</span></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span>)</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> Demo09_6;</span><br></pre></td></tr></table></figure>
+<img src="/2022/02/02/frontend-d3-009-tree-network/08.png" class="" title="08.png">
+
+<p>基於作用力的粒子排列，於最後穩態時繪出</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> d3 <span class="keyword">from</span> <span class="string">&#x27;d3&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; useEffect &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">makeDemo09_7</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    d3.json( <span class="string">&quot;data/network.json&quot;</span> ).then( <span class="function"><span class="params">res</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">var</span> svg = d3.select( <span class="string">&quot;svg&quot;</span> )</span><br><span class="line">        <span class="keyword">var</span> scC = d3.scaleOrdinal( d3.schemePastel1 )</span><br><span class="line">        </span><br><span class="line">        d3.shuffle( res.ps ); d3.shuffle( res.ln );</span><br><span class="line">        </span><br><span class="line">        d3.forceSimulation( res.ps )</span><br><span class="line">            .force(<span class="string">&quot;ct&quot;</span>, d3.forceCenter( <span class="number">300</span>, <span class="number">300</span> ) )</span><br><span class="line">            .force(<span class="string">&quot;ln&quot;</span>,</span><br><span class="line">                   d3.forceLink( res.ln ).distance(<span class="number">40</span>).id(<span class="function"><span class="params">d</span>=&gt;</span>d.id) )</span><br><span class="line">            .force(<span class="string">&quot;hc&quot;</span>, d3.forceCollide(<span class="number">10</span>) )</span><br><span class="line">            .force(<span class="string">&quot;many&quot;</span>, d3.forceManyBody() )</span><br><span class="line">            .on( <span class="string">&quot;end&quot;</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">                svg.selectAll( <span class="string">&quot;line&quot;</span> ).data( res.ln ).enter()</span><br><span class="line">                    .append( <span class="string">&quot;line&quot;</span> ).attr( <span class="string">&quot;stroke&quot;</span>, <span class="string">&quot;black&quot;</span> )</span><br><span class="line">                    .attr( <span class="string">&quot;x1&quot;</span>, <span class="function"><span class="params">d</span>=&gt;</span>d.source.x )</span><br><span class="line">                    .attr( <span class="string">&quot;y1&quot;</span>, <span class="function"><span class="params">d</span>=&gt;</span>d.source.y )</span><br><span class="line">                    .attr( <span class="string">&quot;x2&quot;</span>, <span class="function"><span class="params">d</span>=&gt;</span>d.target.x )</span><br><span class="line">                    .attr( <span class="string">&quot;y2&quot;</span>, <span class="function"><span class="params">d</span>=&gt;</span>d.target.y );</span><br><span class="line">            </span><br><span class="line">                svg.selectAll(<span class="string">&quot;circle&quot;</span>).data(res.ps).enter()</span><br><span class="line">                    .append(<span class="string">&quot;circle&quot;</span>)</span><br><span class="line">                    .attr( <span class="string">&quot;r&quot;</span>, <span class="number">10</span> ).attr( <span class="string">&quot;fill&quot;</span>, <span class="function">(<span class="params">d,i</span>) =&gt;</span> scC(i) )</span><br><span class="line">                    .attr( <span class="string">&quot;cx&quot;</span>, <span class="function"><span class="params">d</span>=&gt;</span>d.x ).attr( <span class="string">&quot;cy&quot;</span>, <span class="function"><span class="params">d</span>=&gt;</span>d.y )</span><br><span class="line"></span><br><span class="line">                svg.selectAll(<span class="string">&quot;text&quot;</span>).data(res.ps).enter()</span><br><span class="line">                    .append(<span class="string">&quot;text&quot;</span>)</span><br><span class="line">                    .attr( <span class="string">&quot;x&quot;</span>, <span class="function"><span class="params">d</span>=&gt;</span>d.x ).attr( <span class="string">&quot;y&quot;</span>, <span class="function"><span class="params">d</span>=&gt;</span>d.y+<span class="number">4</span> )</span><br><span class="line">                    .attr( <span class="string">&quot;text-anchor&quot;</span>, <span class="string">&quot;middle&quot;</span> )</span><br><span class="line">                    .attr( <span class="string">&quot;font-size&quot;</span>, <span class="number">10</span> )</span><br><span class="line">                    .text( <span class="function"><span class="params">d</span>=&gt;</span>d.id );</span><br><span class="line">            &#125; )</span><br><span class="line">    &#125; );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Demo09_7</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    useEffect(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">        makeDemo09_7()</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        (<span class="xml"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">height</span>=<span class="string">&quot;600&quot;</span> <span class="attr">width</span>=<span class="string">&quot;600&quot;</span> <span class="attr">style</span>=<span class="string">&#123;&#123;</span>&quot;<span class="attr">background</span>&quot; <span class="attr">:</span> &#x27;<span class="attr">rgb</span>(<span class="attr">230</span>, <span class="attr">230</span>, <span class="attr">230</span>)&#x27;&#125;&#125;&gt;</span></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span>)</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> Demo09_7;</span><br></pre></td></tr></table></figure>
+<img src="/2022/02/02/frontend-d3-009-tree-network/09.png" class="" title="09.png">
+<p>模擬過程顯示</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> d3 <span class="keyword">from</span> <span class="string">&#x27;d3&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; useEffect &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">makeDemo09_8</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> ps = [ &#123; <span class="attr">x</span>: <span class="number">350</span>, <span class="attr">y</span>: <span class="number">300</span>, <span class="attr">vx</span>: <span class="number">0</span>, <span class="attr">vy</span>: <span class="number">1</span> &#125;,</span><br><span class="line">        &#123; <span class="attr">x</span>: <span class="number">250</span>, <span class="attr">y</span>: <span class="number">300</span>, <span class="attr">vx</span>: <span class="number">0</span>, <span class="attr">vy</span>: -<span class="number">1</span> &#125; ];</span><br><span class="line"><span class="keyword">var</span> ln = [ &#123; <span class="attr">index</span>: <span class="number">0</span>, <span class="attr">source</span>: ps[<span class="number">0</span>], <span class="attr">target</span>: ps[<span class="number">1</span>] &#125; ];</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> cs1 = d3.select( <span class="string">&quot;#simul&quot;</span> ).select( <span class="string">&quot;#c1&quot;</span> );</span><br><span class="line"><span class="keyword">var</span> cs2 = d3.select( <span class="string">&quot;#simul&quot;</span> ).select( <span class="string">&quot;#c2&quot;</span> );</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> sim = d3.forceSimulation( ps )</span><br><span class="line"> .alphaDecay( <span class="number">0</span> ).alphaMin( -<span class="number">1</span> ).velocityDecay( <span class="number">0</span> )</span><br><span class="line"> .force(<span class="string">&quot;ln&quot;</span>, d3.forceLink(ln).distance(<span class="number">50</span>).strength(<span class="number">0.01</span>))</span><br><span class="line"> .on( <span class="string">&quot;tick&quot;</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">     cs1.attr( <span class="string">&quot;cx&quot;</span>, ps[<span class="number">0</span>].x ).attr( <span class="string">&quot;cy&quot;</span>, ps[<span class="number">0</span>].y );</span><br><span class="line">     cs2.attr( <span class="string">&quot;cx&quot;</span>, ps[<span class="number">1</span>].x ).attr( <span class="string">&quot;cy&quot;</span>, ps[<span class="number">1</span>].y );</span><br><span class="line"> &#125; );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Demo09_8</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    useEffect(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">        makeDemo09_8()</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        (<span class="xml"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">id</span>=<span class="string">&quot;simul&quot;</span> <span class="attr">width</span>=<span class="string">&quot;600&quot;</span> <span class="attr">height</span>=<span class="string">&quot;600&quot;</span> <span class="attr">style</span>=<span class="string">&#123;&#123;</span>&quot;<span class="attr">background</span>&quot; <span class="attr">:</span> &#x27;<span class="attr">rgb</span>(<span class="attr">230</span>, <span class="attr">230</span>, <span class="attr">230</span>)&#x27;&#125;&#125;&gt;</span></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;<span class="name">circle</span> <span class="attr">id</span>=<span class="string">&quot;c1&quot;</span> <span class="attr">cx</span>=<span class="string">&quot;350&quot;</span> <span class="attr">cy</span>=<span class="string">&quot;300&quot;</span> <span class="attr">r</span>=<span class="string">&quot;10&quot;</span> <span class="attr">fill</span>=<span class="string">&quot;red&quot;</span> /&gt;</span></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;<span class="name">circle</span> <span class="attr">id</span>=<span class="string">&quot;c2&quot;</span> <span class="attr">cx</span>=<span class="string">&quot;250&quot;</span> <span class="attr">cy</span>=<span class="string">&quot;300&quot;</span> <span class="attr">r</span>=<span class="string">&quot;10&quot;</span> <span class="attr">fill</span>=<span class="string">&quot;blue&quot;</span> /&gt;</span></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span>)</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> Demo09_8;</span><br></pre></td></tr></table></figure>
+<img src="/2022/02/02/frontend-d3-009-tree-network/10.png" class="" title="10.png">
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Tree/" rel="tag"># Tree</a>
+              <a href="/tags/Network/" rel="tag"># Network</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/02/02/frontend-d3-008-color/" rel="prev" title="D3 - 008 Color">
+      <i class="fa fa-chevron-left"></i> D3 - 008 Color
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/02/06/frontend-d3-010-tools/" rel="next" title="D3 - 010 Tools">
+      D3 - 010 Tools <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Steven Wu</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">112</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">112</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/pluto123" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;pluto123" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:yuh.chang.wu@gmail.com" title="E-Mail → mailto:yuh.chang.wu@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Steven Wu</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">473k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">7:10</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span><br></span>	
+
+<span class="post-meta-item-icon">
+    <i class="fa fa-users"></i>
+</span>
+<span>總訪客：&nbsp<span id="busuanzi_value_site_uv"><i class="fa fa-spinner fa-spin"></i></span>&nbsp人</span>
+    <span class="post-meta-divider">|</span>
+<span class="post-meta-item-icon">
+    <i class="fa fa-eye"></i>
+</span>
+<span>總訪問量：&nbsp<span id="busuanzi_value_site_pv"><i class="fa fa-spinner fa-spin"></i></span>&nbsp次</span>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '4930808f816a28eedad7',
+      clientSecret: '20b0570483dc737ad14b42abc3ab1866089ce63e',
+      repo        : 'pluto123.github.io',
+      owner       : 'pluto123',
+      admin       : ['pluto123'],
+      id          : '1d359c3fa2e78e9e91e837a71309e657',
+        language: 'zh-TW',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>
