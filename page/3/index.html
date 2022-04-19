@@ -202,6 +202,97 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/03/backend-spring-security-003-username-password/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Steven Wu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Steven 的學習筆記">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/01/03/backend-spring-security-003-username-password/" class="post-title-link" itemprop="url">Spring Security 文件筆記 - 003 Username/Password Authentication</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-01-03 10:53:26 / Modified: 17:21:49" itemprop="dateCreated datePublished" datetime="2022-01-03T10:53:26+08:00">2022-01-03</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Spring-Security/" itemprop="url" rel="index"><span itemprop="name">Spring Security</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>6.1k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>6 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>透過檢驗用戶與密碼是否正確，是一種最常見的身分驗證方式。</p>
+<h1 id="Reading-the-Username-amp-Password"><a href="#Reading-the-Username-amp-Password" class="headerlink" title="Reading the Username &amp; Password"></a><a target="_blank" rel="noopener" href="https://docs.spring.io/spring-security/reference/servlet/authentication/passwords/input.html">Reading the Username &amp; Password</a></h1><p>Spring Security 提供了幾個內建機制由 HttpServletRequest 讀取使用者名稱與密碼。</p>
+<h2 id="Form-Login"><a href="#Form-Login" class="headerlink" title="Form Login"></a><a target="_blank" rel="noopener" href="https://docs.spring.io/spring-security/reference/servlet/authentication/passwords/form.html">Form Login</a></h2><p>  由 html 的 form 表單提交使用者名稱與密碼。假設使用者未經過驗證就想要取用被保護的資源，則 Spring Security 將會重導到登入頁面。<br>  下圖是一個 SecurityFilterChain 中的流程說明<br>  <img src="/2022/01/03/backend-spring-security-003-username-password/loginurlauthenticationentrypoint.png" class="" title="loginurlauthenticationentrypoint.png"></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/01/03/backend-spring-security-003-username-password/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/03/frontend-material-ui-tutorial-014-masonry/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1349,94 +1440,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/12/28/frontend-material-ui-tutorial-012-app-bar/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Steven Wu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Steven 的學習筆記">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/28/frontend-material-ui-tutorial-012-app-bar/" class="post-title-link" itemprop="url">Material UI 教學 - 012 App Bar</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-12-28 10:51:39" itemprop="dateCreated datePublished" datetime="2021-12-28T10:51:39+08:00">2021-12-28</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-12-30 11:51:38" itemprop="dateModified" datetime="2021-12-30T11:51:38+08:00">2021-12-30</time>
-              </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>2.1k</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>2 mins.</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><a target="_blank" rel="noopener" href="https://v4.mui.com/components/app-bar/#app-bar">App Bar</a><br>引入組件並使用</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="keyword">import</span> AppBar <span class="keyword">from</span> <span class="string">&#x27;@material-ui/core/AppBar&#x27;</span></span><br><span class="line"><span class="keyword">import</span> Toolbar <span class="keyword">from</span> <span class="string">&#x27;@material-ui/core/Toolbar&#x27;</span></span><br><span class="line">...</span><br><span class="line">                &#123;<span class="comment">/* app bar */</span>&#125;</span><br><span class="line">                &lt;AppBar className=&#123;classes.appbar&#125;&gt;</span><br><span class="line">                    <span class="xml"><span class="tag">&lt;<span class="name">Toolbar</span>&gt;</span></span></span><br><span class="line"><span class="xml">                        <span class="tag">&lt;<span class="name">Typography</span>&gt;</span></span></span><br><span class="line"><span class="xml">                            Welcome to Steven&#x27; nodes</span></span><br><span class="line"><span class="xml">                        <span class="tag">&lt;/<span class="name">Typography</span>&gt;</span></span></span><br><span class="line"><span class="xml">                    <span class="tag">&lt;/<span class="name">Toolbar</span>&gt;</span></span></span><br><span class="line">                &lt;/AppBar&gt;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
-<img src="/2021/12/28/frontend-material-ui-tutorial-012-app-bar/01.png" class="" title="01.png">
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/12/28/frontend-material-ui-tutorial-012-app-bar/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1506,7 +1509,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">112</span>
+          <span class="site-state-item-count">113</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -1519,7 +1522,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">112</span>
+        <span class="site-state-item-count">113</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -1564,13 +1567,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">473k</span>
+    <span title="Symbols count total">474k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
-    <span title="Reading time total">7:10</span>
+    <span title="Reading time total">7:11</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
   </div>
