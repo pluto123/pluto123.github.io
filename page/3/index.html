@@ -202,6 +202,563 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/19/backend-spring-security-002-in-memory/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Steven Wu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Steven 的學習筆記">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/01/19/backend-spring-security-002-in-memory/" class="post-title-link" itemprop="url">Spring Security Notes - 002 使用者帳密訊息儲存於 Memory (僅限測試時用)</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-01-19 11:35:25" itemprop="dateCreated datePublished" datetime="2022-01-19T11:35:25+08:00">2022-01-19</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-24 11:46:39" itemprop="dateModified" datetime="2022-01-24T11:46:39+08:00">2022-01-24</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Spring-Security/" itemprop="url" rel="index"><span itemprop="name">Spring Security</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>7.5k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>7 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="實作-UserDetailsService-介面"><a href="#實作-UserDetailsService-介面" class="headerlink" title="實作 UserDetailsService 介面"></a>實作 UserDetailsService 介面</h1><p>src/main/java/tw/com/pluto/service/MyUserDetailsService.java</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> tw.com.pluto.service;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.security.core.userdetails.User;</span><br><span class="line"><span class="keyword">import</span> org.springframework.security.core.userdetails.UserDetails;</span><br><span class="line"><span class="keyword">import</span> org.springframework.security.core.userdetails.UserDetailsService;</span><br><span class="line"><span class="keyword">import</span> org.springframework.security.core.userdetails.UsernameNotFoundException;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Service;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyUserDetailsService</span> <span class="keyword">implements</span> <span class="title">UserDetailsService</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> UserDetails <span class="title">loadUserByUsername</span><span class="params">(String username)</span> <span class="keyword">throws</span> UsernameNotFoundException </span>&#123;</span><br><span class="line">        UserDetails userDetails = User.builder()</span><br><span class="line">                .username(<span class="string">&quot;user123&quot;</span>)</span><br><span class="line">                .password(<span class="string">&quot;&#123;noop&#125;user123&quot;</span>) <span class="comment">// 密碼前面加上&quot;&#123;noop&#125;&quot;，不對密碼進行任何格式的編碼。</span></span><br><span class="line">                .roles(<span class="string">&quot;USER&quot;</span>)</span><br><span class="line">                .build();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> userDetails;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/01/19/backend-spring-security-002-in-memory/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/18/backend-spring-security-001-basic/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Steven Wu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Steven 的學習筆記">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/01/18/backend-spring-security-001-basic/" class="post-title-link" itemprop="url">Spring Security Notes - 001 基礎概念</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-01-18 11:43:59" itemprop="dateCreated datePublished" datetime="2022-01-18T11:43:59+08:00">2022-01-18</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-19 11:41:42" itemprop="dateModified" datetime="2022-01-19T11:41:42+08:00">2022-01-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Spring-Security/" itemprop="url" rel="index"><span itemprop="name">Spring Security</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>4.4k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>4 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Spring-自動配置項目"><a href="#Spring-自動配置項目" class="headerlink" title="Spring 自動配置項目"></a>Spring 自動配置項目</h1><p>當專案一引入底下依賴，Spring Security 就會自動配置一些東西</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-security<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ol>
+<li><p>當專案一啟動時，可以在 Console 中看到底下文字，表示 Spring Security 自動幫我們建立一個帳號為 user，密碼為 bbd1ed75-49a8-4284-9bef-297fd4378d31，此密碼為動態產生的，每次啟動都會不同。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">2022-01-18 11:36:49.501  INFO 41800 --- [           main] .s.s.UserDetailsServiceAutoConfiguration : </span><br><span class="line"></span><br><span class="line">Using generated security password: bbd1ed75-49a8-4284-9bef-297fd4378d31</span><br><span class="line">...</span><br></pre></td></tr></table></figure></li>
+<li><p>根據配置，Spring Sercuity 會配置不同的 Filter Chains，底下只是其中一個範例</p>
+<img src="/2022/01/18/backend-spring-security-001-basic/01.png" class="" title="01.png"></li>
+<li><p>預設所有請求都必須經過認證，且會產生一個頁面 (/login)，讓使用者輸入帳號與密碼</p>
+<img src="/2022/01/18/backend-spring-security-001-basic/02.png" class="" title="02.png">
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/01/18/backend-spring-security-001-basic/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/16/frontend-d3-001-basic/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Steven Wu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Steven 的學習筆記">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/01/16/frontend-d3-001-basic/" class="post-title-link" itemprop="url">D3 - 001 SVG 簡介</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-01-16 21:39:00" itemprop="dateCreated datePublished" datetime="2022-01-16T21:39:00+08:00">2022-01-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-25 17:15:30" itemprop="dateModified" datetime="2022-01-25T17:15:30+08:00">2022-01-25</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/D3/" itemprop="url" rel="index"><span itemprop="name">D3</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>5.5k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>5 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="簡介"><a href="#簡介" class="headerlink" title="簡介"></a>簡介</h1><p>Scalable Vetor Graphics (SVG) 是個向量圖形格式，用於建立二維圖形，也支援互動操作與動畫．SVG 檔案是基於 XML 的文字檔案．SVG 產生的是 DOM 樹．</p>
+<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>SVG 定義一系列可渲染的圖形元素，像是基本的形狀、文字元素及直線與曲線．這些元素的外觀可以透過外觀屬性加以控制，像是尺寸、位置等．<br>SVG 也定義一些結構化的元素，除了可被組織在一個 SVG 檔案中，也可以把其他元素組合在一起，進行轉換或重用．<br>SVG 的渲染是依據文件的先後順序的，所以在文件前面的元素會被後面的元素壓在底下．<br>SVG 使用圖形座標，原點在圖的左上角．<br>SVG 可以接收使用者事件，然後呼叫對應的事件處理程式．</p>
+<h1 id="形狀"><a href="#形狀" class="headerlink" title="形狀"></a>形狀</h1><p>每個形狀都有自己的屬性組可以控制其大小與位置．</p>
+<table>
+<thead>
+<tr>
+<th>tag</th>
+<th>attribute</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&lt;rect&gt;</td>
+<td>x, y</td>
+<td>左上角的座標</td>
+</tr>
+<tr>
+<td></td>
+<td>width, height</td>
+<td>寬高</td>
+</tr>
+<tr>
+<td></td>
+<td>rx, ry</td>
+<td>邊角半徑</td>
+</tr>
+<tr>
+<td>&lt;circle&gt;</td>
+<td>cx, cy</td>
+<td>中心座標</td>
+</tr>
+<tr>
+<td></td>
+<td>r</td>
+<td>半徑</td>
+</tr>
+<tr>
+<td>&lt;ellipse&gt;</td>
+<td>cx, cy</td>
+<td>中心座標</td>
+</tr>
+<tr>
+<td></td>
+<td>rx, ry</td>
+<td>水平與垂直半徑</td>
+</tr>
+<tr>
+<td>&lt;line&gt;</td>
+<td>x1, y1</td>
+<td>開始點</td>
+</tr>
+<tr>
+<td></td>
+<td>x2, y2</td>
+<td>結束點</td>
+</tr>
+</tbody></table>
+<h1 id="路徑"><a href="#路徑" class="headerlink" title="路徑"></a>路徑</h1><p><path> 元素只有一個屬性 d，這個屬性 d 是由命令與座標結合的字串，中間以空白作為分隔符．所以有命令皆是以一個字母構成，命令如果是大寫字母，則表示之後的座標是絕對座標，如果是小寫字母，則表示之後的是相對座標．<br>一般 path 字串會從一個 M 命令開始，如 :</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; standalone=&quot;no&quot;?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">width</span>=<span class="string">&quot;4cm&quot;</span> <span class="attr">height</span>=<span class="string">&quot;4cm&quot;</span> <span class="attr">viewBox</span>=<span class="string">&quot;0 0 400 400&quot;</span></span></span><br><span class="line"><span class="tag">     <span class="attr">xmlns</span>=<span class="string">&quot;http://www.w3.org/2000/svg&quot;</span> <span class="attr">version</span>=<span class="string">&quot;1.1&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span>Example triangle01- simple example of a &#x27;path&#x27;<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">desc</span>&gt;</span>A path that draws a triangle<span class="tag">&lt;/<span class="name">desc</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">rect</span> <span class="attr">x</span>=<span class="string">&quot;1&quot;</span> <span class="attr">y</span>=<span class="string">&quot;1&quot;</span> <span class="attr">width</span>=<span class="string">&quot;398&quot;</span> <span class="attr">height</span>=<span class="string">&quot;398&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">fill</span>=<span class="string">&quot;none&quot;</span> <span class="attr">stroke</span>=<span class="string">&quot;blue&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">path</span> <span class="attr">d</span>=<span class="string">&quot;M 100 100 L 300 100 L 200 300 z&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">fill</span>=<span class="string">&quot;red&quot;</span> <span class="attr">stroke</span>=<span class="string">&quot;blue&quot;</span> <span class="attr">stroke-width</span>=<span class="string">&quot;3&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<img src="/2022/01/16/frontend-d3-001-basic/01.png" class="" title="01.png">
+<p><a target="_blank" rel="noopener" href="https://www.w3.org/TR/SVG2/paths.html">SVG 參考文件</a></p>
+<ul>
+<li>&lt;path&gt; 元素 d 屬性<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>座標</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>M, m</td>
+<td>x y, dx dy</td>
+<td>畫筆移動 (不會畫出線)</td>
+</tr>
+<tr>
+<td>L, l</td>
+<td>x y, dx dy</td>
+<td>畫一條線</td>
+</tr>
+<tr>
+<td>V, v</td>
+<td>y, dy</td>
+<td>垂直線</td>
+</tr>
+<tr>
+<td>H, h</td>
+<td>x, dx</td>
+<td>水平線</td>
+</tr>
+<tr>
+<td>Z, z</td>
+<td></td>
+<td>把目前座標點和第一個座標點連接起來成一個封閉路徑</td>
+</tr>
+<tr>
+<td>Q, q</td>
+<td>cx cy x y</td>
+<td>二次貝茲曲線</td>
+</tr>
+<tr>
+<td>T, t</td>
+<td>多控制點</td>
+<td>從多個控制點中繪製二次貝茲曲線</td>
+</tr>
+<tr>
+<td>C, c</td>
+<td>cx1 cy1 cx2 cy2 x y</td>
+<td>立方貝茲曲線</td>
+</tr>
+<tr>
+<td>S, s</td>
+<td>多控制點</td>
+<td>從多個控制點中繪製立方貝茲曲線</td>
+</tr>
+<tr>
+<td>A, a</td>
+<td>rx ry phi arg sweep x y</td>
+<td>繪製橢圓弧線</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">viewBox</span>=<span class="string">&quot;0 0 100 100&quot;</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.w3.org/2000/svg&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">path</span> <span class="attr">d</span>=<span class="string">&quot;M 10,30</span></span></span><br><span class="line"><span class="string"><span class="tag">           A 20,20 0,0,1 50,30</span></span></span><br><span class="line"><span class="string"><span class="tag">           A 20,20 0,0,1 90,30</span></span></span><br><span class="line"><span class="string"><span class="tag">           Q 90,60 50,90</span></span></span><br><span class="line"><span class="string"><span class="tag">           Q 10,60 10,30 z&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<img src="/2022/01/16/frontend-d3-001-basic/02.png" class="" title="02.png">
+<p><a target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/d">path attribute d</a></p>
+<h1 id="文字"><a href="#文字" class="headerlink" title="文字"></a>文字</h1><p>可使用 &lt;text&gt; 元素將文字包含在 SVG 圖形中，可以內嵌 &lt;tspan&gt; 元素，它用於在原本字串中定義出子字串</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">viewBox</span>=<span class="string">&quot;0 0 240 40&quot;</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.w3.org/2000/svg&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="css"></span></span><br><span class="line"><span class="css">    text  &#123; <span class="attribute">font</span>: italic <span class="number">12px</span> serif; &#125;</span></span><br><span class="line"><span class="css">    tspan &#123; <span class="attribute">font</span>: bold <span class="number">10px</span> sans-serif; fill: red; &#125;</span></span><br><span class="line"><span class="css">  </span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">text</span> <span class="attr">x</span>=<span class="string">&quot;10&quot;</span> <span class="attr">y</span>=<span class="string">&quot;30&quot;</span> <span class="attr">class</span>=<span class="string">&quot;small&quot;</span>&gt;</span></span><br><span class="line">    You are</span><br><span class="line">    <span class="tag">&lt;<span class="name">tspan</span>&gt;</span>not<span class="tag">&lt;/<span class="name">tspan</span>&gt;</span></span><br><span class="line">    a banana!</span><br><span class="line">  <span class="tag">&lt;/<span class="name">text</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<img src="/2022/01/16/frontend-d3-001-basic/03.png" class="" title="03.png">
+<p>只有 &lt;text&gt; 中才有 text-anchor 屬性，是控制對齊方式</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">viewBox</span>=<span class="string">&quot;0 0 120 120&quot;</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.w3.org/2000/svg&quot;</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- Materialization of anchors --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">path</span> <span class="attr">d</span>=<span class="string">&quot;M60,15 L60,110 M30,40 L90,40 M30,75 L90,75 M30,110 L90,110&quot;</span> <span class="attr">stroke</span>=<span class="string">&quot;grey&quot;</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">&lt;!-- Anchors in action --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">text</span> <span class="attr">text-anchor</span>=<span class="string">&quot;start&quot;</span> <span class="attr">x</span>=<span class="string">&quot;60&quot;</span> <span class="attr">y</span>=<span class="string">&quot;40&quot;</span>&gt;</span>A<span class="tag">&lt;/<span class="name">text</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">text</span> <span class="attr">text-anchor</span>=<span class="string">&quot;middle&quot;</span> <span class="attr">x</span>=<span class="string">&quot;60&quot;</span> <span class="attr">y</span>=<span class="string">&quot;75&quot;</span>&gt;</span>A<span class="tag">&lt;/<span class="name">text</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">text</span> <span class="attr">text-anchor</span>=<span class="string">&quot;end&quot;</span> <span class="attr">x</span>=<span class="string">&quot;60&quot;</span> <span class="attr">y</span>=<span class="string">&quot;110&quot;</span>&gt;</span>A<span class="tag">&lt;/<span class="name">text</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">&lt;!-- Materialization of anchors --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">circle</span> <span class="attr">cx</span>=<span class="string">&quot;60&quot;</span> <span class="attr">cy</span>=<span class="string">&quot;40&quot;</span> <span class="attr">r</span>=<span class="string">&quot;3&quot;</span> <span class="attr">fill</span>=<span class="string">&quot;red&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">circle</span> <span class="attr">cx</span>=<span class="string">&quot;60&quot;</span> <span class="attr">cy</span>=<span class="string">&quot;75&quot;</span> <span class="attr">r</span>=<span class="string">&quot;3&quot;</span> <span class="attr">fill</span>=<span class="string">&quot;red&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">circle</span> <span class="attr">cx</span>=<span class="string">&quot;60&quot;</span> <span class="attr">cy</span>=<span class="string">&quot;110&quot;</span> <span class="attr">r</span>=<span class="string">&quot;3&quot;</span> <span class="attr">fill</span>=<span class="string">&quot;red&quot;</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="xml">&lt;![CDATA[</span></span><br><span class="line"><span class="xml">  text &#123;</span></span><br><span class="line"><span class="xml">    font: bold 36px Verdana, Helvetica, Arial, sans-serif;</span></span><br><span class="line"><span class="xml">  &#125;</span></span><br><span class="line"><span class="xml">  ]]&gt;</span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<img src="/2022/01/16/frontend-d3-001-basic/04.png" class="" title="04.png">
+
+<p>&lt;textPath&gt; 可以沿著指定的 &lt;path&gt; 上顯示文字</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">viewBox</span>=<span class="string">&quot;0 0 100 100&quot;</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.w3.org/2000/svg&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">&lt;!-- to hide the path, it is usually wrapped in a &lt;defs&gt; element --&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- &lt;defs&gt; --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">path</span> <span class="attr">id</span>=<span class="string">&quot;MyPath&quot;</span> <span class="attr">fill</span>=<span class="string">&quot;none&quot;</span> <span class="attr">stroke</span>=<span class="string">&quot;red&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">d</span>=<span class="string">&quot;M10,90 Q90,90 90,45 Q90,10 50,10 Q10,10 10,40 Q10,70 45,70 Q70,70 75,50&quot;</span> /&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- &lt;/defs&gt; --&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">text</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">textPath</span> <span class="attr">href</span>=<span class="string">&quot;#MyPath&quot;</span>&gt;</span></span><br><span class="line">      Quick brown fox jumps over the lazy dog.</span><br><span class="line">    <span class="tag">&lt;/<span class="name">textPath</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">text</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<img src="/2022/01/16/frontend-d3-001-basic/05.png" class="" title="05.png">
+
+<p>文字字體的顏色是由 fill 屬性所控制，而 stroke 則是在字型的外圍有一個框線顏色，只有在字體較大時才明顯<br>&lt;text&gt; 並不會有文字換行機制，多行文字必須由多個獨立的 &lt;text&gt; 組合而成．</p>
+<h1 id="外觀顯示屬性"><a href="#外觀顯示屬性" class="headerlink" title="外觀顯示屬性"></a>外觀顯示屬性</h1><table>
+<thead>
+<tr>
+<th>屬性</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>stroke</td>
+<td>元素外框線顏色，預設為 none</td>
+</tr>
+<tr>
+<td>stroke-width</td>
+<td>元素外框線寬度，預設為 1</td>
+</tr>
+<tr>
+<td>stroke-opacity</td>
+<td>元素外框線的透明度，0 為完全透明，預設為 1</td>
+</tr>
+<tr>
+<td>stroke-dasharray</td>
+<td>元素外框線的破折線和差距樣式</td>
+</tr>
+<tr>
+<td>fill</td>
+<td>元素內要填充的顏色，預設為黑色</td>
+</tr>
+<tr>
+<td>fill-opacity</td>
+<td>元素內不透明度，0 為完全透明，預設為 1</td>
+</tr>
+<tr>
+<td>font-family</td>
+<td>字體家族</td>
+</tr>
+<tr>
+<td>font-size</td>
+<td>字體大小</td>
+</tr>
+<tr>
+<td>font-style</td>
+<td>字體樣式</td>
+</tr>
+<tr>
+<td>font-weight</td>
+<td>字體粗細</td>
+</tr>
+<tr>
+<td>cursor</td>
+<td>當滑鼠游標放在元素上方時要顯示的游標形狀</td>
+</tr>
+<tr>
+<td>opacity</td>
+<td>控制元素的透明度</td>
+</tr>
+<tr>
+<td>display</td>
+<td>控制元素顯示與否，不可被繼承，當設為 none 時，接收不到事件</td>
+</tr>
+<tr>
+<td>visibility</td>
+<td>控制元素是否可見，可以被繼承，當設為 hidden 或 collapse 時，也會接收到事件</td>
+</tr>
+</tbody></table>
+<h1 id="轉換"><a href="#轉換" class="headerlink" title="轉換"></a>轉換</h1><p>使用 &lt;transform&gt; 進行元素轉換</p>
+<table>
+<thead>
+<tr>
+<th>操作</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>translate(dx, dy)</td>
+<td>把目前元素平移</td>
+</tr>
+<tr>
+<td>rotate(phi, x, y)</td>
+<td>以座標 x, y 旋轉一個角度 phi</td>
+</tr>
+<tr>
+<td>scale(fx, fy)</td>
+<td>縮放</td>
+</tr>
+<tr>
+<td>skewX(phi)</td>
+<td>沿著水平推移轉換</td>
+</tr>
+<tr>
+<td>skewY(phi)</td>
+<td>沿著垂直推移轉換</td>
+</tr>
+<tr>
+<td>matrix(a, b, c, d, e, f)</td>
+<td>座標轉換</td>
+</tr>
+</tbody></table>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">viewBox</span>=<span class="string">&quot;-40 0 150 100&quot;</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.w3.org/2000/svg&quot;</span> <span class="attr">xmlns:xlink</span>=<span class="string">&quot;http://www.w3.org/1999/xlink&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">g</span> <span class="attr">fill</span>=<span class="string">&quot;grey&quot;</span></span></span><br><span class="line"><span class="tag">     <span class="attr">transform</span>=<span class="string">&quot;rotate(-10 50 100)</span></span></span><br><span class="line"><span class="string"><span class="tag">                translate(-36 45.5)</span></span></span><br><span class="line"><span class="string"><span class="tag">                skewX(40)</span></span></span><br><span class="line"><span class="string"><span class="tag">                scale(1 0.5)&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">path</span> <span class="attr">id</span>=<span class="string">&quot;heart&quot;</span> <span class="attr">d</span>=<span class="string">&quot;M 10,30 A 20,20 0,0,1 50,30 A 20,20 0,0,1 90,30 Q 90,60 50,90 Q 10,60 10,30 z&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">g</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">use</span> <span class="attr">xlink:href</span>=<span class="string">&quot;#heart&quot;</span> <span class="attr">fill</span>=<span class="string">&quot;none&quot;</span> <span class="attr">stroke</span>=<span class="string">&quot;red&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<img src="/2022/01/16/frontend-d3-001-basic/06.png" class="" title="06.png">
+
+<h1 id="結構元素與文件組織"><a href="#結構元素與文件組織" class="headerlink" title="結構元素與文件組織"></a>結構元素與文件組織</h1><p>用來組織元素</p>
+<table>
+<thead>
+<tr>
+<th>元素</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&lt;svg&gt;</td>
+<td>一個容器</td>
+</tr>
+<tr>
+<td>&lt;g&gt;</td>
+<td>把一些元素分成一個群組，可被當成一個複合元素使用</td>
+</tr>
+<tr>
+<td>&lt;defs&gt;</td>
+<td>容器元素，可定義並被重複使用</td>
+</tr>
+<tr>
+<td>&lt;use&gt;</td>
+<td>可參考到另一個元素</td>
+</tr>
+</tbody></table>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">defs</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">g</span> <span class="attr">id</span>=<span class="string">&quot;test&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">circle</span> <span class="attr">cx</span>=<span class="string">&quot;0&quot;</span> <span class="attr">cy</span>=<span class="string">&quot;0&quot;</span> <span class="attr">r</span>=<span class="string">&quot;3&quot;</span> <span class="attr">fill</span>=<span class="string">&quot;red&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">g</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">defs</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">use</span> <span class="attr">x</span>=<span class="string">&quot;10&quot;</span> <span class="attr">y</span>=<span class="string">&quot;20&quot;</span> <span class="attr">href</span>=<span class="string">&quot;#test&quot;</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="SVG-和-CSS"><a href="#SVG-和-CSS" class="headerlink" title="SVG 和 CSS"></a>SVG 和 CSS</h1><ol>
+<li>可在 <code>&lt;defs&gt;</code> 中使用 <code>&lt;style&gt;</code><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">svg</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">defs</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="css"></span></span><br><span class="line"><span class="css">      circle &#123;fill: <span class="string">&quot;red&quot;</span>&#125;</span></span><br><span class="line"><span class="css">    </span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">defs</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">circle</span> <span class="attr">cx</span>=<span class="string">&quot;0&quot;</span> <span class="attr">cy</span>=<span class="string">&quot;0&quot;</span> <span class="attr">r</span>=<span class="string">&quot;3&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li>連結到外部的樣式表<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">href</span>=<span class="string">&quot;style.css&quot;</span> <span class="attr">rel</span>=<span class="string">&quot;stylesheet&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li>行內樣式<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">circle</span> <span class="attr">style</span>=<span class="string">&quot;fill: red&quot;</span> /&gt;</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<h1 id="資源"><a href="#資源" class="headerlink" title="資源"></a>資源</h1><p><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-TW/docs/Web/SVG/Tutorial">https://developer.mozilla.org/zh-TW/docs/Web/SVG/Tutorial</a><br><a target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Web/SVG">https://developer.mozilla.org/en-US/docs/Web/SVG</a><br><a target="_blank" rel="noopener" href="https://www.w3.org/Graphics/SVG/IG/resources/svgprimer.html">https://www.w3.org/Graphics/SVG/IG/resources/svgprimer.html</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/03/backend-spring-security-003-username-password/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1154,292 +1711,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/12/30/backend-spring-security-002-authentication/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Steven Wu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Steven 的學習筆記">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/30/backend-spring-security-002-authentication/" class="post-title-link" itemprop="url">Spring Security 文件筆記 - 002 Authentication</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2021-12-30 13:06:36 / Modified: 13:55:14" itemprop="dateCreated datePublished" datetime="2021-12-30T13:06:36+08:00">2021-12-30</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Spring-Security/" itemprop="url" rel="index"><span itemprop="name">Spring Security</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>5.3k</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>5 mins.</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><a target="_blank" rel="noopener" href="https://docs.spring.io/spring-security/reference/index.html">Spring security 官方文檔</a></p>
-<h1 id="Authentication"><a href="#Authentication" class="headerlink" title="Authentication"></a><a target="_blank" rel="noopener" href="https://docs.spring.io/spring-security/reference/servlet/authentication/index.html">Authentication</a></h1><ul>
-<li><p><a target="_blank" rel="noopener" href="https://docs.spring.io/spring-security/reference/servlet/authentication/architecture.html">Servlet Authentication Architecture</a><br>Spring Security 用來驗證的主要組件 :</p>
-<ul>
-<li>SecurityContextHolder : Spring Security 存放被驗證使用者詳細資料。</li>
-<li>SecurityContext : 由 SecurityContextHolder 獲取到的，SecurityContext 包含當前被驗證使用者的 Authentication 物件。</li>
-<li>Authentication - 為 AuthenticationManager 的輸入，由使用者提交用來作驗證的證書來，或由 SecurityContext 取得。</li>
-<li>GrantedAuthority - 在 Authentication 物件上，授予主體的權限（即角色、範圍等）</li>
-<li>AuthenticationManager - 為 API 定義 Spring Security 的 Filter 如何執行驗證。</li>
-<li>ProviderManager - 一個常見的 AuthenticationManager 實作類。</li>
-<li>AuthenticationProvider - 被 ProviderManager 使用去執行某個類型的驗證。</li>
-<li>Request Credentials with AuthenticationEntryPoint - 用來要求客戶端提供證書 (如 : 傳導到登入頁面，或傳送 WWW-Authenticate 回應.. 等)</li>
-<li>AbstractAuthenticationProcessingFilter - 一個 Filter 用於驗證。提供一個好了解的驗證流程和各部分如何協同工作。
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/12/30/backend-spring-security-002-authentication/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/12/30/backend-spring-security-001-architecture/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Steven Wu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Steven 的學習筆記">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/30/backend-spring-security-001-architecture/" class="post-title-link" itemprop="url">Spring Security 文件筆記 - 001 Architecture</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2021-12-30 09:50:05 / Modified: 11:57:18" itemprop="dateCreated datePublished" datetime="2021-12-30T09:50:05+08:00">2021-12-30</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Spring-Security/" itemprop="url" rel="index"><span itemprop="name">Spring Security</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>3.2k</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>3 mins.</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><a target="_blank" rel="noopener" href="https://docs.spring.io/spring-security/reference/index.html">Spring security 官方文檔</a></p>
-<h1 id="Spring-Security-能使用的地方"><a href="#Spring-Security-能使用的地方" class="headerlink" title="Spring Security 能使用的地方"></a>Spring Security 能使用的地方</h1><p><a target="_blank" rel="noopener" href="https://docs.spring.io/spring-security/reference/servlet/index.html">https://docs.spring.io/spring-security/reference/servlet/index.html</a><br>Spring Security 並不依賴於 Spring Boot/Cloud，只要是採用 standard Servlet Filter 的 Servlet Container 應用皆可以使用 Spring Security。即不一定需要 Spring Framework 的支援，但是需要是 Servlet-based 的應用才可以使用 Spring Security。</p>
-<h1 id="Spring-Boot-中使用-Spring-Security"><a href="#Spring-Boot-中使用-Spring-Security" class="headerlink" title="Spring Boot 中使用 Spring Security"></a>Spring Boot 中使用 Spring Security</h1><p>一般只要是 Spring Boot 專案中引入 Spring Security，基本上就有幾個設定被啟動</p>
-<ol>
-<li>會建立一個 Servlet Filter (springSecurityFilterChain) 用來過濾 request 並處理所有與安全相關的程序，如 : 設定那些 URL 需要保護、驗證使用者帳戶與密碼、未被驗證授權的請求被重導向到 login form … 等</li>
-<li>會建立一個 UserDetailsService 的實例，具有帳號名稱為 user，且會隨機產生對應的密碼並打印在 console 中。<br><a target="_blank" rel="noopener" href="https://docs.spring.io/spring-security/reference/servlet/getting-started.html">參考</a></li>
-</ol>
-<h1 id="Architecture"><a href="#Architecture" class="headerlink" title="Architecture"></a><a target="_blank" rel="noopener" href="https://docs.spring.io/spring-security/reference/servlet/architecture.html">Architecture</a></h1>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/12/30/backend-spring-security-001-architecture/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/12/29/frontend-material-ui-tutorial-013-avatar/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Steven Wu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Steven 的學習筆記">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/29/frontend-material-ui-tutorial-013-avatar/" class="post-title-link" itemprop="url">Material UI 教學 - 013 Avatar</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-12-29 17:22:01" itemprop="dateCreated datePublished" datetime="2021-12-29T17:22:01+08:00">2021-12-29</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-12-30 11:55:40" itemprop="dateModified" datetime="2021-12-30T11:55:40+08:00">2021-12-30</time>
-              </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>2.3k</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>2 mins.</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><a target="_blank" rel="noopener" href="https://v4.mui.com/components/avatars/">Avatar</a></p>
-<p>引入並使用 Avatar</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="keyword">import</span> Avatar <span class="keyword">from</span> <span class="string">&#x27;@material-ui/core/Avatar&#x27;</span></span><br><span class="line">...</span><br><span class="line">&lt;Toolbar&gt;</span><br><span class="line">    <span class="xml"><span class="tag">&lt;<span class="name">Typography</span> <span class="attr">className</span>=<span class="string">&#123;classes.date&#125;</span>&gt;</span></span></span><br><span class="line"><span class="xml">        Today is the &#123; format(new Date(), &#x27;do MMMM Y&#x27;) &#125;</span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;/<span class="name">Typography</span>&gt;</span></span></span><br><span class="line">    <span class="xml"><span class="tag">&lt;<span class="name">Typography</span>&gt;</span></span></span><br><span class="line"><span class="xml">        Steven</span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;/<span class="name">Typography</span>&gt;</span></span></span><br><span class="line">    <span class="xml"><span class="tag">&lt;<span class="name">Avatar</span> <span class="attr">src</span>=<span class="string">&quot;/pluto.png&quot;</span> /&gt;</span></span></span><br><span class="line">&lt;/Toolbar&gt;</span><br></pre></td></tr></table></figure>
-<img src="/2021/12/29/frontend-material-ui-tutorial-013-avatar/01.png" class="" title="01.png">
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/12/29/frontend-material-ui-tutorial-013-avatar/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1509,20 +1780,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">113</span>
+          <span class="site-state-item-count">116</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-count">21</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">113</span>
+        <span class="site-state-item-count">116</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -1567,13 +1838,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">474k</span>
+    <span title="Symbols count total">477k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
-    <span title="Reading time total">7:11</span>
+    <span title="Reading time total">7:13</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
   </div>
