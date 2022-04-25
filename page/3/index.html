@@ -202,6 +202,132 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/23/frontend-d3-002-installing/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Steven Wu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Steven 的學習筆記">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/01/23/frontend-d3-002-installing/" class="post-title-link" itemprop="url">D3 - 003 D3 安裝和結合 React 的小範例</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-01-23 19:26:50" itemprop="dateCreated datePublished" datetime="2022-01-23T19:26:50+08:00">2022-01-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-27 11:19:10" itemprop="dateModified" datetime="2022-01-27T11:19:10+08:00">2022-01-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/D3/" itemprop="url" rel="index"><span itemprop="name">D3</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>9k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>8 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="安裝-D3"><a href="#安裝-D3" class="headerlink" title="安裝 D3"></a>安裝 D3</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> npm install d3 --save</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="引入並建立第一個練習"><a href="#引入並建立第一個練習" class="headerlink" title="引入並建立第一個練習"></a>引入並建立第一個練習</h1><p>在 React 的生命週期 componentDidMount 時，建立 D3</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> d3 <span class="keyword">from</span> <span class="string">&#x27;d3&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; useEffect &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">App</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">  useEffect(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    d3.select(<span class="string">&#x27;.App&#x27;</span>)</span><br><span class="line">      .append(<span class="string">&#x27;svg&#x27;</span>)</span><br><span class="line">      .attr(<span class="string">&#x27;height&#x27;</span>, <span class="number">200</span>)</span><br><span class="line">      .attr(<span class="string">&#x27;width&#x27;</span>, <span class="number">500</span>)</span><br><span class="line">      .style(<span class="string">&#x27;background&#x27;</span>, <span class="string">&#x27;red&#x27;</span>);</span><br><span class="line">    </span><br><span class="line">      d3.select(test)</span><br><span class="line">      .append(<span class="string">&#x27;svg&#x27;</span>)</span><br><span class="line">      .attr(<span class="string">&#x27;height&#x27;</span>, <span class="number">200</span>)</span><br><span class="line">      .attr(<span class="string">&#x27;width&#x27;</span>, <span class="number">500</span>)</span><br><span class="line">      .style(<span class="string">&#x27;background&#x27;</span>, <span class="string">&#x27;blue&#x27;</span>);</span><br><span class="line">  &#125;)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;App&quot;</span>&gt;</span></span></span><br><span class="line"><span class="xml">      <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;test&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> App;</span><br></pre></td></tr></table></figure>
+<p>頁面呈現結果</p>
+<img src="/2022/01/23/frontend-d3-002-installing/01.png" class="" title="01.png">
+
+<h1 id="讀取文件進行繪製"><a href="#讀取文件進行繪製" class="headerlink" title="讀取文件進行繪製"></a>讀取文件進行繪製</h1><p>首先將資料檔放在 public/data/examples-simple.tsv</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">x	y</span><br><span class="line">100	50</span><br><span class="line">200	100</span><br><span class="line">300	150</span><br><span class="line">400	200</span><br><span class="line">500	250</span><br></pre></td></tr></table></figure>
+<p>接著在 App.js 中讀取檔案並繪製<br>src/App.js</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> d3 <span class="keyword">from</span> <span class="string">&#x27;d3&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; useEffect &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">App</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    useEffect(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">        d3.select(<span class="string">&#x27;.App&#x27;</span>)</span><br><span class="line">            .append(<span class="string">&#x27;svg&#x27;</span>)</span><br><span class="line">            .attr(<span class="string">&#x27;height&#x27;</span>, <span class="number">300</span>)</span><br><span class="line">            .attr(<span class="string">&#x27;width&#x27;</span>, <span class="number">600</span>)</span><br><span class="line">            .style(<span class="string">&#x27;background&#x27;</span>, <span class="string">&#x27;lightgrey&#x27;</span>);</span><br><span class="line"></span><br><span class="line">            d3.tsv(<span class="string">&quot;data/examples-simple.tsv&quot;</span>) <span class="comment">// 讀取資料</span></span><br><span class="line">            .then( <span class="function"><span class="keyword">function</span>(<span class="params">data</span>) </span>&#123;</span><br><span class="line">            d3.select(<span class="string">&quot;svg&quot;</span>) <span class="comment">// 傳回第一個匹配的點</span></span><br><span class="line">                .selectAll(<span class="string">&quot;circle&quot;</span>) <span class="comment">// 傳回所有匹配的點，在此時因為沒有找不到任何一個，所以將會建立一個空的 collection</span></span><br><span class="line">                .data(data) <span class="comment">// 將 circle 元素與資料集一對一地結合在一起</span></span><br><span class="line">                .enter() <span class="comment">// 但是並沒有任何的 circle 元素可以對應資料集，所以使用此方法讓 D3 先幫我們佔著</span></span><br><span class="line">                .append(<span class="string">&quot;circle&quot;</span>) <span class="comment">// 針對只有資料沒有元素對應的點，使用 circle 元素幫我們填充</span></span><br><span class="line">                .attr(<span class="string">&quot;r&quot;</span>, <span class="number">5</span>) <span class="comment">// 設定半徑固定為 5</span></span><br><span class="line">                .attr(<span class="string">&quot;fill&quot;</span>, <span class="string">&quot;red&quot;</span>) <span class="comment">// 設定填充的顏色為 red</span></span><br><span class="line">                .attr(<span class="string">&quot;cx&quot;</span>, <span class="function"><span class="keyword">function</span>(<span class="params">d</span>) </span>&#123;<span class="keyword">return</span> d[<span class="string">&quot;x&quot;</span>]&#125;) <span class="comment">// 取得 data 的 x 欄位來設定 cx</span></span><br><span class="line">                .attr(<span class="string">&quot;cy&quot;</span>, <span class="function"><span class="keyword">function</span>(<span class="params">d</span>) </span>&#123;<span class="keyword">return</span> d[<span class="string">&quot;y&quot;</span>]&#125;); <span class="comment">// 取得 data 的 y 欄位來設定 cy</span></span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;)</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        <span class="xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;App&quot;</span>&gt;</span></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">    );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> App;</span><br></pre></td></tr></table></figure>
+<p>頁面呈現結果</p>
+<img src="/2022/01/23/frontend-d3-002-installing/02.png" class="" title="02.png">
+
+<h1 id="封裝組件"><a href="#封裝組件" class="headerlink" title="封裝組件"></a>封裝組件</h1><p>將原本寫在 App 組件中的 D3 程式碼，封裝到另一個組件 Demo1 中<br>src/components/Demo1/index.js</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> d3 <span class="keyword">from</span> <span class="string">&#x27;d3&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; useEffect &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Demo1</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    useEffect(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">        d3.select(<span class="string">&#x27;.Demo1&#x27;</span>)</span><br><span class="line">          .append(<span class="string">&#x27;svg&#x27;</span>)</span><br><span class="line">          .attr(<span class="string">&#x27;height&#x27;</span>, <span class="number">300</span>)</span><br><span class="line">          .attr(<span class="string">&#x27;width&#x27;</span>, <span class="number">600</span>)</span><br><span class="line">          .style(<span class="string">&#x27;background&#x27;</span>, <span class="string">&#x27;lightgrey&#x27;</span>);</span><br><span class="line">    </span><br><span class="line">          d3.tsv(<span class="string">&quot;examples-simple.tsv&quot;</span>) <span class="comment">// 讀取資料</span></span><br><span class="line">            .then( <span class="function"><span class="keyword">function</span>(<span class="params">data</span>) </span>&#123;</span><br><span class="line">            d3.select(<span class="string">&quot;svg&quot;</span>) <span class="comment">// 傳回第一個匹配的點</span></span><br><span class="line">              .selectAll(<span class="string">&quot;circle&quot;</span>) <span class="comment">// 傳回所有匹配的點，在此時因為沒有找不到任何一個，所以將會建立一個空的 collection</span></span><br><span class="line">              .data(data) <span class="comment">// 將 circle 元素與資料集一對一地結合在一起</span></span><br><span class="line">              .enter() <span class="comment">// 但是並沒有任何的 circle 元素可以對應資料集，所以使用此方法讓 D3 先幫我們佔著</span></span><br><span class="line">              .append(<span class="string">&quot;circle&quot;</span>) <span class="comment">// 針對只有資料沒有元素對應的點，使用 circle 元素幫我們填充</span></span><br><span class="line">              .attr(<span class="string">&quot;r&quot;</span>, <span class="number">5</span>) <span class="comment">// 設定半徑固定為 5</span></span><br><span class="line">              .attr(<span class="string">&quot;fill&quot;</span>, <span class="string">&quot;red&quot;</span>) <span class="comment">// 設定填充的顏色為 red</span></span><br><span class="line">              .attr(<span class="string">&quot;cx&quot;</span>, <span class="function"><span class="keyword">function</span>(<span class="params">d</span>) </span>&#123;<span class="keyword">return</span> d[<span class="string">&quot;x&quot;</span>]&#125;) <span class="comment">// 取得 data 的 x 欄位來設定 cx</span></span><br><span class="line">              .attr(<span class="string">&quot;cy&quot;</span>, <span class="function"><span class="keyword">function</span>(<span class="params">d</span>) </span>&#123;<span class="keyword">return</span> d[<span class="string">&quot;y&quot;</span>]&#125;); <span class="comment">// 取得 data 的 y 欄位來設定 cy</span></span><br><span class="line">          &#125;);</span><br><span class="line">      &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        (<span class="xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;Demo1&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span>)</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> Demo1;</span><br></pre></td></tr></table></figure>
+<p>修改 App.js，引入組件 Demo1<br>src/App.js</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Demo1 <span class="keyword">from</span> <span class="string">&#x27;./components/Demo1&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">App</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;App&quot;</span>&gt;</span></span></span><br><span class="line"><span class="xml">      <span class="tag">&lt;<span class="name">Demo1</span> /&gt;</span></span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> App;</span><br></pre></td></tr></table></figure>
+<p>頁面呈現結果</p>
+<img src="/2022/01/23/frontend-d3-002-installing/03.png" class="" title="03.png">
+
+<h1 id="使用兩個資料集"><a href="#使用兩個資料集" class="headerlink" title="使用兩個資料集"></a>使用兩個資料集</h1><p>使用 public/data/examples-multiple.tsv 當資料集</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">x	y1	    y2</span><br><span class="line">1.0	0.001	0.63</span><br><span class="line">3.0	0.003	0.84</span><br><span class="line">4.0	0.024	0.56</span><br><span class="line">4.5	0.054	0.22</span><br><span class="line">4.6	0.062	0.15</span><br><span class="line">5.0	0.100	0.08</span><br><span class="line">6.0	0.176	0.20</span><br><span class="line">8.0	0.198	0.71</span><br><span class="line">9.0	0.199	0.65</span><br></pre></td></tr></table></figure>
+<p>建立 Ｄemo2 組件<br>src/components/Demo2/index.js</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> d3 <span class="keyword">from</span> <span class="string">&#x27;d3&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; useEffect &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Demo2</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    useEffect(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">        d3.select(<span class="string">&#x27;.Demo2&#x27;</span>)</span><br><span class="line">          .append(<span class="string">&#x27;svg&#x27;</span>)</span><br><span class="line">          .attr(<span class="string">&#x27;height&#x27;</span>, <span class="number">300</span>)</span><br><span class="line">          .attr(<span class="string">&#x27;width&#x27;</span>, <span class="number">600</span>)</span><br><span class="line">          .style(<span class="string">&#x27;background&#x27;</span>, <span class="string">&#x27;lightgrey&#x27;</span>);</span><br><span class="line">    </span><br><span class="line">          d3.tsv(<span class="string">&quot;data/examples-multiple.tsv&quot;</span>) <span class="comment">// 讀取資料</span></span><br><span class="line">            .then( <span class="function"><span class="keyword">function</span>(<span class="params">data</span>) </span>&#123;</span><br><span class="line">              <span class="keyword">var</span> pxX = <span class="number">600</span>, pxY = <span class="number">300</span>; <span class="comment">// 設定 SVG 區域大小</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment">// 使用線性縮放，將 domain 映射到 range 中，</span></span><br><span class="line">            <span class="comment">// 也就說是將資料中的值，依據 SVG 尺寸來做線性縮放</span></span><br><span class="line">            <span class="keyword">var</span> scX = d3.scaleLinear()</span><br><span class="line">              .domain(d3.extent(data, <span class="function"><span class="params">d</span> =&gt;</span> d[<span class="string">&quot;x&quot;</span>])) <span class="comment">// extent() : 傳回 data 的 x 欄位中的最小值及最大值，以 [min, max] 形式傳回</span></span><br><span class="line">              .range([<span class="number">0</span>, pxX]);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">var</span> scY1 = d3.scaleLinear()</span><br><span class="line">              .domain(d3.extent(data, <span class="function"><span class="params">d</span>=&gt;</span>d[<span class="string">&quot;y1&quot;</span>]))</span><br><span class="line">              .range([pxY, <span class="number">0</span>]) <span class="comment">// 因為座標原點在左上角，越往下越大，所以我們故意反轉來做修正</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">var</span> scY2 = d3.scaleLinear()</span><br><span class="line">              .domain(d3.extent(data, <span class="function"><span class="params">d</span>=&gt;</span>d[<span class="string">&quot;y2&quot;</span>]))</span><br><span class="line">              .range([pxY, <span class="number">0</span>])</span><br><span class="line"></span><br><span class="line">            d3.select(<span class="string">&quot;svg&quot;</span>) <span class="comment">// 傳回第一個匹配的點</span></span><br><span class="line">              .append(<span class="string">&quot;g&quot;</span>) <span class="comment">// 建立一個邏輯分組後，才把圖形元素加入其中</span></span><br><span class="line">              .attr(<span class="string">&quot;id&quot;</span>, <span class="string">&quot;ds1&quot;</span>) <span class="comment">// 設定唯一標識</span></span><br><span class="line">              .selectAll(<span class="string">&quot;circle&quot;</span>) <span class="comment">// 在分組(ds1)中的子元素建立空的 circle collection</span></span><br><span class="line">              .data(data).enter().append(<span class="string">&quot;circle&quot;</span>) <span class="comment">// 將 data 套用到 circle 元素</span></span><br><span class="line">              .attr(<span class="string">&quot;r&quot;</span>, <span class="number">5</span>) <span class="comment">// 設定半徑固定為 5</span></span><br><span class="line">              .attr(<span class="string">&quot;fill&quot;</span>, <span class="string">&quot;green&quot;</span>) <span class="comment">// 設定 &lt;g&gt; 元素的填充顏色為 green，也會一併套用到子元素中</span></span><br><span class="line">              .attr(<span class="string">&quot;cx&quot;</span>, <span class="function"><span class="params">d</span>=&gt;</span>scX(d[<span class="string">&quot;x&quot;</span>])) <span class="comment">// 此處是取得縮放過後的 x 值</span></span><br><span class="line">              .attr(<span class="string">&quot;cy&quot;</span>, <span class="function"><span class="params">d</span>=&gt;</span>scY1(d[<span class="string">&quot;y1&quot;</span>])); <span class="comment">// 此處是取得縮放過後的 y1 值</span></span><br><span class="line"></span><br><span class="line">            d3.select(<span class="string">&quot;svg&quot;</span>)</span><br><span class="line">              .append(<span class="string">&quot;g&quot;</span>)</span><br><span class="line">              .attr(<span class="string">&quot;id&quot;</span>, <span class="string">&quot;ds2&quot;</span>)</span><br><span class="line">              .selectAll(<span class="string">&quot;circle&quot;</span>)</span><br><span class="line">              .data(data).enter().append(<span class="string">&quot;circle&quot;</span>)</span><br><span class="line">              .attr(<span class="string">&quot;r&quot;</span>, <span class="number">5</span>)</span><br><span class="line">              .attr(<span class="string">&quot;fill&quot;</span>, <span class="string">&quot;blue&quot;</span>)</span><br><span class="line">              .attr(<span class="string">&quot;cx&quot;</span>, <span class="function"><span class="params">d</span>=&gt;</span>scX(d[<span class="string">&quot;x&quot;</span>]))</span><br><span class="line">              .attr(<span class="string">&quot;cy&quot;</span>, <span class="function"><span class="params">d</span>=&gt;</span>scY2(d[<span class="string">&quot;y2&quot;</span>]));</span><br><span class="line"></span><br><span class="line">            <span class="keyword">var</span> lineMaker = d3.line() <span class="comment">// 使用 line() 幫助我們產生 &lt;ptah&gt; 中的 d 屬性</span></span><br><span class="line">                .x( <span class="function"><span class="params">d</span> =&gt;</span> scX( d[<span class="string">&quot;x&quot;</span>] ) )</span><br><span class="line">                .y( <span class="function"><span class="params">d</span> =&gt;</span> scY1( d[<span class="string">&quot;y1&quot;</span>] ) );</span><br><span class="line">            </span><br><span class="line">            d3.select( <span class="string">&quot;#ds1&quot;</span> )  <span class="comment">// 選到 &lt;g id=&quot;ds1&quot;&gt;</span></span><br><span class="line">                .append( <span class="string">&quot;path&quot;</span> )  <span class="comment">// 添加一段路徑</span></span><br><span class="line">                .attr( <span class="string">&quot;fill&quot;</span>, <span class="string">&quot;none&quot;</span> )  <span class="comment">// 實線</span></span><br><span class="line">                .attr( <span class="string">&quot;stroke&quot;</span>, <span class="string">&quot;red&quot;</span> )  <span class="comment">// 顏色為 red</span></span><br><span class="line">                .attr( <span class="string">&quot;d&quot;</span>, lineMaker(data) );</span><br><span class="line">           </span><br><span class="line">            lineMaker.y( <span class="function"><span class="params">d</span> =&gt;</span> scY2( d[<span class="string">&quot;y2&quot;</span>] ) );</span><br><span class="line"></span><br><span class="line">            d3.select( <span class="string">&quot;#ds2&quot;</span> )</span><br><span class="line">                .append( <span class="string">&quot;path&quot;</span> )</span><br><span class="line">                .attr( <span class="string">&quot;fill&quot;</span>, <span class="string">&quot;none&quot;</span> )</span><br><span class="line">                .attr( <span class="string">&quot;stroke&quot;</span>, <span class="string">&quot;cyan&quot;</span> )</span><br><span class="line">                .attr( <span class="string">&quot;d&quot;</span>, lineMaker(data) );</span><br><span class="line">          &#125;);</span><br><span class="line">      &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        (<span class="xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;Demo2&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span>)</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> Demo2;</span><br></pre></td></tr></table></figure>
+<p>頁面呈現結果</p>
+<img src="/2022/01/23/frontend-d3-002-installing/04.png" class="" title="04.png">
+
+<h1 id="建立可重用元件並且添加座標軸"><a href="#建立可重用元件並且添加座標軸" class="headerlink" title="建立可重用元件並且添加座標軸"></a>建立可重用元件並且添加座標軸</h1><p>將一些重複的程式碼合併成一個 function<br>src/components/Demo3/index.js</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> d3 <span class="keyword">from</span> <span class="string">&#x27;d3&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; useEffect &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">makeDemo3</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    d3.tsv(<span class="string">&quot;data/examples-multiple.tsv&quot;</span>)</span><br><span class="line">        .then( <span class="function"><span class="keyword">function</span>(<span class="params">data</span>) </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> svg = d3.select( <span class="string">&quot;svg&quot;</span> );</span><br><span class="line">            <span class="keyword">var</span> pxX = svg.attr( <span class="string">&quot;width&quot;</span> );</span><br><span class="line">            <span class="keyword">var</span> pxY = svg.attr( <span class="string">&quot;height&quot;</span> );</span><br><span class="line"></span><br><span class="line">            <span class="keyword">var</span> makeScale = <span class="function"><span class="keyword">function</span>(<span class="params"> accessor, range</span>) </span>&#123;</span><br><span class="line">                <span class="keyword">return</span> d3.scaleLinear()</span><br><span class="line">                    .domain(d3.extent(data, accessor))</span><br><span class="line">                    .range( range ).nice();</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">var</span> scX = makeScale( <span class="function"><span class="params">d</span> =&gt;</span> d[<span class="string">&quot;x&quot;</span>], [<span class="number">0</span>, pxX]);</span><br><span class="line">            <span class="keyword">var</span> scY1 = makeScale( <span class="function"><span class="params">d</span> =&gt;</span> d[<span class="string">&quot;y1&quot;</span>], [pxY, <span class="number">0</span>]);</span><br><span class="line">            <span class="keyword">var</span> scY2 = makeScale( <span class="function"><span class="params">d</span> =&gt;</span> d[<span class="string">&quot;y2&quot;</span>], [pxY, <span class="number">0</span>]);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">var</span> drawData = <span class="function"><span class="keyword">function</span>(<span class="params">g, accessor, curve</span>) </span>&#123;</span><br><span class="line">                <span class="comment">// draw circles</span></span><br><span class="line">                g.selectAll(<span class="string">&quot;circle&quot;</span>)</span><br><span class="line">                    .data(data).enter().append(<span class="string">&quot;circle&quot;</span>)</span><br><span class="line">                    .attr(<span class="string">&quot;r&quot;</span>, <span class="number">5</span>)</span><br><span class="line">                    .attr(<span class="string">&quot;cx&quot;</span>, <span class="function"><span class="params">d</span>=&gt;</span>scX(d[<span class="string">&quot;x&quot;</span>]))</span><br><span class="line">                    .attr(<span class="string">&quot;cy&quot;</span>, accessor);</span><br><span class="line">                </span><br><span class="line">                <span class="comment">// draw lines</span></span><br><span class="line">                <span class="keyword">var</span> lineMaker = d3.line().curve( curve )</span><br><span class="line">                    .x( <span class="function"><span class="params">d</span> =&gt;</span> scX( d[<span class="string">&quot;x&quot;</span>] ) )</span><br><span class="line">                    .y( accessor );</span><br><span class="line">                g.append( <span class="string">&quot;path&quot;</span> )</span><br><span class="line">                    .attr( <span class="string">&quot;fill&quot;</span>, <span class="string">&quot;none&quot;</span> )</span><br><span class="line">                    .attr( <span class="string">&quot;d&quot;</span>, lineMaker(data) );</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">var</span> g1 = svg.append(<span class="string">&quot;g&quot;</span>);</span><br><span class="line">            <span class="keyword">var</span> g2 = svg.append(<span class="string">&quot;g&quot;</span>);</span><br><span class="line"></span><br><span class="line">            drawData( g1, <span class="function"><span class="params">d</span> =&gt;</span> scY1( d[<span class="string">&quot;y1&quot;</span>] ), d3.curveStep);</span><br><span class="line">            drawData( g2, <span class="function"><span class="params">d</span> =&gt;</span> scY2( d[<span class="string">&quot;y2&quot;</span>] ), d3.curveNatural);</span><br><span class="line"></span><br><span class="line">            g1.selectAll( <span class="string">&quot;circle&quot;</span> ).attr( <span class="string">&quot;fill&quot;</span>, <span class="string">&quot;green&quot;</span>);</span><br><span class="line">            g1.selectAll( <span class="string">&quot;path&quot;</span> ).attr( <span class="string">&quot;stroke&quot;</span>, <span class="string">&quot;cyan&quot;</span>);</span><br><span class="line"></span><br><span class="line">            g2.selectAll( <span class="string">&quot;circle&quot;</span> ).attr( <span class="string">&quot;fill&quot;</span>, <span class="string">&quot;blue&quot;</span>);</span><br><span class="line">            g2.selectAll( <span class="string">&quot;path&quot;</span> ).attr( <span class="string">&quot;stroke&quot;</span>, <span class="string">&quot;red&quot;</span>);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">var</span> axMkr = d3.axisRight( scY1 ); <span class="comment">// 所有元素都是由左上角的原點畫起，所以是這會是在圖形的左邊畫出軸，在軸的右邊標出刻度</span></span><br><span class="line">            axMkr( svg.append(<span class="string">&quot;g&quot;</span>) ); <span class="comment">// 將軸元素附加到一個容器元素中，通常是使用 &lt;g&gt;</span></span><br><span class="line"></span><br><span class="line">            axMkr = d3.axisLeft( scY2 );</span><br><span class="line">            svg.append( <span class="string">&quot;g&quot;</span> )</span><br><span class="line">                .attr( <span class="string">&quot;transform&quot;</span>, <span class="string">&quot;translate(&quot;</span> + pxX + <span class="string">&quot;,0)&quot;</span> ) <span class="comment">// 因為繪圖是由左上角的原點畫起，所以我們要將元素都往右邊移</span></span><br><span class="line">                .call( axMkr ); <span class="comment">// call() 會呼叫傳入的參數 axMkr，此參數為一個 function 就會被呼叫用來會軸</span></span><br><span class="line"></span><br><span class="line">            svg.append( <span class="string">&quot;g&quot;</span> ).call( d3.axisTop( scX ) )</span><br><span class="line">                .attr( <span class="string">&quot;transform&quot;</span>, <span class="string">&quot;translate(0,&quot;</span>+pxY+<span class="string">&quot;)&quot;</span> );</span><br><span class="line">        &#125;</span><br><span class="line">    )</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Demo3</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    useEffect(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">        d3.select(<span class="string">&#x27;.Demo3&#x27;</span>)</span><br><span class="line">          .append(<span class="string">&#x27;svg&#x27;</span>)</span><br><span class="line">          .attr(<span class="string">&#x27;height&#x27;</span>, <span class="number">300</span>)</span><br><span class="line">          .attr(<span class="string">&#x27;width&#x27;</span>, <span class="number">600</span>)</span><br><span class="line">          .style(<span class="string">&#x27;background&#x27;</span>, <span class="string">&#x27;lightgrey&#x27;</span>);</span><br><span class="line">    </span><br><span class="line">          makeDemo3()</span><br><span class="line">      &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        (<span class="xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;Demo3&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span>)</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> Demo3;</span><br></pre></td></tr></table></figure>
+<p>顯示結果</p>
+<img src="/2022/01/23/frontend-d3-002-installing/05.png" class="" title="05.png">
+
+<h1 id="互動"><a href="#互動" class="headerlink" title="互動"></a>互動</h1><ol>
+<li>D3 不只可以產生 SVG，也可以操作 DOM </li>
+<li>可依據事件加以回應<br>src/components/Demo4/index.js<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> d3 <span class="keyword">from</span> <span class="string">&#x27;d3&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; useEffect &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Demo4</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    useEffect(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">        <span class="keyword">var</span> vs = [<span class="string">&quot;From East&quot;</span>, <span class="string">&quot;to West&quot;</span>, <span class="string">&quot;at Home&quot;</span>, <span class="string">&quot;is Best&quot;</span>]</span><br><span class="line">        d3.select(<span class="string">&#x27;.Demo4&#x27;</span>)</span><br><span class="line">          .append(<span class="string">&#x27;ul&#x27;</span>).selectAll(<span class="string">&quot;li&quot;</span>)</span><br><span class="line">          .data(vs).enter()</span><br><span class="line">          .append(<span class="string">&quot;li&quot;</span>).text(<span class="function"><span class="params">d</span>=&gt;</span>d)</span><br><span class="line">          .on( <span class="string">&quot;click&quot;</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">              <span class="built_in">this</span>.toggleState = !<span class="built_in">this</span>.toggleState;</span><br><span class="line">              d3.select(<span class="built_in">this</span>)  <span class="comment">// 選擇被點選的元素</span></span><br><span class="line">              .transition().duration(<span class="number">1000</span>)</span><br><span class="line">              .style(<span class="string">&quot;color&quot;</span>, <span class="built_in">this</span>.toggleState?<span class="string">&quot;red&quot;</span>:<span class="string">&quot;black&quot;</span>)</span><br><span class="line">          &#125;);</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        (<span class="xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;Demo4&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span>)</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> Demo4;</span><br></pre></td></tr></table></figure>
+點選第一個項目的結果顯示<img src="/2022/01/23/frontend-d3-002-installing/06.png" class="" title="06.png"></li>
+</ol>
+<h1 id="參考與出處"><a href="#參考與出處" class="headerlink" title="參考與出處"></a>參考與出處</h1><p><a target="_blank" rel="noopener" href="https://github.com/janert/d3-for-the-impatient">https://github.com/janert/d3-for-the-impatient</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/19/backend-spring-security-003-jdbc/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1721,105 +1847,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/01/frontend-material-ui-practice-002-sign-up/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Steven Wu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Steven 的學習筆記">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/01/01/frontend-material-ui-practice-002-sign-up/" class="post-title-link" itemprop="url">Material UI 練習 - 002 Sign Up</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2022-01-01 14:09:12" itemprop="dateCreated datePublished" datetime="2022-01-01T14:09:12+08:00">2022-01-01</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-01-03 11:58:03" itemprop="dateModified" datetime="2022-01-03T11:58:03+08:00">2022-01-03</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
-                </span>
-                  , 
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/React/Material-UI/" itemprop="url" rel="index"><span itemprop="name">Material UI</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>13k</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>12 mins.</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>由 Login 組件中保留部分結構，建立一個 SignUp 組件</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/01/01/frontend-material-ui-practice-002-sign-up/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1889,20 +1916,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">117</span>
+          <span class="site-state-item-count">118</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-count">22</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">118</span>
+        <span class="site-state-item-count">119</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -1947,13 +1974,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">477k</span>
+    <span title="Symbols count total">478k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
-    <span title="Reading time total">7:14</span>
+    <span title="Reading time total">7:15</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
   </div>

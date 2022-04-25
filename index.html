@@ -202,6 +202,91 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/04/25/python-convert-object-to-json/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Steven Wu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Steven 的學習筆記">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/04/25/python-convert-object-to-json/" class="post-title-link" itemprop="url">Python 將 Object 轉換成 Json 字串</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-04-25 11:55:32 / Modified: 14:08:01" itemprop="dateCreated datePublished" datetime="2022-04-25T11:55:32+08:00">2022-04-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>920</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>1 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="將-Object-轉成-Json-字串"><a href="#將-Object-轉成-Json-字串" class="headerlink" title="將 Object 轉成 Json 字串"></a>將 Object 轉成 Json 字串</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">from</span> json <span class="keyword">import</span> JSONEncoder</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyEncoder</span>(<span class="params">JSONEncoder</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">default</span>(<span class="params">self, o</span>):</span></span><br><span class="line">        <span class="keyword">return</span> o.__dict__</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Item</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, name, amount</span>):</span></span><br><span class="line">        self.name = name</span><br><span class="line">        self.amount = amount</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UserInfo</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, name, phone, address</span>):</span></span><br><span class="line">        self.name = name</span><br><span class="line">        self.phone = phone</span><br><span class="line">        self.address = address</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Order</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, order_id, user, items</span>):</span></span><br><span class="line">        self.order_id = order_id</span><br><span class="line">        self.user_info = user</span><br><span class="line">        self.item_list = items</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">obj_2_json</span>(<span class="params">data</span>):</span></span><br><span class="line">    MyEncoder().encode(data)</span><br><span class="line">    <span class="comment"># convert to JSON string</span></span><br><span class="line">    jsonStr = json.dumps(data.__dict__, cls=MyEncoder)</span><br><span class="line">    <span class="comment"># print json string</span></span><br><span class="line">    <span class="built_in">print</span>(jsonStr)</span><br><span class="line">    <span class="keyword">return</span> jsonStr</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    item1 = Item(<span class="string">&#x27;book&#x27;</span>, <span class="number">12</span>)</span><br><span class="line">    item2 = Item(<span class="string">&#x27;pen&#x27;</span>, <span class="number">3</span>)</span><br><span class="line">    item_list = [item1, item2]</span><br><span class="line">    user_info = UserInfo(<span class="string">&#x27;steven&#x27;</span>, <span class="string">&#x27;03-5678912&#x27;</span>, <span class="string">&#x27;Taiwan&#x27;</span>)</span><br><span class="line">    order = Order(<span class="number">1</span>, user_info, item_list)</span><br><span class="line">    obj_2_json(order)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>程式碼<br><a target="_blank" rel="noopener" href="https://github.com/pluto123/object2json">https://github.com/pluto123/object2json</a></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2022/04/25/linux-add-user/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1127,116 +1212,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/02/10/backend-spring-security-005-jwt/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Steven Wu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Steven 的學習筆記">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/02/10/backend-spring-security-005-jwt/" class="post-title-link" itemprop="url">Spring Security Notes - 005 JWT</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2022-02-10 10:42:09" itemprop="dateCreated datePublished" datetime="2022-02-10T10:42:09+08:00">2022-02-10</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-02-23 13:47:55" itemprop="dateModified" datetime="2022-02-23T13:47:55+08:00">2022-02-23</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Spring-Security/" itemprop="url" rel="index"><span itemprop="name">Spring Security</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>7.3k</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>7 mins.</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="認識-JWT"><a href="#認識-JWT" class="headerlink" title="認識 JWT"></a>認識 JWT</h1><p>請參考 <a target="_blank" rel="noopener" href="https://jwt.io/introduction">JWT官網</a></p>
-<h1 id="事前準備"><a href="#事前準備" class="headerlink" title="事前準備"></a>事前準備</h1><p>準備一個前後端分離的專案，以便後續將使用 Session 機制，改寫成使用 JWT 方式<br><a target="_blank" rel="noopener" href="https://github.com/pluto123/spring-security-exercise/tree/jwt">https://github.com/pluto123/spring-security-exercise/tree/jwt</a></p>
-<h1 id="改寫思維"><a href="#改寫思維" class="headerlink" title="改寫思維"></a>改寫思維</h1><p>整個流程大概是寫一個自定義過濾器用來捕抓 TOKEN 進行驗證，如果沒有 TOKEN 則會進入帳密驗證程序，驗證成功則返回一個 TOKEN 給使用者，使用者下次請求時附上 TOKEN 就可以不需要帳密驗證，直接返回資源。</p>
-<h1 id="引入-JWT-套件"><a href="#引入-JWT-套件" class="headerlink" title="引入 JWT 套件"></a>引入 JWT 套件</h1><p>pom.xml</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.jsonwebtoken<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jjwt-api<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">version</span>&gt;</span>0.11.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.jsonwebtoken<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jjwt-impl<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">version</span>&gt;</span>0.11.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">scope</span>&gt;</span>runtime<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.jsonwebtoken<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jjwt-jackson<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">version</span>&gt;</span>0.11.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">scope</span>&gt;</span>runtime<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">...</span><br></pre></td></tr></table></figure>
-
-<h1 id="製作-JWT-工具"><a href="#製作-JWT-工具" class="headerlink" title="製作 JWT 工具"></a>製作 JWT 工具</h1><p>建立一個工具類別，用來處理請求的驗證<br>src/main/java/tw/com/pluto/security/utils/JwtUtil.java</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JwtUtil</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger logger = LoggerFactory.getLogger(JwtUtil.class);</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String CLAIMS_KEY_USER_ROLES = <span class="string">&quot;userRoles&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Value(&quot;$&#123;jwt.secret_key&#125;&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String secretKey;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Value(&quot;$&#123;jwt.expire_time&#125;&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">long</span> expireTime;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">createToken</span><span class="params">(String userName, List&lt;String&gt; userRoles)</span></span>&#123;</span><br><span class="line">        Map &lt;String, Object&gt; claimMap = <span class="keyword">new</span> HashMap();</span><br><span class="line">        claimMap.put(CLAIMS_KEY_USER_ROLES, userRoles);</span><br><span class="line"></span><br><span class="line">        String token = Jwts.builder()</span><br><span class="line">                .setSubject(userName)  <span class="comment">// 把使用者名稱放入 TOKEN 的 subject 中，之後的請求返回 TOKEN 時，就可以依據該使用者名稱取得對應的權限</span></span><br><span class="line">                .addClaims(claimMap)  <span class="comment">// 也可把一些不敏感的資料記錄到 TOKEN 的 claim 區塊中，我這邊以使用權限作示範，實際生產環境中，通常還是會由資料庫中查詢權限</span></span><br><span class="line">                .setIssuedAt(<span class="keyword">new</span> Date()) <span class="comment">// 簽發時間</span></span><br><span class="line">                .setExpiration(Date.from(Instant.now().plusSeconds(expireTime))) <span class="comment">// 過期時間</span></span><br><span class="line">                .signWith(</span><br><span class="line">                        Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8)),</span><br><span class="line">                        SignatureAlgorithm.HS512)  <span class="comment">// 簽證的方式</span></span><br><span class="line">                .compact();</span><br><span class="line">        logger.debug(<span class="string">&quot;token : &#123;&#125;&quot;</span>, token);</span><br><span class="line">        <span class="keyword">return</span> token;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> Claims <span class="title">parseToken</span><span class="params">(String token)</span> </span>&#123;</span><br><span class="line">        Claims claims = Jwts.parserBuilder()</span><br><span class="line">                .setSigningKey(Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8)))</span><br><span class="line">                .build()</span><br><span class="line">                .parseClaimsJws(token)</span><br><span class="line">                .getBody();  <span class="comment">// 示範將 TOKEN 中的不敏感資料取出，以產生 TOKEN 時，填入的使用者權限為例</span></span><br><span class="line">        logger.debug(<span class="string">&quot;claims : &#123;&#125;&quot;</span>, claims);</span><br><span class="line">        <span class="keyword">return</span> claims;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">parseUserNameFromToken</span><span class="params">(String token)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> parseToken(token).getSubject();  <span class="comment">// 產生 TOKEN 時，是將使用者名稱填入的 subject 中，所以也由 subject 中取出使用者名稱</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;SimpleGrantedAuthority&gt; <span class="title">parseUserAuthoritiesFromToken</span><span class="params">(String token)</span> </span>&#123;</span><br><span class="line">        List&lt;String&gt; userRoles = parseToken(token).get(CLAIMS_KEY_USER_ROLES, List.class);</span><br><span class="line">        logger.debug(<span class="string">&quot;userRoles : &#123;&#125;&quot;</span>, userRoles);</span><br><span class="line">        <span class="keyword">return</span> userRoles.stream().map(SimpleGrantedAuthority::<span class="keyword">new</span>).collect(Collectors.toList());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="JWT-設定"><a href="#JWT-設定" class="headerlink" title="JWT 設定"></a>JWT 設定</h1><p>secret_key 的值要參考 HS512 演算法的規定，可參考 <a target="_blank" rel="noopener" href="https://8gwifi.org/jwkfunctions.jsp">https://8gwifi.org/jwkfunctions.jsp</a></p>
-<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">jwt:</span></span><br><span class="line">  <span class="attr">secret_key:</span> <span class="string">4Kkn7n4OIHhFvc2KeKzJbDiZRXeuiHBbdKxmJu2YheeYeLw6DMQU7ZZb_Q31GU3eXPFn5WRGptW2F-qNMmPc3A</span></span><br><span class="line">  <span class="attr">expire_time:</span> <span class="number">120</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="自定義-Filter"><a href="#自定義-Filter" class="headerlink" title="自定義 Filter"></a>自定義 Filter</h1><p>用來先過濾使用者是否有傳入 JWT，若有則取出 TOKEN 進行驗證<br>src/main/java/tw/com/pluto/security/JwtAuthFilter.java</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JwtAuthFilter</span> <span class="keyword">extends</span> <span class="title">OncePerRequestFilter</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger logger = LoggerFactory.getLogger(JwtAuthFilter.class);</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    ObjectMapper objectMapper;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> JwtUtil jwtUtil;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> MyUserDetailsService userDetailsService;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doFilterInternal</span><span class="params">(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)</span> <span class="keyword">throws</span> ServletException, IOException </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            String token;</span><br><span class="line">            String bearer = request.getHeader(<span class="string">&quot;Authorization&quot;</span>);  <span class="comment">// 由請求的 Header 中取出 key 為 Authorization 的值</span></span><br><span class="line">            <span class="keyword">if</span> (bearer != <span class="keyword">null</span> &amp;&amp; !isBlankString(bearer) &amp;&amp; bearer.startsWith(<span class="string">&quot;Bearer &quot;</span>)) &#123;  <span class="comment">// 依據 Bearer (RFC 6750) 的定義，前面七個字元是 &quot;Bearer &quot;</span></span><br><span class="line">                token = bearer.substring(<span class="number">7</span>);  <span class="comment">// 只取 token</span></span><br><span class="line">                String userName = jwtUtil.parseUserNameFromToken(token); <span class="comment">// 取得使用者名稱</span></span><br><span class="line">                List&lt;SimpleGrantedAuthority&gt; userAuthorities = jwtUtil.parseUserAuthoritiesFromToken(token); <span class="comment">// 取得使用者授權</span></span><br><span class="line">                UserDetails userDetails = userDetailsService.loadUserByUsername(userName); <span class="comment">// 由使用者名稱取得詳細資訊</span></span><br><span class="line"></span><br><span class="line">                UsernamePasswordAuthenticationToken authAfterSuccessLogin = <span class="keyword">new</span> UsernamePasswordAuthenticationToken(userDetails, <span class="keyword">null</span>, userDetails.getAuthorities());</span><br><span class="line">                authAfterSuccessLogin.setDetails(<span class="keyword">new</span> WebAuthenticationDetailsSource().buildDetails(request));</span><br><span class="line">                SecurityContextHolder.getContext().setAuthentication(authAfterSuccessLogin);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">catch</span> (Exception e) &#123;  <span class="comment">// 若解析 token 過程中有錯誤則中斷請求</span></span><br><span class="line">            logger.error(e.getMessage(), e);</span><br><span class="line"></span><br><span class="line">            Map&lt;String, String&gt; errorMsg = <span class="keyword">new</span> LinkedHashMap&lt;&gt;();</span><br><span class="line">            errorMsg.put(<span class="string">&quot;error&quot;</span>, e.getMessage());</span><br><span class="line"></span><br><span class="line">            response.setStatus(HttpStatus.UNAUTHORIZED.value());</span><br><span class="line">            response.setContentType(MediaType.APPLICATION_JSON_VALUE);</span><br><span class="line">            objectMapper.writeValue(response.getWriter(), errorMsg);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 若在這個過濾器運作正常(1. 沒 token；2. 有 token 且驗證成功)，則將請求交由下一個過濾器進行處理</span></span><br><span class="line">        filterChain.doFilter(request, response);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">isBlankString</span><span class="params">(String bearer)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> bearer == <span class="keyword">null</span> || bearer.trim().isEmpty();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="驗證成功處理器"><a href="#驗證成功處理器" class="headerlink" title="驗證成功處理器"></a>驗證成功處理器</h1><p>當首次登入成功後，就需要產生一個 token 返回給使用者，接下來使用者就可以在請求中攜帶此 token 通過驗證。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyAuthenticationSuccessHandler</span> <span class="keyword">implements</span> <span class="title">AuthenticationSuccessHandler</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    ObjectMapper objectMapper;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    JwtUtil jwtUtil;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAuthenticationSuccess</span><span class="params">(HttpServletRequest request, HttpServletResponse response, Authentication authentication)</span> <span class="keyword">throws</span> IOException, ServletException </span>&#123;</span><br><span class="line">        Map&lt;String, String&gt; message = <span class="keyword">new</span> LinkedHashMap&lt;&gt;();</span><br><span class="line">        List&lt;String&gt; grantedAuthorityList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        <span class="keyword">for</span>(GrantedAuthority grantedAuthority : authentication.getAuthorities()) &#123;  <span class="comment">// 取得權限</span></span><br><span class="line">            grantedAuthorityList.add(grantedAuthority.toString());</span><br><span class="line">        &#125;</span><br><span class="line">        String token = jwtUtil.createToken(authentication.getName(), grantedAuthorityList);  <span class="comment">// 將權限附加到 TOKEN，此處只是做示範，在生產環境中並不需要</span></span><br><span class="line">        message.put(<span class="string">&quot;message&quot;</span>, <span class="string">&quot;登入成功&quot;</span>);</span><br><span class="line">        message.put(<span class="string">&quot;token&quot;</span>, token);  <span class="comment">// 附加 token 傳給使用者</span></span><br><span class="line">        response.setStatus(HttpStatus.OK.value());</span><br><span class="line">        response.setContentType(MediaType.APPLICATION_JSON_VALUE);</span><br><span class="line">        response.setCharacterEncoding(StandardCharsets.UTF_8.name());</span><br><span class="line">        objectMapper.writeValue(response.getWriter(), message);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="配置過濾器"><a href="#配置過濾器" class="headerlink" title="配置過濾器"></a>配置過濾器</h1><p>關閉 Session 機制與設定 JWT 過濾器</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyWebSecurityConfig</span> <span class="keyword">extends</span> <span class="title">WebSecurityConfigurerAdapter</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    JwtAuthFilter jwtAuthFilter;</span><br><span class="line">    ...</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">configure</span><span class="params">(HttpSecurity http)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        http.cors().and()  <span class="comment">// 允許跨域</span></span><br><span class="line">                .csrf().disable()  <span class="comment">// 關閉 CSRF</span></span><br><span class="line">                .authorizeRequests()  <span class="comment">// 設定權限</span></span><br><span class="line">                .mvcMatchers(<span class="string">&quot;/user/**&quot;</span>).hasRole(<span class="string">&quot;USER&quot;</span>)</span><br><span class="line">                .mvcMatchers(<span class="string">&quot;/admin/**&quot;</span>).hasRole(<span class="string">&quot;ADMIN&quot;</span>).and()</span><br><span class="line">                .formLogin().permitAll()  <span class="comment">// 允許每個使用者都可訪問登入 URL</span></span><br><span class="line">                .successHandler(myAuthenticationSuccessHandler) <span class="comment">// 登入成功後的處理程序</span></span><br><span class="line">                .failureHandler(myAuthenticationFailureHandler).and() <span class="comment">// 登入失敗後的處理程序</span></span><br><span class="line">                .logout().permitAll()  <span class="comment">// 允許每個使用者都可訪問登出 URL</span></span><br><span class="line">                .logoutSuccessHandler(myLogoutSuccessHandler)  <span class="comment">// 登出成功後的處理程序</span></span><br><span class="line">                .deleteCookies(<span class="string">&quot;JSESSIONID&quot;</span>).and()  <span class="comment">// 刪除 SESSION Cookie</span></span><br><span class="line">                .exceptionHandling()</span><br><span class="line">                .accessDeniedHandler(myAccessDeniedHandler)  <span class="comment">// 無權限訪問的處理程序</span></span><br><span class="line">                .authenticationEntryPoint(unauthorizedEntryPoint).and() <span class="comment">// 未驗證時的處理程序</span></span><br><span class="line">                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); <span class="comment">// 使用 TOKEN 機制後就不需要用 session</span></span><br><span class="line">        http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);  <span class="comment">// 設定 JWT 過濾器，在帳密驗證前先看是否有 token</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="測試"><a href="#測試" class="headerlink" title="測試"></a>測試</h1><p>登入取得 token</p>
-<img src="/2022/02/10/backend-spring-security-005-jwt/01.png" class="" title="01.png">
-<p>使用 token 取得資料</p>
-<img src="/2022/02/10/backend-spring-security-005-jwt/02.png" class="" title="02.png">
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1306,20 +1281,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">117</span>
+          <span class="site-state-item-count">118</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-count">22</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">118</span>
+        <span class="site-state-item-count">119</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -1364,13 +1339,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">477k</span>
+    <span title="Symbols count total">478k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
-    <span title="Reading time total">7:14</span>
+    <span title="Reading time total">7:15</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
   </div>
