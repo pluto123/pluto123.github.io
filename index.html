@@ -202,6 +202,100 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/04/25/linux-add-user/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Steven Wu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Steven 的學習筆記">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/04/25/linux-add-user/" class="post-title-link" itemprop="url">在 Ubuntu 18.04.4 新增/刪除使用者</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-04-25 10:49:12 / Modified: 11:45:27" itemprop="dateCreated datePublished" datetime="2022-04-25T10:49:12+08:00">2022-04-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>461</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>1 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="創建新用戶並建立域設的-Home-目錄-home-username"><a href="#創建新用戶並建立域設的-Home-目錄-home-username" class="headerlink" title="創建新用戶並建立域設的 Home 目錄 (/home/username)"></a>創建新用戶並建立域設的 Home 目錄 (/home/username)</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo useradd -m franklin</span></span><br></pre></td></tr></table></figure>
+<h1 id="創建新用戶並在指定的目錄建立-Home-目錄-指定的目錄必須是未建立目錄"><a href="#創建新用戶並在指定的目錄建立-Home-目錄-指定的目錄必須是未建立目錄" class="headerlink" title="創建新用戶並在指定的目錄建立 Home 目錄 (指定的目錄必須是未建立目錄)"></a>創建新用戶並在指定的目錄建立 Home 目錄 (指定的目錄必須是未建立目錄)</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo useradd -m -d /mnt/app/home/franklin franklin</span></span><br></pre></td></tr></table></figure>
+<h1 id="變更密碼"><a href="#變更密碼" class="headerlink" title="變更密碼"></a>變更密碼</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo passwd franklin</span></span><br></pre></td></tr></table></figure>
+<h1 id="刪除使用者"><a href="#刪除使用者" class="headerlink" title="刪除使用者"></a>刪除使用者</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo userdel franklin</span></span><br></pre></td></tr></table></figure>
+<h1 id="更改-useradd-的預設配置"><a href="#更改-useradd-的預設配置" class="headerlink" title="更改 useradd 的預設配置"></a>更改 useradd 的預設配置</h1><p>將預設的登入 shell (/bin/sh) 改為 /bin/bash</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo useradd -D -s /bin/bash</span></span><br></pre></td></tr></table></figure>
+<p>查看結果</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo useradd -D</span></span><br></pre></td></tr></table></figure>
+<h1 id="Troubleshooting"><a href="#Troubleshooting" class="headerlink" title="Troubleshooting"></a>Troubleshooting</h1><p>登入後的畫面如下</p>
+<img src="/2022/04/25/linux-add-user/01.png" class="" title="01.png">
+<p>則可將 /etc/passwd 中的 /bin/sh 改成 /bin/bash</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">franklin:x:1005:1005::/mnt/app/home/franklin:/bin/sh</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>變成</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">franklin:x:1005:1005::/mnt/app/home/franklin:/bin/bash</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2022/04/19/docker-nvidia-container/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1143,108 +1237,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/02/06/frontend-d3-010-tools/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Steven Wu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Steven 的學習筆記">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/02/06/frontend-d3-010-tools/" class="post-title-link" itemprop="url">D3 - 010 Tools</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2022-02-06 13:16:29" itemprop="dateCreated datePublished" datetime="2022-02-06T13:16:29+08:00">2022-02-06</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-02-08 16:17:14" itemprop="dateModified" datetime="2022-02-08T16:17:14+08:00">2022-02-08</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/D3/" itemprop="url" rel="index"><span itemprop="name">D3</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>2.3k</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>2 mins.</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <ul>
-<li>d3.range( start, stop, step ) : 返回一個數值陣列．以 start 為陣列的第一個元素 (預設為 0)，每間隔 step (step 預設為 1) 取一個數值，直到 stop</li>
-<li>d3.shuffle( array, low, high ) : 對陣列內的索引 low 到 high 間的元素做洗牌動作，若沒有指定 low 和 high 則對陣列的所有元素做洗牌．</li>
-<li>d3.cross( a, b, reducer ) : 傳入一維陣列 a 及 b．透過 reducer 函數，預設會產出一個 2 元素陣列，[ [a1, b1], [a1, b2], …, [a2, b1], [a2, b2], … ]</li>
-<li>d3.merge( array1, array2, … ) : 合併多個一維陣列</li>
-<li>d3.parirs( array, reducer ) : 對相臨兩元素，透過 reducer 函數，預設會產出一個 2 元素陣列，[ [a1, a1], [a2, a3], … ]</li>
-<li>d3.transpose( matrix ) : 返回轉置矩陣</li>
-<li>d3.min( array, accessor ) : 取得 array 中的最小值</li>
-<li>d3.max( array, accessor ) : 取得 array 中的最大值</li>
-<li>d3.extent( array, accessor ) : 返回 [min, max]</li>
-<li>d3.sum( array, accessor ) : 傳回元素的總和</li>
-<li>d3.mean( array, accessor ) : 傳回元素的平均值<br>其他完整的 D3 API : <a target="_blank" rel="noopener" href="https://github.com/d3/d3/blob/main/API.md">https://github.com/d3/d3/blob/main/API.md</a></li>
-</ul>
-<p>直方圖是一個 Layout，傳回一個由一組箱子所組成的陣列．每個箱子都是包含 length 屬性 (元素數目)， x0 及 x1 屬性項組成．</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> d3 <span class="keyword">from</span> <span class="string">&#x27;d3&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; useEffect &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">makeDemo10_1</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    d3.csv( <span class="string">&quot;data/dense.csv&quot;</span> ).then( <span class="function"><span class="keyword">function</span>(<span class="params"> data </span>) </span>&#123;                        </span><br><span class="line">        <span class="keyword">var</span> histo = d3.histogram().value( <span class="function"><span class="params">d</span>=&gt;</span>+d.A )( data );</span><br><span class="line"></span><br><span class="line">        <span class="keyword">var</span> scX = d3.scaleBand().padding( <span class="number">0.2</span> ).round( <span class="literal">true</span> )</span><br><span class="line">            .range( [<span class="number">15</span>, <span class="number">515</span>] ).domain( histo );</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">var</span> scY = d3.scaleLinear().range( [<span class="number">200</span>, <span class="number">0</span>] )</span><br><span class="line">            .domain( [<span class="number">0</span>, d3.max( histo, <span class="function"><span class="params">d</span>=&gt;</span>d.length ) ] ).nice();</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">var</span> g = d3.select( <span class="string">&quot;svg&quot;</span> )</span><br><span class="line">            .append( <span class="string">&quot;g&quot;</span> ).attr( <span class="string">&quot;transform&quot;</span>, <span class="string">&quot;translate( 40,50 )&quot;</span> )</span><br><span class="line"></span><br><span class="line">        g.selectAll( <span class="string">&quot;rect&quot;</span> ).data( histo ).enter()</span><br><span class="line">            .append( <span class="string">&quot;rect&quot;</span> ).attr( <span class="string">&quot;width&quot;</span>, scX.bandwidth() )</span><br><span class="line">            .attr( <span class="string">&quot;x&quot;</span>, scX ).attr( <span class="string">&quot;y&quot;</span>, <span class="function"><span class="params">d</span>=&gt;</span>scY(d.length) )</span><br><span class="line">            .attr( <span class="string">&quot;height&quot;</span>, <span class="function"><span class="params">d</span> =&gt;</span> <span class="number">200</span>-scY(d.length) )</span><br><span class="line">            .attr( <span class="string">&quot;fill&quot;</span>, <span class="string">&quot;red&quot;</span> ).attr( <span class="string">&quot;fill-opacity&quot;</span>, <span class="number">0.2</span> )</span><br><span class="line">            .attr( <span class="string">&quot;stroke&quot;</span>, <span class="string">&quot;red&quot;</span> ).attr( <span class="string">&quot;stroke-width&quot;</span>, <span class="number">2</span> )</span><br><span class="line"></span><br><span class="line">        g.selectAll( <span class="string">&quot;text&quot;</span> ).data( histo ).enter().append( <span class="string">&quot;text&quot;</span> )</span><br><span class="line">            .attr( <span class="string">&quot;text-anchor&quot;</span>, <span class="string">&quot;middle&quot;</span> )</span><br><span class="line">            .attr( <span class="string">&quot;font-family&quot;</span>, <span class="string">&quot;sans-serif&quot;</span> )</span><br><span class="line">            .attr( <span class="string">&quot;font-size&quot;</span>, <span class="number">14</span> )        </span><br><span class="line">            .attr( <span class="string">&quot;x&quot;</span>, <span class="function"><span class="params">d</span> =&gt;</span> scX(d)+<span class="number">0.5</span>*scX.bandwidth() )</span><br><span class="line">            .attr( <span class="string">&quot;y&quot;</span>, <span class="number">225</span> )</span><br><span class="line">            .text( <span class="function"><span class="params">d</span>=&gt;</span>(d.x0+d.x1)/<span class="number">2</span> );</span><br><span class="line"></span><br><span class="line">        g.append( <span class="string">&quot;g&quot;</span> ).call( d3.axisLeft(scY) );</span><br><span class="line">    &#125; );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Demo10_1</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    useEffect(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">        makeDemo10_1()</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        (<span class="xml"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">width</span>=<span class="string">&quot;575&quot;</span> <span class="attr">height</span>=<span class="string">&quot;325&quot;</span> <span class="attr">style</span>=<span class="string">&#123;&#123;</span>&quot;<span class="attr">background</span>&quot; <span class="attr">:</span> &#x27;<span class="attr">rgb</span>(<span class="attr">230</span>, <span class="attr">230</span>, <span class="attr">230</span>)&#x27;&#125;&#125;&gt;</span></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span>)</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> Demo10_1;</span><br></pre></td></tr></table></figure>
-<img src="/2022/02/06/frontend-d3-010-tools/01.png" class="" title="01.png">
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1314,7 +1306,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">116</span>
+          <span class="site-state-item-count">117</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -1327,7 +1319,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">116</span>
+        <span class="site-state-item-count">118</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -1378,7 +1370,7 @@
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
-    <span title="Reading time total">7:13</span>
+    <span title="Reading time total">7:14</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
   </div>
