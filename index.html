@@ -202,6 +202,792 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/05/26/docker-jupyter-dash/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Steven Wu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Steven 的學習筆記">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/05/26/docker-jupyter-dash/" class="post-title-link" itemprop="url">docker - 在 Jupyter 中使用 Dash</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-05-26 16:36:18 / Modified: 17:10:18" itemprop="dateCreated datePublished" datetime="2022-05-26T16:36:18+08:00">2022-05-26</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Docker/" itemprop="url" rel="index"><span itemprop="name">Docker</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>2.1k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>2 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>先說結論就是只需在啟動 Juypter 容器時，將 port 8050 映射一個對外的 port，不用在 Dockerfile 中 EXPOSE 8050</p>
+<h1 id="製作-Image"><a href="#製作-Image" class="headerlink" title="製作 Image"></a>製作 Image</h1><p>Dockerfile</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">FROM tensorflow/tensorflow:2.0.1-gpu-py3-jupyter</span><br><span class="line"></span><br><span class="line">WORKDIR /usr/app/</span><br><span class="line">COPY boot.sh ./</span><br><span class="line">RUN apt-get update &amp;&amp; apt-get install -y openssh-server</span><br><span class="line">RUN mkdir -p /var/run/sshd</span><br><span class="line">RUN mkdir -p /root/.ssh</span><br><span class="line">RUN echo &#x27;root:my_password&#x27; | chpasswd</span><br><span class="line">RUN sed -ri &#x27;s/^#?PermitRootLogin\s+.*/PermitRootLogin yes/&#x27; /etc/ssh/sshd_config</span><br><span class="line">RUN sed -ri &#x27;s/UsePAM yes/UsePAM no/g&#x27; /etc/ssh/sshd_config</span><br><span class="line"></span><br><span class="line">EXPOSE 22 8888</span><br><span class="line">ENTRYPOINT [&quot;./boot.sh&quot;]</span><br></pre></td></tr></table></figure>
+<p>boot.sh</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/sh</span></span><br><span class="line">/etc/init.d/ssh start</span><br><span class="line">source /etc/bash.bashrc</span><br><span class="line">jupyter notebook --notebook-dir=/tf --ip 0.0.0.0 --no-browser --allow-root</span><br></pre></td></tr></table></figure>
+<h1 id="啟動容器"><a href="#啟動容器" class="headerlink" title="啟動容器"></a>啟動容器</h1><p>注意 : <code>-p 15003:8050</code>是必須的</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d --restart always -p 15001:8888 -p 15002:22 -p 15003:8050 -v /etc/localtime:/etc/localtime:ro -v /etc/timezone:/etc/timezone:ro -v /mnt/data/prv/stevenwu/jupyter_data:/tf --gpus all --shm-size=32gb --name stevenwu tensorflow_gpu_py3_jupyter_ssh:v1</span><br></pre></td></tr></table></figure>
+
+<h1 id="在-Jupyter-中啟動-Dash"><a href="#在-Jupyter-中啟動-Dash" class="headerlink" title="在 Jupyter 中啟動 Dash"></a>在 Jupyter 中啟動 Dash</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> jupyter_dash <span class="keyword">import</span> JupyterDash</span><br><span class="line"><span class="keyword">from</span> dash <span class="keyword">import</span> Dash, html, dcc</span><br><span class="line"><span class="keyword">import</span> plotly.express <span class="keyword">as</span> px</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"></span><br><span class="line">app = JupyterDash(__name__)</span><br><span class="line"></span><br><span class="line"><span class="comment"># assume you have a &quot;long-form&quot; data frame</span></span><br><span class="line"><span class="comment"># see https://plotly.com/python/px-arguments/ for more options</span></span><br><span class="line">df = pd.DataFrame(&#123;</span><br><span class="line">    <span class="string">&quot;Fruit&quot;</span>: [<span class="string">&quot;Apples&quot;</span>, <span class="string">&quot;Oranges&quot;</span>, <span class="string">&quot;Bananas&quot;</span>, <span class="string">&quot;Apples&quot;</span>, <span class="string">&quot;Oranges&quot;</span>, <span class="string">&quot;Bananas&quot;</span>],</span><br><span class="line">    <span class="string">&quot;Amount&quot;</span>: [<span class="number">4</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">4</span>, <span class="number">5</span>],</span><br><span class="line">    <span class="string">&quot;City&quot;</span>: [<span class="string">&quot;SF&quot;</span>, <span class="string">&quot;SF&quot;</span>, <span class="string">&quot;SF&quot;</span>, <span class="string">&quot;Montreal&quot;</span>, <span class="string">&quot;Montreal&quot;</span>, <span class="string">&quot;Montreal&quot;</span>]</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">fig = px.bar(df, x=<span class="string">&quot;Fruit&quot;</span>, y=<span class="string">&quot;Amount&quot;</span>, color=<span class="string">&quot;City&quot;</span>, barmode=<span class="string">&quot;group&quot;</span>)</span><br><span class="line"></span><br><span class="line">app.layout = html.Div(children=[</span><br><span class="line">    html.H1(children=<span class="string">&#x27;Hello Dash&#x27;</span>),</span><br><span class="line"></span><br><span class="line">    html.Div(children=<span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">        Dash: A web application framework for your data.</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span>),</span><br><span class="line"></span><br><span class="line">    dcc.Graph(</span><br><span class="line">        <span class="built_in">id</span>=<span class="string">&#x27;example-graph&#x27;</span>,</span><br><span class="line">        figure=fig</span><br><span class="line">    )</span><br><span class="line">])</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    app.run_server(mode=<span class="string">&#x27;inline&#x27;</span>, host=<span class="string">&quot;0.0.0.0&quot;</span>, port=<span class="number">8050</span>, dev_tools_ui=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+<p>安裝相關套件 (視自己的環境而定)</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">!pip install jupyter_dash</span><br><span class="line">!pip install pandas</span><br><span class="line">!pip install plotly</span><br></pre></td></tr></table></figure>
+<p>執行</p>
+<img src="/2022/05/26/docker-jupyter-dash/01.png" class="" title="01.png">
+<p>在瀏覽器中打開另一分頁</p>
+<img src="/2022/05/26/docker-jupyter-dash/02.png" class="" title="02.png">
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/05/24/python-connect-to-mongo/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Steven Wu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Steven 的學習筆記">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/05/24/python-connect-to-mongo/" class="post-title-link" itemprop="url">python -  如何連線到 MongoDB</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-05-24 13:52:45 / Modified: 14:03:11" itemprop="dateCreated datePublished" datetime="2022-05-24T13:52:45+08:00">2022-05-24</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>1.8k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>2 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pymongo</span><br><span class="line"><span class="keyword">from</span> bson.objectid <span class="keyword">import</span> ObjectId</span><br><span class="line"></span><br><span class="line">MONGO_HOST = <span class="string">&quot;192.168.27.17&quot;</span></span><br><span class="line">MONGO_PORT = <span class="string">&quot;25017&quot;</span></span><br><span class="line">MONGO_USER = <span class="string">&quot;sa&quot;</span></span><br><span class="line">MONGO_PWD = <span class="string">&quot;password&quot;</span></span><br><span class="line">MONGO_DB = <span class="string">&quot;my_db&quot;</span></span><br><span class="line">MONGO_LIMIT = <span class="number">50000</span></span><br><span class="line"></span><br><span class="line">MONGO_URL = <span class="string">&quot;mongodb://&quot;</span> + <span class="built_in">str</span>(MONGO_USER) + <span class="string">&quot;:&quot;</span> + <span class="built_in">str</span>(MONGO_PWD) + <span class="string">&quot;@&quot;</span> + <span class="built_in">str</span>(MONGO_HOST) + <span class="string">&quot;:&quot;</span> + <span class="built_in">str</span>(MONGO_PORT)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Mongodb</span>:</span></span><br><span class="line">    <span class="comment"># 建構式</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self</span>):</span></span><br><span class="line">        self.client = pymongo.MongoClient(MONGO_URL)</span><br><span class="line">        self.db = self.client[MONGO_DB]</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">find</span>(<span class="params">self, collection</span>):</span></span><br><span class="line">        collection = self.db[collection]</span><br><span class="line">        <span class="keyword">return</span> collection.find()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">findById</span>(<span class="params">self, collection, objectId</span>):</span></span><br><span class="line">        collection = self.db[collection]</span><br><span class="line">        <span class="keyword">return</span> collection.find(&#123;<span class="string">&#x27;_id&#x27;</span>: &#123;<span class="string">&quot;$gt&quot;</span>: ObjectId(objectId)&#125;&#125;)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">findByIdSortBy</span>(<span class="params">self, collection, objectId, sortCol</span>):</span></span><br><span class="line">        collection = self.db[collection]</span><br><span class="line">        <span class="keyword">return</span> collection.find(&#123;<span class="string">&#x27;_id&#x27;</span>: &#123;<span class="string">&quot;$gt&quot;</span>: ObjectId(objectId)&#125;&#125;).sort(sortCol)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">close</span>(<span class="params">self</span>):</span></span><br><span class="line">        self.client.close()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 取得某個 collection 的全部記錄</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">find</span>(<span class="params">collection</span>):</span></span><br><span class="line">    <span class="keyword">with</span> pymongo.MongoClient(MONGO_URL) <span class="keyword">as</span> client:</span><br><span class="line">        db = client[MONGO_DB]</span><br><span class="line">        collection = db[collection]</span><br><span class="line">        <span class="keyword">return</span> collection.find()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 取得比 object_id 大的 limit 筆紀錄並用 object_id 排序</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">find_by_object_id</span>(<span class="params">collection, object_id</span>):</span></span><br><span class="line">    <span class="keyword">with</span> pymongo.MongoClient(MONGO_URL) <span class="keyword">as</span> client:</span><br><span class="line">        db = client[MONGO_DB]</span><br><span class="line">        collection = db[collection]</span><br><span class="line">        <span class="keyword">return</span> collection.find(&#123;<span class="string">&#x27;_id&#x27;</span>: &#123;<span class="string">&quot;$gt&quot;</span>: ObjectId(object_id)&#125;&#125;).sort(<span class="string">&quot;_id&quot;</span>).limit(MONGO_LIMIT)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 取得比 object_id 大的 limit 筆紀錄並用 sort_col 排序</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">find_by_object_id_sort_by_col</span>(<span class="params">collection, object_id, sort_col</span>):</span></span><br><span class="line">    <span class="keyword">with</span> pymongo.MongoClient(MONGO_URL) <span class="keyword">as</span> client:</span><br><span class="line">        db = client[MONGO_DB]</span><br><span class="line">        collection = db[collection]</span><br><span class="line">        <span class="keyword">return</span> collection.find(&#123;<span class="string">&#x27;_id&#x27;</span>: &#123;<span class="string">&quot;$gt&quot;</span>: ObjectId(object_id)&#125;&#125;).sort(</span><br><span class="line">            sort_col).limit(MONGO_LIMIT)</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/05/24/python-connect-to-postgres/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Steven Wu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Steven 的學習筆記">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/05/24/python-connect-to-postgres/" class="post-title-link" itemprop="url">python - 如何連線到 Postgres</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-05-24 13:42:08 / Modified: 13:50:34" itemprop="dateCreated datePublished" datetime="2022-05-24T13:42:08+08:00">2022-05-24</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>2.6k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>2 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> psycopg2</span><br><span class="line"></span><br><span class="line">POSTGRES_HOST = <span class="string">&quot;localhost&quot;</span></span><br><span class="line">POSTGRES_PORT = <span class="number">5432</span></span><br><span class="line">POSTGRES_USER = <span class="string">&quot;postgres&quot;</span></span><br><span class="line">POSTGRES_PWD = <span class="string">&quot;123456&quot;</span></span><br><span class="line">POSTGRES_DB = <span class="string">&quot;my_db&quot;</span></span><br><span class="line">POSTGRES_SCHEMA = <span class="string">&quot;my_schema&quot;</span></span><br><span class="line">POSTGRES_SSL = <span class="string">&quot;disable&quot;</span></span><br><span class="line"></span><br><span class="line">POSTGRES_CONNECT_STRING = <span class="string">&quot;host=&#123;0&#125; user=&#123;1&#125; dbname=&#123;2&#125; password=&#123;3&#125; sslmode=&#123;4&#125; port=&#123;5&#125; options=&#x27;-c search_path=&#123;6&#125;&#x27;&quot;</span>.<span class="built_in">format</span>(POSTGRES_HOST, POSTGRES_USER, POSTGRES_DB, POSTGRES_PWD, POSTGRES_SSL, POSTGRES_PORT, POSTGRES_SCHEMA)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 建立資料表</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">create_postgres_table</span>(<span class="params">table_name, columns</span>):</span></span><br><span class="line">    header = <span class="string">&quot;CREATE TABLE IF NOT EXISTS &#123;0&#125; (&quot;</span>.<span class="built_in">format</span>(table_name)</span><br><span class="line">    length = <span class="built_in">len</span>(columns)</span><br><span class="line">    body = <span class="string">&quot;&quot;</span></span><br><span class="line">    <span class="keyword">for</span> column <span class="keyword">in</span> columns:</span><br><span class="line">        index, name, <span class="built_in">type</span> = column</span><br><span class="line">        tmp = <span class="string">&quot;&#123;0&#125; &#123;1&#125;&quot;</span>.<span class="built_in">format</span>(name, <span class="built_in">type</span>)</span><br><span class="line">        <span class="keyword">if</span> index != length - <span class="number">1</span>:</span><br><span class="line">            tmp += <span class="string">&#x27;, &#x27;</span></span><br><span class="line">        body += tmp</span><br><span class="line">    tail = <span class="string">&quot;);&quot;</span></span><br><span class="line">    sql_string = header + body + tail</span><br><span class="line">    <span class="built_in">print</span>(sql_string)</span><br><span class="line">    <span class="keyword">return</span> sql_string</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 執行一個 SQL 命令</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">execute</span>(<span class="params">sql_string</span>):</span></span><br><span class="line">    conn = <span class="literal">None</span></span><br><span class="line">    result = <span class="literal">True</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        conn = psycopg2.connect(POSTGRES_CONNECT_STRING)</span><br><span class="line">        cur = conn.cursor()</span><br><span class="line">        cur.execute(sql_string)</span><br><span class="line">        conn.commit()</span><br><span class="line">    <span class="keyword">except</span> (Exception, psycopg2.DatabaseError) <span class="keyword">as</span> error:</span><br><span class="line">        <span class="built_in">print</span>(error)</span><br><span class="line">        result = <span class="literal">False</span></span><br><span class="line">    <span class="keyword">finally</span>:</span><br><span class="line">        <span class="keyword">if</span> conn <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            conn.close()</span><br><span class="line">    <span class="keyword">return</span> result</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 取得一筆紀錄</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fetch_one</span>(<span class="params">sql_string</span>):</span></span><br><span class="line">    conn = <span class="literal">None</span></span><br><span class="line">    record = <span class="literal">None</span></span><br><span class="line">    error_flag = <span class="literal">False</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        conn = psycopg2.connect(POSTGRES_CONNECT_STRING)</span><br><span class="line">        cur = conn.cursor()</span><br><span class="line">        cur.execute(sql_string)</span><br><span class="line">        record = cur.fetchone()</span><br><span class="line">    <span class="keyword">except</span> (Exception, psycopg2.DatabaseError) <span class="keyword">as</span> error:</span><br><span class="line">        <span class="built_in">print</span>(error)</span><br><span class="line">        error_flag = <span class="literal">True</span></span><br><span class="line">    <span class="keyword">finally</span>:</span><br><span class="line">        <span class="keyword">if</span> conn <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            conn.close()</span><br><span class="line">        <span class="keyword">if</span> error_flag:</span><br><span class="line">            exit()</span><br><span class="line">    <span class="keyword">return</span> record</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 取得全部紀錄</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fetch_all</span>(<span class="params">sql_string</span>):</span></span><br><span class="line">    conn = <span class="literal">None</span></span><br><span class="line">    records = <span class="literal">None</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        conn = psycopg2.connect(POSTGRES_CONNECT_STRING)</span><br><span class="line">        cur = conn.cursor()</span><br><span class="line">        cur.execute(sql_string)</span><br><span class="line">        records = cur.fetchall()</span><br><span class="line">    <span class="keyword">except</span> (Exception, psycopg2.DatabaseError) <span class="keyword">as</span> error:</span><br><span class="line">        <span class="built_in">print</span>(error)</span><br><span class="line">    <span class="keyword">finally</span>:</span><br><span class="line">        <span class="keyword">if</span> conn <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            conn.close()</span><br><span class="line">    <span class="keyword">return</span> records</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 執行一個交易</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">transaction</span>(<span class="params">sql_list</span>):</span></span><br><span class="line">    conn = <span class="literal">None</span></span><br><span class="line">    result = <span class="literal">True</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        conn = psycopg2.connect(POSTGRES_CONNECT_STRING)</span><br><span class="line">        cur = conn.cursor()</span><br><span class="line">        <span class="keyword">for</span> sql <span class="keyword">in</span> sql_list:</span><br><span class="line">            cur.execute(sql)</span><br><span class="line">        conn.commit()</span><br><span class="line">    <span class="keyword">except</span> (Exception, psycopg2.DatabaseError) <span class="keyword">as</span> error:</span><br><span class="line">        <span class="built_in">print</span>(error)</span><br><span class="line">        result = <span class="literal">False</span></span><br><span class="line">    <span class="keyword">finally</span>:</span><br><span class="line">        <span class="keyword">if</span> conn <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            conn.close()</span><br><span class="line">    <span class="keyword">return</span> result</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 取得某資料表全部紀錄</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_all_from_postgres</span>(<span class="params">table</span>):</span></span><br><span class="line">    sql_string = <span class="string">&quot;SELECT * FROM &#123;0&#125;&quot;</span>.<span class="built_in">format</span>(table)</span><br><span class="line">    records = fetch_all(sql_string)</span><br><span class="line">    <span class="keyword">return</span> records</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 刪除資料表</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">drop_postgres_table</span>(<span class="params">table</span>):</span></span><br><span class="line">    sql_string = <span class="string">&quot;DROP TABLE IF EXISTS &quot;</span> + table</span><br><span class="line">    <span class="keyword">return</span> sql_string</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/05/24/python-connect-to-sql-server/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Steven Wu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Steven 的學習筆記">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/05/24/python-connect-to-sql-server/" class="post-title-link" itemprop="url">python - 如何連線到微軟的 SQL SERVER</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-05-24 13:28:41 / Modified: 13:40:04" itemprop="dateCreated datePublished" datetime="2022-05-24T13:28:41+08:00">2022-05-24</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>2.4k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>2 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pyodbc</span><br><span class="line"></span><br><span class="line">SQL_SERVER_HOST = <span class="string">&quot;192.168.31.27&quot;</span></span><br><span class="line">SQL_SERVER_PORT = <span class="number">1433</span></span><br><span class="line">SQL_SERVER_USER = <span class="string">&quot;sa&quot;</span></span><br><span class="line">SQL_SERVER_PWD = <span class="string">&quot;Ml22099478&quot;</span></span><br><span class="line">SQL_SERVER_DB = <span class="string">&quot;my_db&quot;</span></span><br><span class="line"></span><br><span class="line">SQL_SERVER_CONNECT_STRING = <span class="string">&quot;DRIVER=&#123;SQL Server&#125;;&quot;</span> + <span class="string">&quot;SERVER=tcp:&#123;0&#125;,&#123;1&#125;;DATABASE=&#123;2&#125;;UID=&#123;3&#125;;PWD=&#123;4&#125;&quot;</span>.<span class="built_in">format</span>(</span><br><span class="line">    SQL_SERVER_HOST, SQL_SERVER_PORT, SQL_SERVER_DB, SQL_SERVER_USER, SQL_SERVER_PWD)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 取一筆資料</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fetch_one</span>(<span class="params">sql_string</span>):</span></span><br><span class="line">    conn = <span class="literal">None</span></span><br><span class="line">    record = <span class="literal">None</span></span><br><span class="line">    error_flag = <span class="literal">False</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        conn = pyodbc.connect(SQL_SERVER_CONNECT_STRING)</span><br><span class="line">        cur = conn.cursor()</span><br><span class="line">        cur.execute(sql_string)</span><br><span class="line">        record = cur.fetchone()</span><br><span class="line">    <span class="keyword">except</span> (Exception, pyodbc.DatabaseError) <span class="keyword">as</span> error:</span><br><span class="line">        <span class="built_in">print</span>(error)</span><br><span class="line">        error_flag = <span class="literal">True</span></span><br><span class="line">    <span class="keyword">finally</span>:</span><br><span class="line">        <span class="keyword">if</span> conn <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            conn.close()</span><br><span class="line">        <span class="keyword">if</span> error_flag:</span><br><span class="line">            exit()</span><br><span class="line">    <span class="keyword">return</span> record</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 取全部的資料</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fetch_all</span>(<span class="params">sql_string</span>):</span></span><br><span class="line">    conn = <span class="literal">None</span></span><br><span class="line">    records = <span class="literal">None</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        conn = pyodbc.connect(SQL_SERVER_CONNECT_STRING)</span><br><span class="line">        cur = conn.cursor()</span><br><span class="line">        cur.execute(sql_string)</span><br><span class="line">        records = cur.fetchall()</span><br><span class="line">    <span class="keyword">except</span> (Exception, pyodbc.DatabaseError) <span class="keyword">as</span> error:</span><br><span class="line">        <span class="built_in">print</span>(error)</span><br><span class="line">    <span class="keyword">finally</span>:</span><br><span class="line">        <span class="keyword">if</span> conn <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            conn.close()</span><br><span class="line">    <span class="keyword">return</span> records</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 執行一個 SQL 命令</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">execute</span>(<span class="params">sql_string</span>):</span></span><br><span class="line">    conn = <span class="literal">None</span></span><br><span class="line">    result = <span class="literal">True</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        conn = pyodbc.connect(SQL_SERVER_CONNECT_STRING)</span><br><span class="line">        cur = conn.cursor()</span><br><span class="line">        cur.execute(sql_string)</span><br><span class="line">        conn.commit()</span><br><span class="line">    <span class="keyword">except</span> (Exception, pyodbc.DatabaseError) <span class="keyword">as</span> error:</span><br><span class="line">        <span class="built_in">print</span>(error)</span><br><span class="line">        result = <span class="literal">False</span></span><br><span class="line">    <span class="keyword">finally</span>:</span><br><span class="line">        <span class="keyword">if</span> conn <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            conn.close()</span><br><span class="line">    <span class="keyword">return</span> result</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 由某個資料表中取出所有資料並依據需求進行排序</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_all_from_sql_server</span>(<span class="params">table, order=<span class="literal">None</span></span>):</span></span><br><span class="line">    <span class="keyword">if</span> order <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">        sql_string = <span class="string">&quot;SELECT * FROM &#123;0&#125;&quot;</span>.<span class="built_in">format</span>(table)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        sql_string = <span class="string">&quot;SELECT * FROM &#123;0&#125; ORDER BY &#123;1&#125;&quot;</span>.<span class="built_in">format</span>(table, order)</span><br><span class="line">    records = fetch_all(sql_string)</span><br><span class="line">    <span class="keyword">return</span> records</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 建立資料表</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">create_sql_server_table</span>(<span class="params">table_name, columns</span>):</span></span><br><span class="line">    header = <span class="string">&quot;IF NOT EXISTS (SELECT * FROM sysobjects WHERE name=&#x27;&#123;0&#125;&#x27; and xtype=&#x27;U&#x27;) &quot;</span> \</span><br><span class="line">             <span class="string">&quot;CREATE TABLE &#123;0&#125; (&quot;</span>.<span class="built_in">format</span>(table_name)</span><br><span class="line">    length = <span class="built_in">len</span>(columns)</span><br><span class="line">    body = <span class="string">&quot;&quot;</span></span><br><span class="line">    <span class="keyword">for</span> column <span class="keyword">in</span> columns:</span><br><span class="line">        index, name, <span class="built_in">type</span> = column</span><br><span class="line">        tmp = <span class="string">&quot;&#123;0&#125; &#123;1&#125;&quot;</span>.<span class="built_in">format</span>(name, <span class="built_in">type</span>)</span><br><span class="line">        <span class="keyword">if</span> index != length - <span class="number">1</span>:</span><br><span class="line">            tmp += <span class="string">&#x27;, &#x27;</span></span><br><span class="line">        body += tmp</span><br><span class="line">    tail = <span class="string">&quot;);&quot;</span></span><br><span class="line">    sql_string = header + body + tail</span><br><span class="line">    <span class="built_in">print</span>(sql_string)</span><br><span class="line">    <span class="keyword">return</span> sql_string</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 刪除資料表</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">drop_sql_server_table</span>(<span class="params">table_name</span>):</span></span><br><span class="line">    sql_string = <span class="string">&quot;DROP TABLE IF EXISTS &#123;0&#125;;&quot;</span>.<span class="built_in">format</span>(table_name)</span><br><span class="line">    <span class="built_in">print</span>(sql_string)</span><br><span class="line">    <span class="keyword">return</span> sql_string</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/05/24/python-ternary-conditional-operator/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Steven Wu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Steven 的學習筆記">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/05/24/python-ternary-conditional-operator/" class="post-title-link" itemprop="url">python - 三元運算子</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-05-24 13:10:18 / Modified: 13:22:03" itemprop="dateCreated datePublished" datetime="2022-05-24T13:10:18+08:00">2022-05-24</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>174</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>1 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>Python 並沒有三元運算子，若要產生如下的 Java 語法效果</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">1</span></span><br><span class="line"><span class="keyword">int</span> b = <span class="number">2</span></span><br><span class="line"><span class="keyword">boolean</span> condition = <span class="keyword">true</span></span><br><span class="line"><span class="keyword">int</span> result = condition ? a : b</span><br></pre></td></tr></table></figure>
+<p>則我們可以用底下方式模擬:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">a = <span class="number">1</span></span><br><span class="line">b = <span class="number">2</span></span><br><span class="line">condition = <span class="literal">True</span></span><br><span class="line">result = a <span class="keyword">if</span> condition <span class="keyword">else</span> b</span><br><span class="line">prinf(result)</span><br></pre></td></tr></table></figure>
+<p>輸入輸出結果為</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/05/24/python-delete-property/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Steven Wu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Steven 的學習筆記">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/05/24/python-delete-property/" class="post-title-link" itemprop="url">python - 刪除類別中的屬性</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-05-24 10:57:53 / Modified: 11:56:25" itemprop="dateCreated datePublished" datetime="2022-05-24T10:57:53+08:00">2022-05-24</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>1.6k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>1 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h1><p>有一個類別 WorkStationInfoItem，具有的屬性如下:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">WorkStationInfoItem</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, Floor, Zone, WorkStationId, OperationType, Status, Time</span>):</span></span><br><span class="line">        self.Floor = Floor</span><br><span class="line">        self.Zone = Zone</span><br><span class="line">        self.WorkStationId = WorkStationId</span><br><span class="line">        self.OperationType = OperationType</span><br><span class="line">        self.Status = Status</span><br><span class="line">        self.Time = Time</span><br></pre></td></tr></table></figure>
+<p>因為在將 Object 轉成 Json String 時，如果該屬性 (Zone) 為空值時，也會轉出該屬性並填上空字串，如下所示 :</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;WorkStationInfo&quot;</span>: &#123;</span><br><span class="line">        <span class="attr">&quot;Floor&quot;</span>: <span class="string">&quot;3F&quot;</span>, </span><br><span class="line">        <span class="attr">&quot;Zone&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;WorkStationId&quot;</span>: <span class="string">&quot;123&quot;</span>, </span><br><span class="line">        <span class="attr">&quot;OperationType&quot;</span>: <span class="string">&quot;A&quot;</span>, </span><br><span class="line">        <span class="attr">&quot;Status&quot;</span>: <span class="number">1</span>, </span><br><span class="line">        <span class="attr">&quot;Time&quot;</span>: <span class="string">&quot;2000/01/01 00:00:00&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但是我們不想要的是，如果該屬性值為空字串，則不要輸出，如<code>&quot;Zone&quot;: &quot;&quot;</code>就不要輸出，<br>此時就需要將屬性刪除 (del)，這是我目前試過可行的方法，不知道是否有其他簡便的解法。</p>
+<h1 id="程式碼"><a href="#程式碼" class="headerlink" title="程式碼"></a>程式碼</h1><p>In workstation.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">WorkStationInfoItem</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, Floor, Zone, WorkStationId, OperationType, Status, Time</span>):</span></span><br><span class="line">        self.Floor = Floor</span><br><span class="line">        self.Zone = Zone</span><br><span class="line">        self.WorkStationId = WorkStationId</span><br><span class="line">        self.OperationType = OperationType</span><br><span class="line">        self.Status = Status</span><br><span class="line">        self.Time = Time</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">skip_data</span>(<span class="params">work_station_info</span>):</span></span><br><span class="line">    <span class="keyword">if</span> work_station_info.Zone == <span class="string">&#x27;&#x27;</span>:</span><br><span class="line">        <span class="keyword">del</span> work_station_info.Zone</span><br><span class="line">    <span class="keyword">return</span> work_station_info</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">send_data</span>():</span></span><br><span class="line">    work_station_info = WorkStationInfoItem(<span class="string">&quot;3F&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;123&quot;</span>, <span class="string">&quot;A&quot;</span>, <span class="number">1</span>, <span class="string">&quot;2000/01/01 00:00:00&quot;</span>)</span><br><span class="line">    json_string = obj_2_json(skip_data(work_station_info))</span><br><span class="line">    <span class="built_in">print</span>(json_string)</span><br></pre></td></tr></table></figure>
+<p>輸出結果:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;WorkStationInfo&quot;</span>: &#123;</span><br><span class="line">        <span class="attr">&quot;Floor&quot;</span>: <span class="string">&quot;3F&quot;</span>, </span><br><span class="line">        <span class="attr">&quot;WorkStationId&quot;</span>: <span class="string">&quot;123&quot;</span>, </span><br><span class="line">        <span class="attr">&quot;OperationType&quot;</span>: <span class="string">&quot;A&quot;</span>, </span><br><span class="line">        <span class="attr">&quot;Status&quot;</span>: <span class="number">1</span>, </span><br><span class="line">        <span class="attr">&quot;Time&quot;</span>: <span class="string">&quot;2000/01/01 00:00:00&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/05/24/mongo-query-like/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Steven Wu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Steven 的學習筆記">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/05/24/mongo-query-like/" class="post-title-link" itemprop="url">mongo-query-like</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-05-24 10:29:14 / Modified: 10:49:23" itemprop="dateCreated datePublished" datetime="2022-05-24T10:29:14+08:00">2022-05-24</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Mongo/" itemprop="url" rel="index"><span itemprop="name">Mongo</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>239</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>1 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="如何在-MongoDB-上執行模糊查詢"><a href="#如何在-MongoDB-上執行模糊查詢" class="headerlink" title="如何在 MongoDB 上執行模糊查詢?"></a>如何在 MongoDB 上執行模糊查詢?</h1><ol>
+<li><p>是否具有某個字串, i.e. <code>like &#39;%05%&#39;</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.users.find(&#123;TRXDATE: /05/&#125;)</span><br></pre></td></tr></table></figure>
+<img src="/2022/05/24/mongo-query-like/01.png" class="" title="01.png"></li>
+<li><p>查詢某開頭字串, i.e. <code>like &#39;2021-05%&#39;</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.users.find(&#123;TRXDATE: /^2021-05/&#125;)</span><br></pre></td></tr></table></figure>
+<img src="/2022/05/24/mongo-query-like/02.png" class="" title="02.png"></li>
+<li><p>查詢某結束字串, i.e. <code>like &#39;%07&#39;</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.users.find(&#123;TRXDATE: /07$/&#125;)</span><br></pre></td></tr></table></figure>
+<img src="/2022/05/24/mongo-query-like/03.png" class="" title="03.png"></li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/05/24/python-pyinstaller-packaging-error/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Steven Wu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Steven 的學習筆記">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/05/24/python-pyinstaller-packaging-error/" class="post-title-link" itemprop="url">python pyinstaller 打包失敗</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-05-24 10:02:00 / Modified: 10:23:51" itemprop="dateCreated datePublished" datetime="2022-05-24T10:02:00+08:00">2022-05-24</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>244</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>1 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>雖然可以打包起來一個執行檔，但是當執行該檔案時，卻出現底下錯誤訊息</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ModuleNotFoundError: No module named &#x27;pyodbc&#x27; [12652] Failed to execute script</span><br></pre></td></tr></table></figure>
+<p>我試過</p>
+<ol>
+<li>更新 pip</li>
+<li>更新 pyinstaller</li>
+<li>安裝有使用到的套件 pip install pyodbc</li>
+<li>重新打包 pyinstaller -F ….py<br>必要時，移除 python 重新安裝<br>以上方式是有解決到我的問題，也順利可以打包並執行，但是沒有時間和環境確認是否全部步驟都是必要的。</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/05/24/python-can-not-find-pip/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Steven Wu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Steven 的學習筆記">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/05/24/python-can-not-find-pip/" class="post-title-link" itemprop="url">python - 找不到 pip 指令</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-05-24 09:49:48 / Modified: 10:26:52" itemprop="dateCreated datePublished" datetime="2022-05-24T09:49:48+08:00">2022-05-24</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>158</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>1 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>當在終端介面輸入</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install pyinstaller</span><br></pre></td></tr></table></figure>
+<p>出現以下錯誤訊息</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x27;pip&#x27; is not recognized as an internal or external command, operable program or batch file.</span><br></pre></td></tr></table></figure>
+<p>網路上有許多解決方式，我的方法是去 <a target="_blank" rel="noopener" href="https://www.python.org/downloads/">python 網站</a> 重新下載安裝。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2022/04/25/python-convert-object-to-json/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -283,939 +1069,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/04/25/linux-add-user/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Steven Wu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Steven 的學習筆記">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/25/linux-add-user/" class="post-title-link" itemprop="url">在 Ubuntu 18.04.4 新增/刪除使用者</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2022-04-25 10:49:12 / Modified: 11:45:27" itemprop="dateCreated datePublished" datetime="2022-04-25T10:49:12+08:00">2022-04-25</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>461</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>1 mins.</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="創建新用戶並建立域設的-Home-目錄-home-username"><a href="#創建新用戶並建立域設的-Home-目錄-home-username" class="headerlink" title="創建新用戶並建立域設的 Home 目錄 (/home/username)"></a>創建新用戶並建立域設的 Home 目錄 (/home/username)</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo useradd -m franklin</span></span><br></pre></td></tr></table></figure>
-<h1 id="創建新用戶並在指定的目錄建立-Home-目錄-指定的目錄必須是未建立目錄"><a href="#創建新用戶並在指定的目錄建立-Home-目錄-指定的目錄必須是未建立目錄" class="headerlink" title="創建新用戶並在指定的目錄建立 Home 目錄 (指定的目錄必須是未建立目錄)"></a>創建新用戶並在指定的目錄建立 Home 目錄 (指定的目錄必須是未建立目錄)</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo useradd -m -d /mnt/app/home/franklin franklin</span></span><br></pre></td></tr></table></figure>
-<h1 id="變更密碼"><a href="#變更密碼" class="headerlink" title="變更密碼"></a>變更密碼</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo passwd franklin</span></span><br></pre></td></tr></table></figure>
-<h1 id="刪除使用者"><a href="#刪除使用者" class="headerlink" title="刪除使用者"></a>刪除使用者</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo userdel franklin</span></span><br></pre></td></tr></table></figure>
-<h1 id="更改-useradd-的預設配置"><a href="#更改-useradd-的預設配置" class="headerlink" title="更改 useradd 的預設配置"></a>更改 useradd 的預設配置</h1><p>將預設的登入 shell (/bin/sh) 改為 /bin/bash</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo useradd -D -s /bin/bash</span></span><br></pre></td></tr></table></figure>
-<p>查看結果</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo useradd -D</span></span><br></pre></td></tr></table></figure>
-<h1 id="Troubleshooting"><a href="#Troubleshooting" class="headerlink" title="Troubleshooting"></a>Troubleshooting</h1><p>登入後的畫面如下</p>
-<img src="/2022/04/25/linux-add-user/01.png" class="" title="01.png">
-<p>則可將 /etc/passwd 中的 /bin/sh 改成 /bin/bash</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">franklin:x:1005:1005::/mnt/app/home/franklin:/bin/sh</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
-<p>變成</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">franklin:x:1005:1005::/mnt/app/home/franklin:/bin/bash</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/04/19/docker-nvidia-container/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Steven Wu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Steven 的學習筆記">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/19/docker-nvidia-container/" class="post-title-link" itemprop="url">建立具有 GPU 執行的容器環境</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2022-04-19 16:34:13 / Modified: 17:02:29" itemprop="dateCreated datePublished" datetime="2022-04-19T16:34:13+08:00">2022-04-19</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Docker/" itemprop="url" rel="index"><span itemprop="name">Docker</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>1.4k</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>1 mins.</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="建立具有-GPU-執行的容器環境"><a href="#建立具有-GPU-執行的容器環境" class="headerlink" title="建立具有 GPU 執行的容器環境"></a>建立具有 GPU 執行的容器環境</h1><p>參考 : <a target="_blank" rel="noopener" href="https://github.com/NVIDIA/nvidia-docker">https://github.com/NVIDIA/nvidia-docker</a><br>Make sure you <font color="#FF0000">have installed the NVIDIA driver</font> and <font color="#FF0000">Docker 19.03</font> for your Linux distribution Note that you <font color="#FF0000">do not need to install the CUDA toolkit on the host</font>, but the driver needs to be installed</p>
-<img src="/2022/04/19/docker-nvidia-container/01.png" class="" title="01.png">
-<h2 id="安裝-nvidia-driver"><a href="#安裝-nvidia-driver" class="headerlink" title="安裝 nvidia driver"></a>安裝 nvidia driver</h2><p>參考 - <a target="_blank" rel="noopener" href="https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html">https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html</a></p>
-<ul>
-<li>System Requirements<img src="/2022/04/19/docker-nvidia-container/02.png" class="" title="02.png"></li>
-<li>Pre-installation Actions</li>
-</ul>
-<ol>
-<li>Verify You Have a CUDA-Capable GPU<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> lspci | grep -i nvidia</span></span><br></pre></td></tr></table></figure>
-<img src="/2022/04/19/docker-nvidia-container/03.png" class="" title="03.png"></li>
-<li>Verify You Have a Supported Version of Linux<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> uname -m &amp;&amp; cat /etc/*release</span></span><br></pre></td></tr></table></figure>
-<img src="/2022/04/19/docker-nvidia-container/04.png" class="" title="04.png"></li>
-<li>Verify the System Has gcc Installed<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> gcc --version</span></span><br></pre></td></tr></table></figure>
-<img src="/2022/04/19/docker-nvidia-container/05.png" class="" title="05.png">
-如果沒有裝，則使用底下指令安裝<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo apt install gcc</span></span><br></pre></td></tr></table></figure>
-<img src="/2022/04/19/docker-nvidia-container/06.png" class="" title="06.png"></li>
-<li>Verify the System has the Correct Kernel Headers and Development Packages Installed<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> uname -r</span></span><br></pre></td></tr></table></figure>
-<img src="/2022/04/19/docker-nvidia-container/07.png" class="" title="07.png"></li>
-<li>Download driver<br>下載網址 - <a target="_blank" rel="noopener" href="https://www.nvidia.com/Download/index.aspx?lang=en-us">https://www.nvidia.com/Download/index.aspx?lang=en-us</a><img src="/2022/04/19/docker-nvidia-container/08.png" class="" title="08.png"></li>
-<li>安裝命令順序<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo dpkg -i nvidia-driver-local-repo-ubuntu1804-440.33.01_1.0-1_amd64.deb</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo apt-key add /var/nvidia-driver-local-repo-440.33.01/7fa2af80.pub</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo apt-get update</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo apt-get install cuda-drivers</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo reboot</span></span><br></pre></td></tr></table></figure></li>
-<li>檢查結果<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> nvidia-smi</span></span><br></pre></td></tr></table></figure>
-<img src="/2022/04/19/docker-nvidia-container/09.png" class="" title="09.png"></li>
-<li>安裝 NVIDIA CUDA Toolkit<br>For first-time users of Docker 19.03 and GPUs, continue with the instructions for getting started below.<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> distribution=$(. /etc/os-release;<span class="built_in">echo</span> $ID<span class="variable">$VERSION_ID</span>)</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> curl -s -L https://nvidia.github.io/nvidia-docker/<span class="variable">$distribution</span>/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo apt-get update &amp;&amp; sudo apt-get install -y nvidia-container-toolkit</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo systemctl restart docker</span></span><br></pre></td></tr></table></figure>
-<img src="/2022/04/19/docker-nvidia-container/10.png" class="" title="10.png"></li>
-<li>執行容器測試<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> docker run --gpus all nvidia/cuda:10.0-base nvidia-smi</span></span><br></pre></td></tr></table></figure>
-<img src="/2022/04/19/docker-nvidia-container/11.png" class="" title="11.png"></li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/04/19/docker-installation/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Steven Wu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Steven 的學習筆記">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/19/docker-installation/" class="post-title-link" itemprop="url">安裝 Docker</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2022-04-19 16:31:19 / Modified: 16:41:37" itemprop="dateCreated datePublished" datetime="2022-04-19T16:31:19+08:00">2022-04-19</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Docker/" itemprop="url" rel="index"><span itemprop="name">Docker</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>1.2k</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>1 mins.</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="安裝-Docker"><a href="#安裝-Docker" class="headerlink" title="安裝 Docker"></a>安裝 Docker</h1><p>參考官網 - <a target="_blank" rel="noopener" href="https://docs.docker.com/install/linux/docker-ce/ubuntu/">https://docs.docker.com/install/linux/docker-ce/ubuntu/</a></p>
-<h2 id="準備工作"><a href="#準備工作" class="headerlink" title="準備工作"></a>準備工作</h2><ul>
-<li>更新 apt<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo apt-get update</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo apt-get upgrade</span></span><br></pre></td></tr></table></figure></li>
-<li>OS requirements<ul>
-<li>Eoan 19.10</li>
-<li>Bionic 18.04 (LTS)</li>
-<li>Xenial 16.04 (LTS)</li>
-</ul>
-</li>
-<li>Uninstall old versions<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo apt-get remove docker docker-engine docker.io containerd runc</span></span><br></pre></td></tr></table></figure>
-<img src="/2022/04/19/docker-installation/01.png" class="" title="01.png"></li>
-</ul>
-<h2 id="Install-using-the-repository"><a href="#Install-using-the-repository" class="headerlink" title="Install using the repository"></a>Install using the repository</h2><ol>
-<li>Update the apt package index:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo apt-get update</span></span><br></pre></td></tr></table></figure></li>
-<li>Install packages to allow apt to use a repository over HTTPS:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo apt-get install \</span></span><br><span class="line"><span class="bash">    apt-transport-https \</span></span><br><span class="line"><span class="bash">    ca-certificates \</span></span><br><span class="line"><span class="bash">    curl \</span></span><br><span class="line"><span class="bash">    gnupg-agent \</span></span><br><span class="line"><span class="bash">    software-properties-common</span></span><br></pre></td></tr></table></figure></li>
-<li>Add Docker’s official GPG key:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -</span></span><br></pre></td></tr></table></figure></li>
-<li>Verify<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo apt-key fingerprint 0EBFCD88</span></span><br></pre></td></tr></table></figure>
-<img src="/2022/04/19/docker-installation/02.png" class="" title="02.png"></li>
-<li>Use the following command to set up the stable repository<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo add-apt-repository <span class="string">&quot;deb [arch=amd64] https://download.docker.com/linux/ubuntu <span class="subst">$(lsb_release -cs)</span> stable&quot;</span></span></span><br></pre></td></tr></table></figure></li>
-</ol>
-<h2 id="INSTALL-DOCKER-ENGINE-COMMUNITY"><a href="#INSTALL-DOCKER-ENGINE-COMMUNITY" class="headerlink" title="INSTALL DOCKER ENGINE - COMMUNITY"></a>INSTALL DOCKER ENGINE - COMMUNITY</h2><ol>
-<li>Update the apt package index.<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo apt-get update</span></span><br></pre></td></tr></table></figure></li>
-<li>Install the latest version of Docker Engine - Community and containerd, or go to the next step to install a specific version:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo apt-get install docker-ce docker-ce-cli containerd.io</span></span><br></pre></td></tr></table></figure></li>
-<li>Verify that Docker Engine - Community is installed correctly by running the hello-world image.<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo docker run hello-world</span></span><br></pre></td></tr></table></figure></li>
-<li>Configure Docker to start on boot<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo systemctl <span class="built_in">enable</span> docker</span></span><br></pre></td></tr></table></figure></li>
-<li>Add your user to the docker group.<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo usermod -aG docker stevenwu</span></span><br></pre></td></tr></table></figure></li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/04/19/server-installation/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Steven Wu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Steven 的學習筆記">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/19/server-installation/" class="post-title-link" itemprop="url">Dell T640 Server Installation</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2022-04-19 12:00:35 / Modified: 16:35:24" itemprop="dateCreated datePublished" datetime="2022-04-19T12:00:35+08:00">2022-04-19</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Server/" itemprop="url" rel="index"><span itemprop="name">Server</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>432</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>1 mins.</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="安裝前準備"><a href="#安裝前準備" class="headerlink" title="安裝前準備"></a>安裝前準備</h1><ul>
-<li>透過 Controller Port 連線<br>將網路線連接背板上的網路孔 (下圖紅色框)，接上螢幕看是被配置哪個 IP 並記下<img src="/2022/04/19/server-installation/01.png" class="" title="01.png"></li>
-<li>透過瀏覽器登入<img src="/2022/04/19/server-installation/02.png" class="" title="02.png"></li>
-<li>登入後點選虛擬控制台<img src="/2022/04/19/server-installation/03.png" class="" title="03.png"></li>
-<li>虛擬控制台畫面選擇進入 BIOS<img src="/2022/04/19/server-installation/04.png" class="" title="04.png"></li>
-</ul>
-<h1 id="設定-RAID"><a href="#設定-RAID" class="headerlink" title="設定 RAID"></a>設定 RAID</h1><ol>
-<li>選擇 Device Settings 以設定 RAID<img src="/2022/04/19/server-installation/05.png" class="" title="05.png"></li>
-<li>選擇 RAID Controller<img src="/2022/04/19/server-installation/06.png" class="" title="06.png"></li>
-</ol>
-<h1 id="刪除虛擬硬碟"><a href="#刪除虛擬硬碟" class="headerlink" title="刪除虛擬硬碟"></a>刪除虛擬硬碟</h1><ol>
-<li>選擇 Virtual Disk Management<img src="/2022/04/19/server-installation/07.png" class="" title="07.png"></li>
-<li>選擇要刪掉的虛擬硬碟<img src="/2022/04/19/server-installation/08.png" class="" title="08.png"></li>
-<li>選擇要執行的動作<img src="/2022/04/19/server-installation/09.png" class="" title="09.png"></li>
-<li>按下 Go 執行<img src="/2022/04/19/server-installation/10.png" class="" title="10.png"></li>
-<li>Confirm<img src="/2022/04/19/server-installation/11.png" class="" title="11.png"></li>
-<li>執行完成<img src="/2022/04/19/server-installation/12.png" class="" title="12.png"></li>
-<li>執行結果 - 減少了一個虛擬硬碟<img src="/2022/04/19/server-installation/13.png" class="" title="13.png"></li>
-</ol>
-<h1 id="Convert-to-Non-RAID-Disk"><a href="#Convert-to-Non-RAID-Disk" class="headerlink" title="Convert to Non-RAID Disk"></a>Convert to Non-RAID Disk</h1><ol>
-<li>選擇 Configuration Management<img src="/2022/04/19/server-installation/14.png" class="" title="14.png"></li>
-<li>Convert to Non-RAID Disk<img src="/2022/04/19/server-installation/15.png" class="" title="15.png"></li>
-<li>選擇要還原的硬碟<img src="/2022/04/19/server-installation/16.png" class="" title="16.png"></li>
-<li>確認執行<img src="/2022/04/19/server-installation/17.png" class="" title="17.png"></li>
-<li>執行成功<img src="/2022/04/19/server-installation/18.png" class="" title="18.png"></li>
-</ol>
-<h1 id="建立虛擬硬碟"><a href="#建立虛擬硬碟" class="headerlink" title="建立虛擬硬碟"></a>建立虛擬硬碟</h1><ol>
-<li>選擇 Create Virtual Disk<img src="/2022/04/19/server-installation/19.png" class="" title="19.png"></li>
-<li>設定 RAID 並選擇實體硬碟<img src="/2022/04/19/server-installation/20.png" class="" title="20.png"></li>
-<li>選擇那些實體硬碟要組成一顆虛擬硬碟<img src="/2022/04/19/server-installation/21.png" class="" title="21.png"></li>
-<li>確認後執行<img src="/2022/04/19/server-installation/22.png" class="" title="22.png"></li>
-<li>選擇實體硬碟類型與要設定的實體硬碟<img src="/2022/04/19/server-installation/23.png" class="" title="23.png"></li>
-<li>執行成功<img src="/2022/04/19/server-installation/24.png" class="" title="24.png"></li>
-<li>選擇 Create Virtual Disk<img src="/2022/04/19/server-installation/25.png" class="" title="25.png"></li>
-<li>確認後執行<img src="/2022/04/19/server-installation/26.png" class="" title="26.png"></li>
-<li>執行成功<img src="/2022/04/19/server-installation/27.png" class="" title="27.png"></li>
-<li>一路按 back 回到首頁按下 Finish<img src="/2022/04/19/server-installation/28.png" class="" title="28.png"></li>
-</ol>
-<h1 id="安裝作業系統"><a href="#安裝作業系統" class="headerlink" title="安裝作業系統"></a>安裝作業系統</h1><img src="/2022/04/19/server-installation/29.png" class="" title="29.png">
-<img src="/2022/04/19/server-installation/30.png" class="" title="30.png">
-<img src="/2022/04/19/server-installation/31.png" class="" title="31.png">
-<img src="/2022/04/19/server-installation/32.png" class="" title="32.png">
-<img src="/2022/04/19/server-installation/33.png" class="" title="33.png">
-<img src="/2022/04/19/server-installation/34.png" class="" title="34.png">
-<img src="/2022/04/19/server-installation/35.png" class="" title="35.png">
-<img src="/2022/04/19/server-installation/36.png" class="" title="36.png">
-<img src="/2022/04/19/server-installation/37.png" class="" title="37.png">
-<img src="/2022/04/19/server-installation/38.png" class="" title="38.png">
-<img src="/2022/04/19/server-installation/39.png" class="" title="39.png">
-<img src="/2022/04/19/server-installation/40.png" class="" title="40.png">
-<img src="/2022/04/19/server-installation/41.png" class="" title="41.png">
-<img src="/2022/04/19/server-installation/42.png" class="" title="42.png">
-<img src="/2022/04/19/server-installation/43.png" class="" title="43.png">
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/04/19/docker-nvidia-container-runtime-hook/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Steven Wu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Steven 的學習筆記">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/19/docker-nvidia-container-runtime-hook/" class="post-title-link" itemprop="url">Docker Error response from daemon exec "nvidia-container-runtime-hook"</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2022-04-19 11:22:19 / Modified: 11:55:19" itemprop="dateCreated datePublished" datetime="2022-04-19T11:22:19+08:00">2022-04-19</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Docker/" itemprop="url" rel="index"><span itemprop="name">Docker</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>735</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>1 mins.</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="啟動具有使用-GPU-的容器時，出現-docker-Error-response-from-daemon-exec-“nvidia-container-runtime-hook”-executable-file-not-found-in-PATH"><a href="#啟動具有使用-GPU-的容器時，出現-docker-Error-response-from-daemon-exec-“nvidia-container-runtime-hook”-executable-file-not-found-in-PATH" class="headerlink" title="啟動具有使用 GPU 的容器時，出現 docker: Error response from daemon: exec: “nvidia-container-runtime-hook”: executable file not found in $PATH."></a>啟動具有使用 GPU 的容器時，出現 docker: Error response from daemon: exec: “nvidia-container-runtime-hook”: executable file not found in $PATH.</h1><ul>
-<li>執行<br>  <code>$ docker run --gpus all nvidia/cuda:10.0-base nvidia-smi</code></li>
-<li>出現錯誤  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker: Error response from daemon: exec: &quot;nvidia-container-runtime-hook&quot;: executable file not found in $PATH.</span><br><span class="line">ERRO[0000] error waiting for container: context canceled </span><br></pre></td></tr></table></figure></li>
-<li>解決方法<ol>
-<li><code>$ distribution=$(. /etc/os-release;echo $ID$VERSION_ID)</code></li>
-<li><code>$ curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -</code></li>
-<li><code>$ curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list</code></li>
-<li><code>$ sudo apt-get update &amp;&amp; sudo apt-get install -y nvidia-container-toolkit</code></li>
-<li><code>$ sudo systemctl restart docker</code></li>
-<li><code>$ docker run --gpus all nvidia/cuda:10.0-base nvidia-smi</code></li>
-</ol>
-</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/04/19/nvidia-001-version-mismatch/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Steven Wu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Steven 的學習筆記">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/19/nvidia-001-version-mismatch/" class="post-title-link" itemprop="url">Nvidia-001-version-mismatch</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2022-04-19 10:12:37 / Modified: 10:46:16" itemprop="dateCreated datePublished" datetime="2022-04-19T10:12:37+08:00">2022-04-19</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Nvidia/" itemprop="url" rel="index"><span itemprop="name">Nvidia</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>268</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>1 mins.</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Error-Message-Failed-to-initialize-NVML-Driver-library-version-mismatch"><a href="#Error-Message-Failed-to-initialize-NVML-Driver-library-version-mismatch" class="headerlink" title="Error Message : Failed to initialize NVML: Driver/library version mismatch"></a>Error Message : Failed to initialize NVML: Driver/library version mismatch</h1><ul>
-<li><p>原因<br>  NVIDIA 內核驅動版本與系統驅動不一致</p>
-</li>
-<li><p>解決方法</p>
-<ol>
-<li>卸載驅動<br> <code>$ sudo apt-get purge nvidia*</code></li>
-<li>查找可用驅動版本<br> <code>$ ubuntu-drivers devices</code> <img src="/2022/04/19/nvidia-001-version-mismatch/01.png" class="" title="01.png"></li>
-<li>查找內核版本<br> <code>$ cat /proc/driver/nvidia/version</code> <img src="/2022/04/19/nvidia-001-version-mismatch/02.png" class="" title="02.png"></li>
-<li>安裝驅動<br> <code>$ sudo apt-get install nvidia-driver-470 nvidia-settings nvidia-prime</code></li>
-<li>檢驗結果<br> <code>$ nvidia-smi</code> <img src="/2022/04/19/nvidia-001-version-mismatch/03.png" class="" title="03.png"></li>
-</ol>
-</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/02/20/frontend-003-visualizing-distributions/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Steven Wu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Steven 的學習筆記">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/02/20/frontend-003-visualizing-distributions/" class="post-title-link" itemprop="url">資料視覺化 - 002 分佈視覺化</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2022-02-20 22:14:48" itemprop="dateCreated datePublished" datetime="2022-02-20T22:14:48+08:00">2022-02-20</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-03-11 15:47:34" itemprop="dateModified" datetime="2022-03-11T15:47:34+08:00">2022-03-11</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Visualize/" itemprop="url" rel="index"><span itemprop="name">Visualize</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>1.8k</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>2 mins.</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>若想了解特定變數在資料集中的分佈狀況，比如說 : 來店內消費的客戶的年齡分佈</p>
-<h1 id="單一變數的分佈視覺化"><a href="#單一變數的分佈視覺化" class="headerlink" title="單一變數的分佈視覺化"></a>單一變數的分佈視覺化</h1><h2 id="直方圖"><a href="#直方圖" class="headerlink" title="直方圖"></a>直方圖</h2><p>以想了解來店內消費的客人年齡分佈為例，首先需要將客人年齡分組，然後統計每個分組內年齡層的客人數量，就可以開始繪製直方圖．每一次都要嘗試不同的矩形寬度 (即分組的區間大小)，以便測試產生的直方圖是否真的可準確反應原始資料．一般來說，寬度太小，容易造成過於尖銳且雜亂的視覺感受，且資料的主要趨勢會被模糊，而寬度太大，則會造成某些局部細小的趨勢被模糊．</p>
-<h2 id="密度圖"><a href="#密度圖" class="headerlink" title="密度圖"></a>密度圖</h2><p>在密度圖中，需要估算資料的基本機率分佈，估算的方法稱為核密度估算 (kernel desnsity estimation)，常用的有高斯核密度估算．<br>與直方圖相同，帶寬的大小會影響視覺的呈現，所以需要多嘗試不同的帶寬，另外對於大型資料集而言，比較可以呈現出可靠且豐富的資訊，對於資料量較小的資料集，可能會產生誤導．<br>核密度估算有一個缺點，就是在尾部的地方也會估算出值，但是這也估算區域的值是否合理就需要考量一下，如 : 年齡分佈有可能會算出負數區域也有一些分佈，但是在現實情況下是不合理的，應該在視覺呈現上剔除掉以免造成誤解．</p>
-<h1 id="多個變數的分佈視覺化"><a href="#多個變數的分佈視覺化" class="headerlink" title="多個變數的分佈視覺化"></a>多個變數的分佈視覺化</h1><p>如果我們除了想要知道年齡分佈外，也想要了解在同分組的客人性別分布，則可以使用堆疊直方圖，但是堆疊直方圖有兩個缺點:</p>
-<ol>
-<li>上面堆疊的直方，不知道起點是由 0 開始，還是由下面的直方終點開始</li>
-<li>因為是不同起始點，所以難以比較同分組的男女生人數到底誰多<br>要解決上述缺點，可以使用重疊直方圖，即男和女的直方起點都是由零開始，重疊的部分用另一種顏色表示，但是這樣會造成讓使用者以為有三個變數的堆疊直方，而使用重疊密度圖一樣有這個問題．<br>所以比較好的方式是分成兩個重疊密度圖，一個是全部與男性客人的重疊密度圖，另一個是全部與女性客人的重疊密度圖．<br>另一個比較準確地呈現出資料視覺化的方式是分別繪製男性和女性的直方圖，將其中一個向右旋轉 90 度，另一個向左旋轉 90 度，通常這種圖形被稱為 age pyramid，但是此圖在超過兩個以上就無法繪製．<br>超過兩個以上的分佈圖，還是以重疊密度圖的方式顯示較清楚．</li>
-</ol>
-<h1 id="經驗累積分佈函數"><a href="#經驗累積分佈函數" class="headerlink" title="經驗累積分佈函數"></a>經驗累積分佈函數</h1><p>以上的圖形 (直方圖/密度圖) 所呈現的結果，有很大程度上取決於使用者所選擇的參數 (寬度/帶寬)，這兩者都被視為對資料的解讀，而非直接的視覺化．為了要解決此問題，則有了經驗累積分佈函數 (ECDF) 和分位圖 (Q-Q 圖) 的產生．<br>比如說我們需要依據每家店的銷售額區分幾個等級，則我們首先將銷售額的多寡進行排序，x 軸為銷售額，y 軸為排名，由排名最低者開始繪製，依序繪製到最高者，每一家店的銷售額和排名決定一點，依據將每點連接起來成一個直線，<br>通常會針對 y 軸作正規化，讓 y 軸呈現的是累積頻率由 0 到 1 的範圍，做完正規化後，則 y 軸低於 0.25 以下的店家銷售額是多少，位於 0.5 的銷售額則是所有店家銷售額的中位數所在．<br>但是在有資料不平均的情況下，比如說大部分的鄉鎮人口都是比較稀少的，只有幾個鄉鎮人口數遠遠大於其他鄉鎮，此時不管用密度圖或是經驗累積分佈函數，則大部分都集中在 0 處，完全沒有可見的細部分佈呈現，所以遇到此狀況時，會將資料進行對數轉換．</p>
-<h1 id="分位圖"><a href="#分位圖" class="headerlink" title="分位圖"></a>分位圖</h1><p>???</p>
-<h1 id="箱型圖"><a href="#箱型圖" class="headerlink" title="箱型圖"></a>箱型圖</h1><p>在一些情況下，我們會希望了解在不同月份的銷售額變化，也想要同時呈現出不同分店的銷售額分佈，所以我們就可以用箱型圖來呈現．</p>
-<h1 id="提琴圖"><a href="#提琴圖" class="headerlink" title="提琴圖"></a>提琴圖</h1><p>可替換箱型圖，以得到更細緻的資料視覺呈現，尤其是當有雙峰出現時，是箱型圖所無法呈現的．因為提琴圖是從密度估計而來的，所以資料量較少時，可能使無資料的地方看起來有資料，或者實際上非常稀疏的資料集，看起來很密集．<br>為了解決提琴圖因為資料數量較少時的缺點，我們可以直接將所有單個資料繪製成點，稱為帶狀圖 (strip chart)，只要確認沒有太多的點是重疊的，這樣的帶狀圖基本上是可以良好地表達出資料視覺．如果有太多點重疊在一起，則在繪製上在 x 維度上隨機添加一些微小的數值，以便讓點可以散開一些，此種技巧稱為抖動 (jittering)．<br>另外也有結合提琴圖與帶狀圖的 Sina 圖 (Sina plot) 可使用．</p>
-<h1 id="脊線圖"><a href="#脊線圖" class="headerlink" title="脊線圖"></a>脊線圖</h1><p>如果你想呈現出隨著時間推移的分佈趨勢，此圖表的目的是為了比較個分組的密度形狀和相對高度．也可以用來比要兩種趨勢分佈，比如說將兩家分店的銷售額依據月份分別做成兩個脊線圖並且將其重疊在一個圖表中，就可以很清楚地反應出兩家店每月的銷售額的分佈變化．</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/02/20/frontend-002-visualizing-amounts/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Steven Wu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Steven 的學習筆記">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/02/20/frontend-002-visualizing-amounts/" class="post-title-link" itemprop="url">資料視覺化 - 002 數量視覺化</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2022-02-20 22:14:17" itemprop="dateCreated datePublished" datetime="2022-02-20T22:14:17+08:00">2022-02-20</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-03-11 15:47:34" itemprop="dateModified" datetime="2022-03-11T15:47:34+08:00">2022-03-11</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Visualize/" itemprop="url" rel="index"><span itemprop="name">Visualize</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>861</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>1 mins.</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="長條圖"><a href="#長條圖" class="headerlink" title="長條圖"></a>長條圖</h1><p>假如我們對某些類別的數值大小感興趣，如 : 不同品牌的銷售量，則很適合用長條圖來呈現．<br>一般來說，長條的寬度最好大於類別名稱的寬度，但是有時候類別的名稱太長，導致長條的寬度也不美觀．一種解決的方式是將類別名稱旋轉一個角度，不過會造成閱讀上的困擾，比較好的作法是改成橫向的長條圖．<br>當長條圖的類別「不具有順序性」時，長條圖的排列最好依據數值的大小遞增/遞減排序．</p>
-<h1 id="分組與堆疊長條圖"><a href="#分組與堆疊長條圖" class="headerlink" title="分組與堆疊長條圖"></a>分組與堆疊長條圖</h1><p>長條圖是針對單一個分類所繪製的，當我們需要顯示多個分類時，就可以用分組長條圖來表示，一般來說，除非是特別需要強調類別之間的比較，比如說 : 要比較同月份不同區域的銷售金額，強調的是不同區域的銷售金額的比較，則 x 軸為月份， y 軸為銷售金額，而將區域分組比較，但是分組內的類別個數也不宜太多，否則會容易混淆，失去比較意義．<br>另外如果分組內的類別個數過多，可能要在長條圖的顏色選擇上下功夫，選擇同色系漸變的色系是個不錯的選擇；或是將分組長條圖，分成數個長條子圖做並排呈現．<br>如果說分組的數據，堆疊起來具有意義時，才使用堆疊長條圖，比如說將同月份不同區域的銷售金額堆疊起來，則可以看出該月份該產品的總銷售金額，這樣的堆疊才有意義．此外若是 y 軸堆疊的數值，只是少量且簡單的數值，有時候不繪製 y 軸，直接在長條上標明數值，會比較清楚易懂．</p>
-<h1 id="點圖和熱圖"><a href="#點圖和熱圖" class="headerlink" title="點圖和熱圖"></a>點圖和熱圖</h1><p>長條圖的一個重要限制就是必須由 0 開始，讓長條的長度與數值成比例．對於有些情境下，這樣可能會模糊焦點，比如說，每個月的銷售金額都差不多時，則長條圖繪製起來會沒差異，但是使用點圖在特定的某一小範圍做圖，則會放大看出數據之間的差異．跟長條圖一樣，如果數據的排序不影響圖表的解讀，最好依序遞增或遞減排列數值．<br>又比如說，要一年十二個月中，要比較每個月 20 種商品的銷售金額，如果我們使用分組長條圖的話，則會顯得資訊量太多，不容易讓人理解，此時我們可以使用熱圖方式，將銷售金額轉換成顏色，這樣就可以形成一個 12 X 20 的方格，再依據銷售金額對應的顏色，繪製到所屬的方格中做呈現，同理我們也需要依據情境進行必要的排序，以凸顯我們要強調的資訊．</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/02/19/frontend-001-visualize/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Steven Wu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Steven 的學習筆記">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/02/19/frontend-001-visualize/" class="post-title-link" itemprop="url">資料視覺化 - 001 資料對應視覺</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2022-02-19 17:25:15" itemprop="dateCreated datePublished" datetime="2022-02-19T17:25:15+08:00">2022-02-19</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-03-11 15:47:34" itemprop="dateModified" datetime="2022-03-11T15:47:34+08:00">2022-03-11</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Visualize/" itemprop="url" rel="index"><span itemprop="name">Visualize</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>926</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>1 mins.</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="常用的視覺呈現"><a href="#常用的視覺呈現" class="headerlink" title="常用的視覺呈現"></a>常用的視覺呈現</h1><ul>
-<li>位置</li>
-<li>形狀</li>
-<li>大小</li>
-<li>顏色</li>
-<li>線條粗細</li>
-<li>線條種類<br>其中『形狀』與『線條種類』僅可表示離散型資料，如 : 貓、狗 … 等分類，其餘的不管是連續或離散型資料都可以表示．<br>另外，當資料是數值形式時，我們稱為定量；當是類別形式時，我們稱為定性．</li>
-</ul>
-<h1 id="座標系統"><a href="#座標系統" class="headerlink" title="座標系統"></a>座標系統</h1><p>常見的座標系統 : </p>
-<ul>
-<li>笛卡爾座標系統<br>軸上的網格間隔一般來說 x 與 y 軸幾乎都是均等的，除非有需要強調 y 軸上的變化，則會將 x 軸上的網格間隔壓縮，反之要強調 x 軸上的變化時，則會將 x 軸做一個拉伸．<br>如果 x 與 y 軸都是相同單位的話，則最好網格間隔都要相等．<br>另外當資料中有極端數據時，使用對數尺度比用線性尺度較容易理解．<br>但是數據中如果有 0 存在時，使用對數轉換會得到一個負無窮大值，所以我們可以採用平方根尺度解決．</li>
-<li>極座標系統<br>對於週期性資料使用極座標呈現是十分實用的，另外是地理空間資料也是使用極座標較合適，不推薦使用笛卡爾座標系統．</li>
-</ul>
-<h1 id="顏色尺度"><a href="#顏色尺度" class="headerlink" title="顏色尺度"></a>顏色尺度</h1><ul>
-<li>定性 (qualitative) 顏色尺度<br>用顏色來區分不具有順序的離散型數據，如 : 不同產品、國家 … 等．在顏色的選取上，每個顏色都必須明顯地不同，但是也不可以有某一顏色比其他顏色耀眼，而且也不應該讓人產生出具有順序的印象，如 : 一系列連續的顏色漸淡的組合．</li>
-<li>順序 (sequential) 顏色尺度<br>如果要用顏色來代表連續數值的資料集，如 : 人口、溫度和收入 … 等，則我們應該選擇一組顏色，這組顏色之間可以表明資料間的大小、距離，並且要注意顏色是否讓人有均勻分佈的印象。</li>
-<li>偏離 (diverging) 顏色尺度<br>而有些情境下，我們希望用顏色表現出基於某個數值，是正偏離還是負偏離，如 : 以 0 為基準點，當數值為正數時是一種顏色，當為負值時為另一種顏色，以供使用者可以很快地區分是正數還是負數．<br>此種尺度可以看成是兩個順序顏色尺度的組合，中間顏色較淺，兩側顏色較深，中間則是依序漸變顏色．</li>
-<li>強調 (accent) 顏色尺度<br>當資料中有我們要強調的訊息時，將這些關鍵資訊使用強調色凸顯，所以會有一組基本色和一組強調色，基本色不可以引起使用者的注意，要盡量單調，甚至可以使用灰階顏色．<br>參考<a target="_blank" rel="noopener" href="https://colorbrewer2.org/#type=sequential&scheme=BuGn&n=3">ColorBrewer</a></li>
-</ul>
-<h1 id="視覺化圖表目錄"><a href="#視覺化圖表目錄" class="headerlink" title="視覺化圖表目錄"></a>視覺化圖表目錄</h1><p>參考 : <a target="_blank" rel="noopener" href="https://clauswilke.com/dataviz/directory-of-visualizations.html">https://clauswilke.com/dataviz/directory-of-visualizations.html</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -1281,20 +1138,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">118</span>
+          <span class="site-state-item-count">127</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-count">23</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">119</span>
+        <span class="site-state-item-count">129</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -1339,13 +1196,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">478k</span>
+    <span title="Symbols count total">489k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
-    <span title="Reading time total">7:15</span>
+    <span title="Reading time total">7:25</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
   </div>
